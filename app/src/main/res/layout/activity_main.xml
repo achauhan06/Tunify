@@ -7,13 +7,29 @@
     tools:context=".MainActivity">
 
 
+    <!--    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Tunify.NoActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.Tunify.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>-->
 
     <TextView
         android:id="@+id/main_text_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome"
-        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/main_input_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,5 +100,7 @@
         >
 
     </Button>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
