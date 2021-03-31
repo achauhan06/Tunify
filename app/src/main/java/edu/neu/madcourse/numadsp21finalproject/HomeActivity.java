@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity  extends AppCompatActivity {
@@ -34,6 +35,32 @@ public class HomeActivity  extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         setNavigationListener();
+        setBottomNavigationListener();
+    }
+
+    private void setBottomNavigationListener() {
+       BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+       bottomNavigationView.setOnNavigationItemSelectedListener(item->{
+           int id = item.getItemId();
+           switch(id) {
+               case R.id.navigation_home:
+                   Toast.makeText(HomeActivity.this, "My Home",Toast.LENGTH_SHORT).show();
+                   break;
+               case R.id.navigation_friends:
+                   Toast.makeText(HomeActivity.this, "My Friends",Toast.LENGTH_SHORT).show();
+                   break;
+               case R.id.navigation_library:
+                   Toast.makeText(HomeActivity.this, "My Library",Toast.LENGTH_SHORT).show();
+                   break;
+               case R.id.navigation_notifications:
+                   Toast.makeText(HomeActivity.this, "My Notifications",Toast.LENGTH_SHORT).show();
+                   break;
+               default:
+                   return true;
+           }
+           return true;
+
+       });
     }
 
     private void setNavigationListener() {
