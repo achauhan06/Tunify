@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "549237785495",
+    "project_id": "tunify-7fda5",
+    "storage_bucket": "tunify-7fda5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549237785495:android:b20033afb4adb1ea11bad2",
+        "android_client_info": {
+          "package_name": "edu.neu.madcourse.numadsp21finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549237785495-k99ps1q0o76fbvgu9ofrlq24mg8bbm8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZqPMVIRpIPfoQVfbpafHEorq390WyIm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549237785495-k99ps1q0o76fbvgu9ofrlq24mg8bbm8s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
