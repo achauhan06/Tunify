@@ -25,23 +25,39 @@
 
     </com.google.android.material.appbar.AppBarLayout>-->
 
-    <TextView
-        android:id="@+id/main_text_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome"
-        app:layout_constraintBottom_toTopOf="@id/main_input_email"
+    <LinearLayout
+        android:id="@+id/main_email_password_linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:id="@+id/main_text_welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Tunify"
+        android:textAlignment="center"
+        android:textSize="15pt"
+        android:padding="10dp"
+
+
          />
 
     <EditText
         android:id="@+id/main_input_email"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:hint="email"
+        android:textAlignment="center"
+        android:textSize="10pt"
+        android:padding="10dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@id/main_input_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -54,10 +70,13 @@
 
     <EditText
         android:id="@+id/main_input_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="password"
+        android:textSize="10pt"
+        android:layout_margin="10dp"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@id/main_button_logIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -68,18 +87,22 @@
 
     </EditText>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        >
+
+
     <Button
         android:id="@+id/main_button_logIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:layout_margin="10dp"
         android:padding="10dp"
         android:text="log in"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/main_button_register"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_input_password"
+        android:layout_alignParentStart="true"
 
         >
 
@@ -89,18 +112,17 @@
         android:id="@+id/main_button_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:layout_margin="10dp"
         android:padding="10dp"
         android:text="register"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toEndOf="@id/main_button_logIn"
-        app:layout_constraintTop_toBottomOf="@id/main_input_password"
+        android:layout_alignParentEnd="true"
         >
 
     </Button>
+    </RelativeLayout>
 
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity  extends AppCompatActivity {
 
@@ -86,6 +88,8 @@ public class HomeActivity  extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.logout_title:
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     Toast.makeText(HomeActivity.this, "Logout",Toast.LENGTH_SHORT).show();
                     break;
                 default:
