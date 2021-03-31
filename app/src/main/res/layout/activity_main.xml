@@ -30,18 +30,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome"
-        app:layout_constraintBottom_toTopOf="@id/main_input_username"
+        app:layout_constraintBottom_toTopOf="@id/main_input_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
          />
 
     <EditText
-        android:id="@+id/main_input_username"
+        android:id="@+id/main_input_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="user name"
+        android:inputType="textEmailAddress"
+        android:hint="email"
         app:layout_constraintBottom_toTopOf="@id/main_input_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

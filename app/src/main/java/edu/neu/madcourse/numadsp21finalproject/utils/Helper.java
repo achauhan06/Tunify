@@ -10,7 +10,7 @@ public class Helper {
     public static final String NO_INTERNET = "No internet connection";
     public static String SERVER_KEY = "AAAAf-Efg5c:APA91bH5jUEnPT04fw-qdgAMl5ghx_ZAgNL6x4cMKoxz9MRoMEXYS2g4UHOEEuDs2Eb2ysEFfgtp48D8oxMpCiUt7ir6ezA09tv0FjvyH1mQ6jUtLkO_4_xadmzKlgQXfmNVmXgGoarB";
 
-    private final static String USER_NAME = "userName";
+    private final static String EMAIL = "email";
     private final static String PASSWORD = "password";
     private final static String LOGGED_IN = "loggedIn";
     private final static String USER_TOKEN = "userToken";
@@ -27,10 +27,10 @@ public class Helper {
         return PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
     }
 
-    public static void setUserNamePassword(Context ctx, String userName, String password)
+    public static void setEmailPassword(Context ctx, String userName, String password)
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
-        editor.putString(USER_NAME, userName);
+        editor.putString(EMAIL, userName);
         editor.putString(PASSWORD, password);
         editor.putBoolean(LOGGED_IN, true);
         editor.apply();
@@ -43,9 +43,9 @@ public class Helper {
         editor.apply();
     }
 
-    public static String getUserName(Context ctx)
+    public static String getEmail(Context ctx)
     {
-        return getSharedPreferences(ctx.getApplicationContext()).getString(USER_NAME, "");
+        return getSharedPreferences(ctx.getApplicationContext()).getString(EMAIL, "");
     }
 
     public static String getPassword(Context ctx)
