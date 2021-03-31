@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logInService(View view, String userName, String password){
+        Intent intent = new Intent(view.getContext(),HomeActivity.class);
+        startActivity(intent);
 
     }
 }
