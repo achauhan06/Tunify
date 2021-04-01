@@ -1,9 +1,15 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -22,6 +28,7 @@ public class HomeActivity  extends AppCompatActivity {
    private DrawerLayout drawer;
    private ActionBarDrawerToggle toggle;
    private ImageButton searchButton;
+   private EditText searchTextBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,14 @@ public class HomeActivity  extends AppCompatActivity {
         searchButton.setOnClickListener(v ->
                 Toast.makeText(HomeActivity.this,"search clicked", Toast.LENGTH_SHORT)
                         .show());
+        searchTextBox = findViewById(R.id.search_box);
+   /*     searchTextBox.setOnFocusChangeListener((v, hasFocus) -> {
+            if(!hasFocus){
+                searchTextBox.setCursorVisible(false);
+            }
+        });*/
+
+
     }
 
     private void setBottomNavigationListener() {
@@ -122,5 +137,27 @@ public class HomeActivity  extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_top_menu, menu);
         return true;
+    }
+
+    //citation: https://stackoverflow.com/a/39212571
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                EditText edit = ((EditText) v);
+                Rect outR = new Rect();
+                edit.getGlobalVisibleRect(outR);
+                Boolean isKeyboardOpen = !outR.contains((int)ev.getRawX(), (int)ev.getRawY());
+                if (isKeyboardOpen) {
+                    edit.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
+                }
+                edit.setCursorVisible(!isKeyboardOpen);
+
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }
