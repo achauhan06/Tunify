@@ -2,6 +2,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class HomeActivity  extends AppCompatActivity {
         toggle.syncState();
         setNavigationListener();
         setBottomNavigationListener();
+        toolbar.setNavigationIcon(R.drawable.back);
     }
 
     private void setBottomNavigationListener() {
@@ -90,7 +92,6 @@ public class HomeActivity  extends AppCompatActivity {
                 case R.id.logout_title:
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    Toast.makeText(HomeActivity.this, "Logout",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     return true;
@@ -106,5 +107,12 @@ public class HomeActivity  extends AppCompatActivity {
         if(toggle.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.home_top_menu, menu);
+        return true;
     }
 }
