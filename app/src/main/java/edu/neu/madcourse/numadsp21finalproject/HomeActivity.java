@@ -1,14 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +21,7 @@ public class HomeActivity  extends AppCompatActivity {
 
    private DrawerLayout drawer;
    private ActionBarDrawerToggle toggle;
-   private EditText searchText;
+   private ImageButton searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,33 +45,10 @@ public class HomeActivity  extends AppCompatActivity {
     }
 
     private void setSearchComponent() {
-        searchText = findViewById(R.id.search_box);
-        searchText.setOnClickListener(v -> Toast.makeText(HomeActivity.this,"search clicked", Toast.LENGTH_SHORT).show());
-
-        searchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                /*System.out.println("In Before");
-                System.out.println(s.toString());*/
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                /*System.out.println("In OnText");
-                System.out.println(s.toString());*/
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                /*System.out.println("In After");
-                System.out.println(s.toString());*/
-            }
-        });
-        searchText.setOnFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus){
-                Toast.makeText(HomeActivity.this,"search focus", Toast.LENGTH_SHORT).show();
-            }
-        });
+        searchButton = findViewById(R.id.search_icon);
+        searchButton.setOnClickListener(v ->
+                Toast.makeText(HomeActivity.this,"search clicked", Toast.LENGTH_SHORT)
+                        .show());
     }
 
     private void setBottomNavigationListener() {

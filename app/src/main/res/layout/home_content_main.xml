@@ -22,24 +22,27 @@
             android:paddingTop="2dp"
             android:paddingEnd="16dp">
 
-            <ImageView
-                android:id="@+id/search_icon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:backgroundTint="@color/primaryLightColor"
-                android:background="@drawable/image_box"
-                android:src="@drawable/baseline_search_black_18dp"/>
+
 
             <EditText
                 android:id="@+id/search_box"
                 android:layout_width="match_parent"
                 android:hint="@string/search_hint"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:textColorHint="@color/primaryDarkColor"
                 android:backgroundTint="@color/primaryLightColor"
                 android:background="@drawable/search_box"
                 android:inputType="textCapWords"
                 android:layout_weight="1"
                 android:layout_height="36dp" />
+            <ImageButton
+                android:id="@+id/search_icon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:backgroundTint="@color/primaryDarkColor"
+                android:foreground="@drawable/search_button_effect"
+                android:background="@drawable/search_image_box"
+                android:src="@drawable/baseline_search_black_18dp"/>
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 

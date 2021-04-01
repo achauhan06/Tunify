@@ -22,4 +22,6 @@
     <style name="Theme.Tunify.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Tunify.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--<style name="Theme.Tunify.color"-->
 </resources>

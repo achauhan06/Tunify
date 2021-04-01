@@ -5,9 +5,9 @@
         android:color="@color/primaryLightColor"/>
 
     <corners
-        android:bottomLeftRadius="16dp"
-        android:topLeftRadius="16dp"/>
+        android:bottomRightRadius="16dp"
+        android:topRightRadius="16dp"/>
     <stroke
-        android:color="#ffffff"
+        android:color="@color/primaryDarkColor"
         android:width="1dp"/>
 </shape>
