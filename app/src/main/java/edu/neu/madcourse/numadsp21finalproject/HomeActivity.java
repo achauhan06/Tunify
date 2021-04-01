@@ -1,9 +1,15 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +45,6 @@ public class HomeActivity  extends AppCompatActivity {
         toggle.syncState();
         setNavigationListener();
         setBottomNavigationListener();
-        toolbar.setNavigationIcon(R.drawable.back);
     }
 
     private void setBottomNavigationListener() {
@@ -106,13 +111,44 @@ public class HomeActivity  extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(toggle.onOptionsItemSelected(item))
             return true;
+/*        if(item.getItemId() == R.id.search) {
+            showExpandedMenu(item);
+        }*/
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showExpandedMenu(MenuItem searchViewItem) {
+        SearchView searchView = (SearchView) searchViewItem.getActionView();
+        /*searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Search");
+        searchView.setSubmitButtonEnabled(true);
+        Toolbar.LayoutParams layoutParams =
+                new Toolbar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        80,
+                        Gravity.CENTER | Gravity.RIGHT);
+        searchView.setLayoutParams(layoutParams);*/
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                // This is your adapter that will be filtered
+                Toast.makeText(getApplicationContext(),"textChanged :"+newText,Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                // **Here you can get the value "query" which is entered in the search box.**
+                Toast.makeText(getApplicationContext(),"searchvalue :"+query,Toast.LENGTH_LONG).show();
+                return true;
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_top_menu, menu);
+        //showExpandedMenu(menu.findItem(R.id.search));
         return true;
     }
 }

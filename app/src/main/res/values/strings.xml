@@ -9,4 +9,5 @@
     <string name="welcome">Welcome</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+    <string name="search_hint">Search</string>
 </resources>
