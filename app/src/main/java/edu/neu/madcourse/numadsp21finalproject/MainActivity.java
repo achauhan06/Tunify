@@ -19,6 +19,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
+    Button register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,22 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         logIn();
+        register = findViewById(R.id.main_button_register);
+        register.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                startRegisterActivity();
+            }
+        }
+
+        );
+
+    }
+
+    private void startRegisterActivity() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void logIn() {

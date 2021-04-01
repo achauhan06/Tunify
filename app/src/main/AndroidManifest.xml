@@ -25,6 +25,7 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar">
         </activity>
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
