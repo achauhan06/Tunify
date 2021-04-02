@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:inputType="text"
         android:hint="last name"
-        app:layout_constraintBottom_toTopOf="@id/register_dob"
+        app:layout_constraintBottom_toTopOf="@id/openAlertDialogButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +59,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_last_name">
+        app:layout_constraintTop_toBottomOf="@id/openAlertDialogButton">
     </EditText>
+
+    <EditText
+        android:id="@+id/openAlertDialogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Choose genres"
+        app:layout_constraintBottom_toTopOf="@id/register_dob"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_last_name"
+        android:textColor="@android:color/white">
+    </EditText>
+
+    <TextView
+        android:id="@+id/selectedItemPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/register_dob"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_last_name"
+        android:textSize="18sp">
+    </TextView>
 
     <EditText
         android:id="@+id/register_email"
