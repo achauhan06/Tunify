@@ -30,7 +30,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Tunify.NoActionBar">
+    <style name="Theme.Tunify.NoActionBar" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -39,5 +39,4 @@
 
     <style name="Theme.Tunify.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!--<style name="Theme.Tunify.color"-->
 </resources>

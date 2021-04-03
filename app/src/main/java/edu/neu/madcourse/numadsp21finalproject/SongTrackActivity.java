@@ -1,9 +1,12 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -17,18 +20,24 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private YouTubePlayerView youtubePlayerView;
     private String songUrl;
     private String songName;
+    private ImageButton youtubeBackButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.song_track_layout);
         Toolbar toolbar = findViewById(R.id.toolbar_song_track_view);
+        setActionBar(toolbar);
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setTitle("");
         /*setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
         createYoutubeView();
+        youtubeBackButton = findViewById(R.id.youtubeBackButton);
+        youtubeBackButton.setOnClickListener(v-> this.finish());
     }
 
     private void createYoutubeView() {
@@ -39,6 +48,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                         YouTubePlayer youTubePlayer, boolean b) {
                         youTubePlayer.cueVideo("xNN372Ud0EE");
+                        youTubePlayer.play();
                     }
 
                     @Override
