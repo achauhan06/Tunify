@@ -41,6 +41,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryHolder>{
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         CategoryItem currentItem = categories.get(position);
         holder.categoryName.setText(currentItem.getCategoryName());
+        if (currentItem.isLocked()) {
+            holder.imageView.setVisibility(View.VISIBLE);
+            holder.categoryButton.setVisibility(View.INVISIBLE);
+        } else {
+            holder.categoryButton.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.INVISIBLE);
+        }
 
     }
 

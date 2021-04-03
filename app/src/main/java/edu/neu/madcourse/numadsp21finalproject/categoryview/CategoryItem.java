@@ -37,4 +37,8 @@ public class CategoryItem implements CategoryViewListener{
                 (ArrayList<? extends Parcelable>) songsList);
         context.startActivity(intent);
     }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
 }

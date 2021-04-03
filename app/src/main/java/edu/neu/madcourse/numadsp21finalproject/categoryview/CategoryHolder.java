@@ -13,7 +13,8 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class CategoryHolder extends RecyclerView.ViewHolder{
 
-    public TextView categoryName;
+    public TextView
+            categoryName;
     public Button categoryButton;
     public ImageView imageView;
 
@@ -23,7 +24,7 @@ public class CategoryHolder extends RecyclerView.ViewHolder{
         super(itemView);
         categoryName = itemView.findViewById(R.id.category_item);
         categoryButton = itemView.findViewById(R.id.category_button);
-        //imageView = itemView.findViewById(R.id.locked);
+        imageView = itemView.findViewById(R.id.category_lock);
 
         categoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
