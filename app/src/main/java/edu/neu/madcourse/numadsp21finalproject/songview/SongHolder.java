@@ -13,14 +13,16 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 public class SongHolder extends RecyclerView.ViewHolder{
 
     public TextView songName;
+    public Button songPlay;
 
     public SongHolder(@NonNull View itemView,
                       Context context,
                       final SongViewListener songViewListener) {
         super(itemView);
         songName = itemView.findViewById(R.id.song_item);
+        songPlay = itemView.findViewById(R.id.play_button);
 
-        songName.setOnClickListener(v -> {
+        songPlay.setOnClickListener(v -> {
             if (songViewListener != null) {
                 int position = getLayoutPosition();
                 songViewListener.onItemClick(position,context);

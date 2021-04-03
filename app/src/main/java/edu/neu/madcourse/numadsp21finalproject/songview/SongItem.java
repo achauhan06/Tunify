@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 import edu.neu.madcourse.numadsp21finalproject.SongListActivity;
+import edu.neu.madcourse.numadsp21finalproject.SongTrackActivity;
 
 public class SongItem implements Parcelable,SongViewListener {
 
@@ -66,7 +67,7 @@ public class SongItem implements Parcelable,SongViewListener {
 
     @Override
     public void onItemClick(int position, Context context) {
-        Intent intent = new Intent(context, SongListActivity.class);
+        Intent intent = new Intent(context, SongTrackActivity.class);
         intent.putExtra("songName", songName);
         intent.putExtra("songUrl", songURL);
         context.startActivity(intent);
