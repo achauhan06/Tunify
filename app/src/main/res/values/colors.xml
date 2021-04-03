@@ -8,7 +8,17 @@
     <color name="secondaryDarkColor">#af8eb5</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
-    <color name="button1Color">#94BC6A</color>
-    <color name="button2Color">#000000</color>
-    <color name="button3Color">#000000</color>
+    <color name="button1Color">#AF88BA</color>
+    <color name="button2Color">#94BC6A</color>
+    <color name="button3Color">#A0C8F8</color>
+
+    <!--Colors for practice section-->
+    <color name="practicePrimaryColor">#af88ba</color>
+    <color name="practicePrimaryLightColor">#e1b8ec</color>
+    <color name="practicePrimaryDarkColor">#7f5b8a</color>
+    <color name="practiceSecondaryColor">#d1c4e9</color>
+    <color name="practiceSecondaryLightColor">#fff7ff</color>
+    <color name="practiceSecondaryDarkColor">#a094b7</color>
+    <color name="practicePrimaryTextColor">#000000</color>
+    <color name="practiceSecondaryTextColor">#000000</color>
 </resources>

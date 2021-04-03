@@ -30,11 +30,11 @@
         <activity
             android:name=".CategoryListActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar"/>
+            android:theme="@style/Theme.Tunify.Practice"/>
         <activity
             android:name=".SongListActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar"/>
+            android:theme="@style/Theme.Tunify.Practice"/>
     </application>
 
 </manifest>

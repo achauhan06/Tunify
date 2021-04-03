@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
@@ -24,16 +25,17 @@ public class SongListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<SongItem> songList = getIntent().getParcelableExtra("songs");
+        setContentView(R.layout.song_main);
         Toolbar toolbar = findViewById(R.id.toolbar_song);
         setSupportActionBar(toolbar);
-        setContentView(R.layout.song_main);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        List<SongItem> songList = getIntent().getParcelableExtra("songs");
         createRecyclerView();
     }
 
     private void createRecyclerView() {
+        songItemList = new ArrayList<>();
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.song_recycler_view);
         recyclerView.setHasFixedSize(true);

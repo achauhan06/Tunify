@@ -67,7 +67,7 @@
                 android:id="@+id/practice_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#DDAF88BA"
+                android:backgroundTint="@color/button1Color"
                 android:onClick="onClick"
                 android:text="Practice" />
         </LinearLayout>
@@ -82,7 +82,7 @@
                 android:id="@+id/jam_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/button1Color"
+                android:backgroundTint="@color/button2Color"
                 android:onClick="onClick"
                 android:text="Jam" />
         </LinearLayout>
@@ -96,7 +96,7 @@
                 android:id="@+id/meet_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#A0C8F8"
+                android:backgroundTint="@color/button3Color"
                 android:onClick="onClick"
                 android:text="Meet" />
         </LinearLayout>
