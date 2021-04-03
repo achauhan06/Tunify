@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import edu.neu.madcourse.numadsp21finalproject.R;
+
 public class SongHolder extends RecyclerView.ViewHolder{
 
     public TextView songName;
@@ -16,5 +18,13 @@ public class SongHolder extends RecyclerView.ViewHolder{
                       Context context,
                       final SongViewListener songViewListener) {
         super(itemView);
+        songName = itemView.findViewById(R.id.song_item);
+
+        songName.setOnClickListener(v -> {
+            if (songViewListener != null) {
+                int position = getLayoutPosition();
+                songViewListener.onItemClick(position,context);
+            }
+        });
     }
 }

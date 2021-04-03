@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
@@ -20,7 +19,7 @@ public class SongListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private SongAdapter songAdapter;
-    private List<SongItem> songItemList;
+    private ArrayList<SongItem> songItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +29,18 @@ public class SongListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<SongItem> songList = getIntent().getParcelableExtra("songs");
+        songItemList = getIntent().getParcelableArrayListExtra("songs");
         createRecyclerView();
     }
 
     private void createRecyclerView() {
-        songItemList = new ArrayList<>();
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.song_recycler_view);
         recyclerView.setHasFixedSize(true);
         SongViewListener songViewListener = new SongViewListener() {
             @Override
             public void onItemClick(int position, Context context) {
-
+                songItemList.get(position).onItemClick(position,context);
             }
         };
         songAdapter = new SongAdapter(songItemList, songViewListener, this);

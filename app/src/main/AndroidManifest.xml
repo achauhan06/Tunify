@@ -35,6 +35,10 @@
             android:name=".SongListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Practice"/>
+        <activity
+            android:name=".SongTrackActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.Practice"/>
     </application>
 
 </manifest>
