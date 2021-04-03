@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+
 public class RegisterActivity extends AppCompatActivity {
     EditText edittext;
 
@@ -50,8 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText bOpenAlertDialog = findViewById(R.id.openAlertDialogButton);
         final TextView tvSelectedItemsPreview = findViewById(R.id.selectedItemPreview);
 
-        final String[] listItems = new String[]{"Rock", "Pop", "Hip Hop", "Blues", "Jazz", "Reggae", "Folk", "Country", "Classical",
-        "Soul", "R&B", "Heavy Metal"};
+        final String[] listItems = Helper.CATEGORY_LIST;
         final boolean[] checkedItems = new boolean[listItems.length];
 
         final List<String> selectedItems = Arrays.asList(listItems);

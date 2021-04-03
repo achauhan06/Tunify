@@ -64,9 +64,11 @@
             app:layout_constraintTop_toTopOf="@+id/buttons_section">
 
             <Button
+                android:id="@+id/practice_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#DDAF88BA"
+                android:onClick="onClick"
                 android:text="Practice" />
         </LinearLayout>
 
@@ -77,9 +79,11 @@
             android:layout_margin="3dp">
 
             <Button
+                android:id="@+id/jam_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button1Color"
+                android:onClick="onClick"
                 android:text="Jam" />
         </LinearLayout>
         <LinearLayout
@@ -89,9 +93,11 @@
             android:layout_margin="3dp">
 
             <Button
+                android:id="@+id/meet_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#A0C8F8"
+                android:onClick="onClick"
                 android:text="Meet" />
         </LinearLayout>
 

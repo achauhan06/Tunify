@@ -23,9 +23,18 @@
         <activity
             android:name=".HomeActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar">
-        </activity>
-        <activity android:name=".RegisterActivity"></activity>
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
+        <activity
+            android:name=".RegisterActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".CategoryListActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
+        <activity
+            android:name=".SongListActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
     </application>
 
 </manifest>

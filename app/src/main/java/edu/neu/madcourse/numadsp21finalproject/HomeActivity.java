@@ -23,7 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class HomeActivity  extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
    private DrawerLayout drawer;
    private ActionBarDrawerToggle toggle;
@@ -51,6 +51,21 @@ public class HomeActivity  extends AppCompatActivity {
         setSearchComponent();
     }
 
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.practice_btn:
+                Intent intent = new Intent(this,CategoryListActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.jam_btn:
+                break;
+            case R.id.meet_btn:
+                break;
+            default:
+                return;
+
+        }
+    }
     private void setSearchComponent() {
         searchButton = findViewById(R.id.search_icon);
         searchButton.setOnClickListener(v ->
