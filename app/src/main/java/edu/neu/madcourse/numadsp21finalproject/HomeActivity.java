@@ -23,6 +23,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+
 public class HomeActivity extends AppCompatActivity {
 
    private DrawerLayout drawer;
@@ -118,6 +120,8 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case R.id.profile_title:
                     Toast.makeText(HomeActivity.this, "My Profile",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this,ProfileActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.settings_title:
                     Toast.makeText(HomeActivity.this, "My Settings",Toast.LENGTH_SHORT).show();
@@ -131,6 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.logout_title:
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    Toast.makeText(HomeActivity.this, "You've logged out",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     return true;
@@ -175,4 +180,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+
 }

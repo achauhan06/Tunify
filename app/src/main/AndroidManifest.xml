@@ -40,6 +40,10 @@
             android:configChanges="orientation|screenSize"
             android:title=""
             android:theme="@style/Theme.Tunify.Practice"/>
+        <activity
+            android:name=".navigation.ProfileActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
     </application>
 
 </manifest>
