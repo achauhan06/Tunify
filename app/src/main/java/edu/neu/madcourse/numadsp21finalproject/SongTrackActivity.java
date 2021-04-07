@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.DrawableRes;
@@ -19,12 +21,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
@@ -37,8 +50,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private ImageButton recordButton = null;
     private MediaRecorder recorder = null;
+    private Button save;
+    FirebaseFirestore firebaseFirestore;
 
-   // private PlayButton   playButton = null;
+    private ImageButton playButton = null;
     private MediaPlayer player = null;
 
     private boolean permissionToRecordAccepted = false;
@@ -46,6 +61,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
     boolean mStartRecording = true;
+    boolean mStartPlaying = true;
+
+    YouTubePlayer player1;
+    DocumentReference ref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,26 +83,40 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         youtubeBackButton = findViewById(R.id.youtubeBackButton);
         youtubeBackButton.setOnClickListener(v-> this.finish());
         fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/audiorecordtest.3gp";
+        fileName += "/";
+        fileName += "new_audio.mp3";
         setRecordSection();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     private void setRecordSection() {
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         recordButton = findViewById(R.id.record);
-        recordButton.setOnClickListener(new View.OnClickListener(
+        recordButton.setOnClickListener(v -> {
+            onRecord(mStartRecording);
+            if (mStartRecording) {
+                recordButton.setImageResource(R.drawable.microphone);
 
-        ) {
-            @Override
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    recordButton.setImageResource(R.drawable.microphone);
-                } else {
-                    recordButton.setImageResource(R.drawable.microphone_block);
-                }
-                mStartRecording = !mStartRecording;
+            } else {
+                recordButton.setImageResource(R.drawable.microphone_block);
             }
+            mStartRecording = !mStartRecording;
+        });
+
+        playButton = findViewById(R.id.play);
+        playButton.setOnClickListener(v -> {
+            onPlay(mStartPlaying);
+            if (mStartPlaying) {
+                playButton.setImageResource(R.drawable.stop);
+            } else {
+                playButton.setImageResource(R.drawable.play);
+            }
+            mStartPlaying = !mStartPlaying;
+        });
+
+        save = findViewById(R.id.save);
+        save.setOnClickListener(v-> {
+            uploadAudio();
         });
     }
 
@@ -95,6 +128,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                         YouTubePlayer youTubePlayer, boolean b) {
                         youTubePlayer.cueVideo("xNN372Ud0EE");
+                        player1 = youTubePlayer;
                         youTubePlayer.play();
                     }
 
@@ -175,6 +209,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             Log.e(LOG_TAG, "prepare() failed");
         }
 
+        player1.play();
         recorder.start();
     }
 
@@ -184,28 +219,34 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder = null;
     }
 
+    private void uploadAudio() {
+        /*mProgressDialog.setMessage("Uploading Audio...");//declare it globally and initialize it with passing the current activity i.e this
+        mProgressDialog.show();*/
 
-/*    class PlayButton extends androidx.appcompat.widget.AppCompatButton {
-        boolean mStartPlaying = true;
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("audio/mpeg")
+                .build();
 
-        View.OnClickListener clicker = new View.OnClickListener() {
-            public void onClick(View v) {
-                onPlay(mStartPlaying);
-                if (mStartPlaying) {
-                    setText("Stop playing");
-                } else {
-                    setText("Start playing");
-                }
-                mStartPlaying = !mStartPlaying;
+        ref = firebaseFirestore.collection("recordings").document("file1");
+        Map<String, Object> reg_entry = new HashMap<>();
+        reg_entry.put("fileName", "new_audio.mp3");
+        ref.set(reg_entry);
+
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference mFilePath = mStorageRef.child("aishwarya").child("songs");
+
+        Uri u = Uri.fromFile(new File(fileName));
+        mFilePath.putFile(u,metadata).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(SongTrackActivity.this,"Done",Toast.LENGTH_SHORT);
+
+               // mProgressDialog.dismiss();
+                //mTextView.setText("Audio has been Uploaded Successfully !!!");
             }
-        };
+        });
+    }
 
-        public PlayButton(Context ctx) {
-            super(ctx);
-            setText("Start playing");
-            setOnClickListener(clicker);
-        }
-    }*/
 
 
 }
