@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.2.1'
     implementation 'com.google.firebase:firebase-inappmessaging:19.0.7'
     implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-firestore:22.1.2'
     implementation 'com.google.firebase:firebase-auth:20.0.3'
 
     implementation 'androidx.navigation:navigation-ui:2.3.4'

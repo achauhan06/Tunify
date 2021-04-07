@@ -7,30 +7,61 @@ import android.content.DialogInterface;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText edittext;
+    Button reg_registration;
+    FirebaseFirestore firebaseFirestore;
+    FirebaseAuth auth;
+    DocumentReference ref;
+    EditText firstName;
+    EditText lastName;
+    EditText dob;
+    EditText email;
+    EditText password;
+    EditText passwordConfirmation;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+        firebaseFirestore = FirebaseFirestore.getInstance();
         edittext = (EditText) findViewById(R.id.register_dob);
-
+        reg_registration = findViewById(R.id.register);
+        firstName = findViewById(R.id.register_first_name);
+        lastName = findViewById(R.id.register_last_name);
+        dob = findViewById(R.id.register_dob);
+        email = findViewById(R.id.register_email);
+        password = findViewById(R.id.register_password);
+        passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
+        auth = FirebaseAuth.getInstance();
         edittext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +141,49 @@ public class RegisterActivity extends AppCompatActivity {
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+        });
+        reg_registration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (firstName.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please enter your First Name", Toast.LENGTH_SHORT).show();
+
+                } else if (email.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please type an email id", Toast.LENGTH_SHORT).show();
+
+                } else if (dob.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please enter a DOB", Toast.LENGTH_SHORT).show();
+
+                } else if (lastName.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
+
+                } else if (password.getText().toString().equals("")){
+                    Toast.makeText(RegisterActivity.this, "Please type a password", Toast.LENGTH_SHORT).show();
+
+                } else if (!passwordConfirmation.getText().toString().equals(password.getText().toString())){
+                    Toast.makeText(RegisterActivity.this, "Password mismatch", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    auth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim()).addOnCompleteListener((task) -> {
+                        if (task.isSuccessful()) {
+                            userId = auth.getCurrentUser().getUid();
+                            DocumentReference reference1 = firebaseFirestore.collection("users").document(userId);
+                            Map<String, Object> reg_entry = new HashMap<>();
+                            reg_entry.put("First Name", firstName.getText().toString());
+                            reg_entry.put("Last Name", lastName.getText().toString());
+                            reg_entry.put("Email", email.getText().toString());
+                            reg_entry.put("Password", password.getText().toString());
+                            reg_entry.put("Date of Birth", dob.getText().toString());
+                            reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     }
