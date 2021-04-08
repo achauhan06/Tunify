@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -46,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     EditText passwordConfirmation;
+    TextView genres;
     String userId;
 
     @Override
@@ -61,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         email = findViewById(R.id.register_email);
         password = findViewById(R.id.register_password);
         passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
+        genres = findViewById(R.id.selectedItemPreview);
         auth = FirebaseAuth.getInstance();
         edittext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
                         for (int i = 0; i < checkedItems.length; i++) {
                             if (checkedItems[i]) {
                                 tvSelectedItemsPreview.setText(tvSelectedItemsPreview.getText() + selectedItems.get(i) + ", ");
+                                bOpenAlertDialog.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -173,14 +177,20 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("First Name", firstName.getText().toString());
                             reg_entry.put("Last Name", lastName.getText().toString());
                             reg_entry.put("Email", email.getText().toString());
+                            reg_entry.put("Genres", genres.getText().toString());
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
                             reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-
+                                    Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                 }
                             });
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
