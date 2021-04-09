@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 
 public class HomeActivity extends AppCompatActivity {
@@ -93,6 +94,8 @@ public class HomeActivity extends AppCompatActivity {
                    break;
                case R.id.navigation_friends:
                    Toast.makeText(HomeActivity.this, "My Friends",Toast.LENGTH_SHORT).show();
+                   Intent intent = new Intent(this, FriendsActivity.class);
+                   startActivity(intent);
                    break;
                case R.id.navigation_library:
                    Toast.makeText(HomeActivity.this, "My Library",Toast.LENGTH_SHORT).show();

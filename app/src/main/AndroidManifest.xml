@@ -45,6 +45,10 @@
             android:name=".navigation.ProfileActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"/>
+        <activity
+            android:name=".bottomNavigation.FriendsActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
     </application>
 
 </manifest>
