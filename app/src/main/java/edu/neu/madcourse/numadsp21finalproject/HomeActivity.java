@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
                    Toast.makeText(HomeActivity.this, "My Home",Toast.LENGTH_SHORT).show();
                    break;
                case R.id.navigation_friends:
-                   Toast.makeText(HomeActivity.this, "My Friends",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(HomeActivity.this, "My Friends",Toast.LENGTH_SHORT).show();
                    Intent intent = new Intent(this, FriendsActivity.class);
                    startActivity(intent);
                    break;

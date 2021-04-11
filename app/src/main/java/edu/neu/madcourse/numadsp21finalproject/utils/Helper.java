@@ -17,6 +17,10 @@ public class Helper {
     private final static String PASSWORD = "password";
     private final static String LOGGED_IN = "loggedIn";
     private final static String USER_TOKEN = "userToken";
+    private final static String FIRST_NAME = "first_name";
+    private final static String LAST_NAME = "last_name";
+
+
 
     //citation: https://stackoverflow.com/a/51070246
     public static boolean isOnline(Context context) {
@@ -39,6 +43,14 @@ public class Helper {
         editor.apply();
     }
 
+    public static void setName(Context ctx, String first_name, String last_name)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
+        editor.putString(FIRST_NAME, first_name);
+        editor.putString(LAST_NAME, last_name);
+        editor.apply();
+    }
+
 
     public static void setUserToken(Context ctx, String userToken) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
@@ -56,9 +68,19 @@ public class Helper {
         return getSharedPreferences(ctx.getApplicationContext()).getString(PASSWORD, "");
     }
 
-    public static Boolean getLoggedIn(Context ctx)
+    public static Boolean getLoggedInStatus(Context ctx)
     {
         return getSharedPreferences(ctx.getApplicationContext()).getBoolean(LOGGED_IN, false);
+    }
+
+    public static String getFirstName(Context ctx)
+    {
+        return getSharedPreferences(ctx.getApplicationContext()).getString(FIRST_NAME, "");
+    }
+
+    public static String getLastName(Context ctx)
+    {
+        return getSharedPreferences(ctx.getApplicationContext()).getString(LAST_NAME, "");
     }
 
     public static void clearLoggedInName(Context ctx)

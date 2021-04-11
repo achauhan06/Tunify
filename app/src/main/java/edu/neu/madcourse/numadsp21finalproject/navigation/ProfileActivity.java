@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,8 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -26,13 +29,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -42,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fireStore;
     FirebaseUser user;
-    String userId;
+    String userId, oldUserName, newUserName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,17 +78,8 @@ public class ProfileActivity extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(userId);
+        setProfile(documentReference);
 
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                email.setText(value.getString("Email"));
-                first_name.setText(value.getString("First Name"));
-                last_name.setText(value.getString("Last Name"));
-                dob.setText(value.getString("Date of Birth"));
-
-            }
-        });
 
         dob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,46 +120,123 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    fireStore.getInstance().runTransaction(new Transaction.Function<Void>() {
-                        @Nullable
-                        @Override
-                        public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                            DocumentSnapshot documentSnapshot = transaction.get(documentReference);
-                            transaction.update(documentReference, "First Name", first_name.getText().toString());
-                            transaction.update(documentReference, "Last Name", last_name.getText().toString());
-                            transaction.update(documentReference, "Date of Birth", dob.getText().toString());
 
-                            return null;
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProfileActivity.this, "Unable to update your profile", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
+                    updateProfile(documentReference);
                 }
 
-
-                }
-
-
+            }
         });
-
-
 
     }
 
 
+        public void setProfile(DocumentReference documentReference) {
+            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    email.setText(value.getString("Email"));
+                    String first_name_str = value.getString("First Name");
+                    first_name.setText(first_name_str);
+                    String last_name_str = value.getString("Last Name");
+                    last_name.setText(last_name_str);
+                    dob.setText(value.getString("Date of Birth"));
+                    oldUserName = first_name_str + " " + last_name_str;
+                    Toast.makeText(ProfileActivity.this, oldUserName, Toast.LENGTH_SHORT).show();
 
-    @Override
+
+                }
+            });
+
+        }
+
+
+        public void updateProfile(DocumentReference documentReference) {
+            fireStore.getInstance().runTransaction(new Transaction.Function<Void>() {
+                @Nullable
+                @Override
+                public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                    DocumentSnapshot documentSnapshot = transaction.get(documentReference);
+                    transaction.update(documentReference, "First Name", first_name.getText().toString());
+                    transaction.update(documentReference, "Last Name", last_name.getText().toString());
+                    transaction.update(documentReference, "Date of Birth", dob.getText().toString());
+
+                    return null;
+                }
+            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    newUserName = first_name.getText().toString() + " " + last_name.getText().toString();
+                    updateFriendShips();
+                    // Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Unable to update your profile", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+        }
+
+        public void updateFriendShips() {
+            fireStore.getInstance().collection("friendships")
+                    .whereArrayContains("friends", userId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                for(DocumentSnapshot documentSnapshot : task.getResult()) {
+                                    String name1 = documentSnapshot.get("name1").toString();
+                                    DocumentReference documentReference = documentSnapshot.getReference();
+                                    if(name1.equals(oldUserName)) {
+                                        updateFriendShipsName(documentReference, "name1");
+                                    }else {
+                                        updateFriendShipsName(documentReference, "name2");
+                                    }
+
+
+                                }
+
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Error updating friendship name", Toast.LENGTH_SHORT).show();
+                                Log.d("firebase", "Error updating friendship name", task.getException());
+                            }
+                        }
+                    });
+
+        }
+
+        private void updateFriendShipsName(DocumentReference documentReference, String field) {
+            fireStore.getInstance().runTransaction(new Transaction.Function<Void>() {
+                @Nullable
+                @Override
+                public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                    DocumentSnapshot documentSnapshot = transaction.get(documentReference);
+                    transaction.update(documentReference, field, newUserName);
+                    return null;
+                }
+            }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(ProfileActivity.this, "Friends list name updated", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Unable to update your name on friends list", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+
+
+
+
+        @Override
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
