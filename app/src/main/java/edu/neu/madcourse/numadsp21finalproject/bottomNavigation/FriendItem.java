@@ -8,6 +8,7 @@ import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 
 public class FriendItem implements FriendViewClickListener{
     private Context context;
+    private final String userId;
     private final String friendId;
     private final String friendName;
 
@@ -17,8 +18,9 @@ public class FriendItem implements FriendViewClickListener{
         return friendName;
     }
 
-    public FriendItem(String friendId, String friendName,Context context){
+    public FriendItem(String userId, String friendId, String friendName,Context context){
         this.context = context;
+        this.userId = userId;
         this.friendId = friendId;
         this.friendName = friendName;
 
@@ -27,11 +29,12 @@ public class FriendItem implements FriendViewClickListener{
 
     @Override
     public void onItemClick(int position) {
-        // Intent intent = new Intent(context, FriendsActivity.class);
-        // intent.putExtra("friendId", friendId);
-        // intent.putExtra("friendName", friendName);
-        // context.startActivity(intent);
-        Toast.makeText(context, friendId + " " + friendName,Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(context, FriendProfile.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", friendName);
+        context.startActivity(intent);
+        // Toast.makeText(context, friendId + " " + friendName,Toast.LENGTH_LONG).show();
 
     }
 }

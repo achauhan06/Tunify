@@ -76,7 +76,7 @@ public class FriendsActivity extends AppCompatActivity {
         // Toast.makeText(this, userName,Toast.LENGTH_SHORT).show();
 
 
-        // query for all friendships
+        // query for all current user's friendships
         fireStore.getInstance().collection("friendships")
                 .whereArrayContains("friends", userId)
                 .get()
@@ -102,7 +102,7 @@ public class FriendsActivity extends AppCompatActivity {
                                 }
 
                                 // add friend item to friend list
-                                FriendItem friend = new FriendItem( friendId, friendName, FriendsActivity.this);
+                                FriendItem friend = new FriendItem( userId, friendId, friendName, FriendsActivity.this);
                                 friendsList.add(friend);
                                 // Toast.makeText(FriendsActivity.this, friendName,Toast.LENGTH_SHORT).show();
 
