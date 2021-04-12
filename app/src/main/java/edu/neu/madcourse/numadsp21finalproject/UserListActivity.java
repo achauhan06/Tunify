@@ -28,11 +28,14 @@ public class UserListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.users);
+        userItemList = new ArrayList<>();
+
         Toolbar toolbar = findViewById(R.id.toolbar_user);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userItemList = getIntent().getParcelableArrayListExtra("users");
+
+        // userItemList = getIntent().getParcelableArrayListExtra("users");
         createRecyclerView();
     }
 
