@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
    private ActionBarDrawerToggle toggle;
    private ImageButton searchButton;
    private EditText searchTextBox;
+   private Button meet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,14 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //meet = findViewById(R.id.meet_btn);
+        /*meet.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startMeetActivity();
+            }
+        });*/
 
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -63,6 +73,8 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.jam_btn:
                 break;
             case R.id.meet_btn:
+                Intent intent1 = new Intent(this, UserListActivity.class);
+                startActivity(intent1);
                 break;
             default:
                 return;
@@ -82,6 +94,13 @@ public class HomeActivity extends AppCompatActivity {
         });*/
 
 
+    }
+
+    private void startMeetActivity() {
+        Toast.makeText(HomeActivity.this, "Meeting",Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, UserListActivity.class);
+        startActivity(intent);
     }
 
     private void setBottomNavigationListener() {
