@@ -31,6 +31,8 @@ public class UserListActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
     private ArrayList<UserItem> userItemList;
     private FirebaseFirestore db;
+    private ArrayList<UserItem> userItemList2;
+
 
 
     @Override
@@ -39,6 +41,10 @@ public class UserListActivity extends AppCompatActivity {
         setContentView(R.layout.users);
         userItemList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
+        UserItem user1 = new UserItem("user1", "");
+        userItemList2 = new ArrayList<>();
+
+        userItemList2.add(user1);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar_user);
@@ -54,15 +60,21 @@ public class UserListActivity extends AppCompatActivity {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
-                                UserItem users = d.toObject(UserItem.class);
-                                userItemList.add(users);
+                                String userName = d.getString("First Name") + " " + d.getString("Last Name");
+                                UserItem user = new UserItem(userName, "");
+                                //userItemList
+                                //UserItem users = d.toObject(UserItem.class);
+                                userItemList.add(user);
+                                Toast.makeText(UserListActivity.this, userName, Toast.LENGTH_SHORT).show();
+
                             }
                         } else {
                             Toast.makeText(UserListActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
                         }
+                        createRecyclerView();
+
                     }
                 });
-        createRecyclerView();
     }
 
     private void createRecyclerView() {
