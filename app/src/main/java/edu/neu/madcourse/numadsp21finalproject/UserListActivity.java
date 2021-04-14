@@ -48,10 +48,10 @@ public class UserListActivity extends AppCompatActivity {
         profile = findViewById(R.id.profile_button);
         userItemList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
-        UserItem user1 = new UserItem("user1", "");
+        //UserItem user1 = new UserItem("user1", "");
         userItemList2 = new ArrayList<>();
 
-        userItemList2.add(user1);
+        //userItemList2.add(user1);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar_user);
@@ -67,11 +67,12 @@ public class UserListActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 String userName = d.getString("First Name") + " " + d.getString("Last Name");
-                                UserItem user = new UserItem(userName, "");
+                                String email = d.getString("Email");
+                                UserItem user = new UserItem(userName, "", email);
                                 //userItemList
                                 //UserItem users = d.toObject(UserItem.class);
                                 userItemList.add(user);
-                                //Toast.makeText(UserListActivity.this, userName, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
 
                             }
                         } else {

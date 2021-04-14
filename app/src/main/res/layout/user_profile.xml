@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_first_name"
+                    android:id="@+id/user_profile_first_name"
                     android:inputType="text"
                     android:text=""
                     android:textSize="10pt"
@@ -152,7 +152,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_last_name"
+                    android:id="@+id/user_profile_last_name"
                     android:text=""
                     android:textSize="10pt"
                     android:padding="5dp"
@@ -183,7 +183,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_dob"
+                    android:id="@+id/user_profile_dob"
                     android:text=""
                     android:inputType="date"
                     android:textSize="10pt"
@@ -215,9 +215,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_genre"
+                    android:id="@+id/user_profile_genre"
                     android:text=""
-                    android:hint="Rock"
+                    android:hint=""
                     android:textSize="10pt"
                     android:padding="5dp"
                     android:textColor="@color/primaryTextColor"
