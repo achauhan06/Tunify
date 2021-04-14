@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -240,15 +241,16 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         StorageReference mFilePath = mStorageRef.child("aishwarya").child("songs");
 
         Uri u = Uri.fromFile(new File(fileName));
-        mFilePath.putFile(u,metadata).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(SongTrackActivity.this,"Done",Toast.LENGTH_SHORT);
+        mFilePath.putFile(u,metadata).addOnSuccessListener(taskSnapshot -> Snackbar.make(findViewById(android.R.id.content),
+                "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-               // mProgressDialog.dismiss();
-                //mTextView.setText("Audio has been Uploaded Successfully !!!");
-            }
-        });
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                .show());
     }
 
 

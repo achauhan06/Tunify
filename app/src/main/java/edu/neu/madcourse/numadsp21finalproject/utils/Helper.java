@@ -5,6 +5,16 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
+
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 
 public class Helper {
     public static final String NO_INTERNET = "No internet connection";
@@ -13,13 +23,14 @@ public class Helper {
     public static String[] CATEGORY_LIST = {"Rock", "Pop", "Hip Hop", "Blues", "Jazz", "Reggae", "Folk", "Country", "Classical",
             "Soul", "R&B", "Heavy Metal"};
 
+    public static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private final static String EMAIL = "email";
     private final static String PASSWORD = "password";
     private final static String LOGGED_IN = "loggedIn";
     private final static String USER_TOKEN = "userToken";
     private final static String FIRST_NAME = "first_name";
     private final static String LAST_NAME = "last_name";
-
 
 
     //citation: https://stackoverflow.com/a/51070246

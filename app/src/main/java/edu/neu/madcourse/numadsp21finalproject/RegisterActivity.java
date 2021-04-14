@@ -73,12 +73,16 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month,
                                           int day) {
 
+
                         String a = day+ "/" + (month + 1) +"/" +year;
                         edittext.setText(""+a);
                     }
                 };
-                Time date = new Time();
-                DatePickerDialog d = new DatePickerDialog(RegisterActivity.this, dpd, date.year ,date.month, date.monthDay);
+                final Calendar newCalendar = Calendar.getInstance();
+                DatePickerDialog d = new DatePickerDialog(RegisterActivity.this, dpd,
+                        newCalendar.get(Calendar.YEAR),
+                        newCalendar.get(Calendar.MONTH),
+                        newCalendar.get(Calendar.DAY_OF_MONTH));
                 d.show();
             }
         });

@@ -8,7 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryAdapter;
@@ -23,6 +28,7 @@ public class CategoryListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CategoryAdapter categoryAdapter;
     private List<CategoryItem> categoryItemList;
+    private String currentEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +39,36 @@ public class CategoryListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        currentEmail = getIntent().getExtras().getString("currentEmail");
         createRecyclerView();
     }
 
     private void createRecyclerView() {
 
+
+
+        Helper.db.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
+
+            String[] genreArray;
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot d : list) {
+                        String email1 = d.getString("Email");
+                        if (currentEmail.equals(email1)) {
+                            String genresString = d.getString("Genres");
+                            genreArray = genresString.split(",");
+                            break;
+                        }
+                    }
+                }
+                createCategoryListView(Arrays.asList(genreArray));
+            }
+        });
+    }
+
+    private void createCategoryListView(List<String> selectedCategories) {
         categoryItemList = new ArrayList<>();
         for(int i = 0; i<Helper.CATEGORY_LIST.length; i++) {
             List<SongItem> songItemList = new ArrayList(){{
@@ -48,7 +79,7 @@ public class CategoryListActivity extends AppCompatActivity {
             }};
             CategoryItem categoryItem = new CategoryItem(Helper.CATEGORY_LIST[i],
                     songItemList,
-                    i > 2);
+                    !selectedCategories.contains(Helper.CATEGORY_LIST[i]));
             categoryItemList.add(categoryItem);
         }
 
