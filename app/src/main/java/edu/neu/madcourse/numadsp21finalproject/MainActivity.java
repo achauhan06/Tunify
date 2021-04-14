@@ -95,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Logged in successfully.",
                             Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.putExtra("email", email);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Unable to log in.",
                             Toast.LENGTH_SHORT).show();

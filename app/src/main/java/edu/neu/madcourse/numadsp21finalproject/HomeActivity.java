@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
@@ -34,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
    private ImageButton searchButton;
    private EditText searchTextBox;
    private Button meet;
+   private String currentEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,13 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            currentEmail = user.getEmail();
+        } else {
+            currentEmail = getIntent().getStringExtra("email");
+        }
+
         //meet = findViewById(R.id.meet_btn);
         /*meet.setOnClickListener(new View.OnClickListener() {
 
@@ -68,12 +77,14 @@ public class HomeActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.practice_btn:
                 Intent intent = new Intent(this,CategoryListActivity.class);
+                intent.putExtra("currentEmail", currentEmail);
                 startActivity(intent);
                 break;
             case R.id.jam_btn:
                 break;
             case R.id.meet_btn:
                 Intent intent1 = new Intent(this, UserListActivity.class);
+                intent1.putExtra("currentEmail", currentEmail);
                 startActivity(intent1);
                 break;
             default:
