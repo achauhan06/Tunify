@@ -6,6 +6,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import edu.neu.madcourse.numadsp21finalproject.SongTrackActivity;
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
 
 public class UserItem implements Parcelable, UserViewListener{
@@ -13,14 +16,26 @@ public class UserItem implements Parcelable, UserViewListener{
     private String userName;
     private String profileLink;
 
-    public UserItem(String userName, String profileLink) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    private String email;
+
+    public UserItem(String userName, String profileLink, String email) {
         this.userName =  userName;
         this.profileLink = profileLink;
+        this.email = email;
     }
 
     public UserItem(Parcel in) {
         this.userName = in.readString();
         this.profileLink = in.readString();
+        this.email = in.readString();
     }
 
     @Override
@@ -64,10 +79,10 @@ public class UserItem implements Parcelable, UserViewListener{
 
     @Override
     public void onItemClick(int position, Context context) {
-        /*Intent intent = new Intent(context, SongTrackActivity.class);
-        intent.putExtra("userName", userName);
-        intent.putExtra("profileLink", profileLink);
-        context.startActivity(intent);*/
+        Intent intent = new Intent(context, UserProfileActivity.class);
+        intent.putExtra("email", email);
+        //intent.putExtra("profileLink", profileLink);
+        context.startActivity(intent);
     }
 
 

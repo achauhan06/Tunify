@@ -50,7 +50,7 @@ public class FriendProfile extends AppCompatActivity {
         first_name = findViewById(R.id.profile_first_name);
         last_name = findViewById(R.id.profile_last_name);
         dob = findViewById(R.id.profile_dob);
-        // genre = findViewById(R.id.profile_genre);
+        genre = findViewById(R.id.profile_genre);
         unfriendBtn = findViewById(R.id.unfriend_btn);
 
 

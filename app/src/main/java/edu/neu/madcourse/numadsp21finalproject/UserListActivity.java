@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,10 +16,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
@@ -32,6 +37,7 @@ public class UserListActivity extends AppCompatActivity {
     private ArrayList<UserItem> userItemList;
     private FirebaseFirestore db;
     private ArrayList<UserItem> userItemList2;
+    private Button profile;
 
 
 
@@ -39,6 +45,7 @@ public class UserListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.users);
+        profile = findViewById(R.id.profile_button);
         userItemList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         UserItem user1 = new UserItem("user1", "");
@@ -52,8 +59,7 @@ public class UserListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // userItemList = getIntent().getParcelableArrayListExtra("users");
-        db.collection("users").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -65,7 +71,7 @@ public class UserListActivity extends AppCompatActivity {
                                 //userItemList
                                 //UserItem users = d.toObject(UserItem.class);
                                 userItemList.add(user);
-                                Toast.makeText(UserListActivity.this, userName, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(UserListActivity.this, userName, Toast.LENGTH_SHORT).show();
 
                             }
                         } else {
@@ -74,7 +80,7 @@ public class UserListActivity extends AppCompatActivity {
                         createRecyclerView();
 
                     }
-                });
+        });
     }
 
     private void createRecyclerView() {
@@ -90,6 +96,14 @@ public class UserListActivity extends AppCompatActivity {
         userAdapter = new UserAdapter(userItemList, userViewListener, this);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(userAdapter);
+        /*profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(UserListActivity.this, "My Profile",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserListActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });*/
 
     }
 
