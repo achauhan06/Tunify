@@ -1,0 +1,30 @@
+package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import edu.neu.madcourse.numadsp21finalproject.R;
+
+public class LibraryHolder extends RecyclerView.ViewHolder {
+    TextView libraryItemName;
+    Button libraryItemBtn;
+
+    public LibraryHolder(@NonNull View itemView, Context context, LibraryViewClickListener libraryViewClickListener) {
+        super(itemView);
+
+        libraryItemName = itemView.findViewById(R.id.library_item_name);
+        libraryItemBtn = itemView.findViewById(R.id.library_item_button);
+
+        libraryItemBtn.setOnClickListener(v -> {
+            if (libraryViewClickListener != null) {
+                int position = getLayoutPosition();
+                libraryViewClickListener.onItemClick(position);
+            }
+        });
+    }
+}

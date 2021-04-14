@@ -63,6 +63,10 @@
             android:name=".bottomNavigation.FriendProfile"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"/>
+        <activity
+            android:name=".bottomNavigation.LibraryActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
     </application>
 
 </manifest>
