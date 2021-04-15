@@ -19,24 +19,39 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryAdapter;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryViewClickListener;
+import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
+import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
+import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
-   private DrawerLayout drawer;
-   private ActionBarDrawerToggle toggle;
-   private ImageButton searchButton;
-   private EditText searchTextBox;
-   private Button meet;
-   private String currentEmail;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private ImageButton searchButton;
+    private EditText searchTextBox;
+    private Button meet;
+    private String currentEmail;
+
+    private RecyclerView.LayoutManager rLayoutManger;
+    private RecyclerView recyclerView;
+    private FeedsAdapter feedsAdapter;
+    private ArrayList<FeedsItem> feedsItemArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +75,10 @@ public class HomeActivity extends AppCompatActivity {
                 startMeetActivity();
             }
         });*/
+        feedsItemArrayList = new ArrayList<>();
+
+
+
 
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -72,6 +91,8 @@ public class HomeActivity extends AppCompatActivity {
         setNavigationListener();
         setBottomNavigationListener();
         setSearchComponent();
+        createFeedsRecyclerView();
+
     }
 
     public void onClick(View view) {
@@ -216,6 +237,31 @@ public class HomeActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+    private void createFeedsRecyclerView() {
+        FeedsItem item1 = new FeedsItem("test1","path","genre",this);
+        FeedsItem item2 = new FeedsItem("test2","path","genre",this);
+        feedsItemArrayList.add(item1);
+        feedsItemArrayList.add(item2);
+        feedsItemArrayList.add(item1);
+        feedsItemArrayList.add(item2);
+        feedsItemArrayList.add(item1);
+        feedsItemArrayList.add(item2);
+        rLayoutManger = new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.feeds_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        FeedsViewListener feedsViewListener = new FeedsViewListener() {
+            @Override
+            public void onItemClick(int position) {
+                feedsItemArrayList.get(position).onItemClick(position);
+            }
+        };
+        feedsAdapter = new FeedsAdapter(feedsItemArrayList, feedsViewListener, this);
+        recyclerView.setLayoutManager(rLayoutManger);
+        recyclerView.setAdapter(feedsAdapter);
+
+    }
+
 
 
 }
