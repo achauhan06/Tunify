@@ -5,10 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,31 +13,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText edittext;
+    EditText dateEditText;
     Button reg_registration;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
-    DocumentReference ref;
     EditText firstName;
     EditText lastName;
     EditText dob;
@@ -49,13 +45,14 @@ public class RegisterActivity extends AppCompatActivity {
     EditText passwordConfirmation;
     TextView genres;
     String userId;
+    List<String> selectedGenres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
         firebaseFirestore = FirebaseFirestore.getInstance();
-        edittext = (EditText) findViewById(R.id.register_dob);
+        dateEditText = (EditText) findViewById(R.id.register_dob);
         reg_registration = findViewById(R.id.register);
         firstName = findViewById(R.id.register_first_name);
         lastName = findViewById(R.id.register_last_name);
@@ -65,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
         genres = findViewById(R.id.selectedItemPreview);
         auth = FirebaseAuth.getInstance();
-        edittext.setOnClickListener(new View.OnClickListener() {
+        dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog.OnDateSetListener dpd = new DatePickerDialog.OnDateSetListener() {
@@ -74,15 +71,23 @@ public class RegisterActivity extends AppCompatActivity {
                                           int day) {
 
 
-                        String a = day+ "/" + (month + 1) +"/" +year;
-                        edittext.setText(""+a);
+                        String dateFormat = day+ "/" + (month + 1) +"/" +year;
+                        dateEditText.setText("" + dateFormat);
                     }
                 };
                 final Calendar newCalendar = Calendar.getInstance();
+                int[] dateArray = new int[]{newCalendar.get(Calendar.YEAR),
+                        newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH)};
+                if(!dateEditText.getText().toString().isEmpty()) {
+                    String[] dateInStringArray =
+                            dateEditText.getText().toString().split("/");
+                    dateArray = new int[]{Integer.parseInt(dateInStringArray[2]),
+                            Integer.parseInt(dateInStringArray[1])-1,
+                            Integer.parseInt(dateInStringArray[0])};
+                }
+
                 DatePickerDialog d = new DatePickerDialog(RegisterActivity.this, dpd,
-                        newCalendar.get(Calendar.YEAR),
-                        newCalendar.get(Calendar.MONTH),
-                        newCalendar.get(Calendar.DAY_OF_MONTH));
+                        dateArray[0], dateArray[1], dateArray[2]);
                 d.show();
             }
         });
@@ -120,12 +125,14 @@ public class RegisterActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        selectedGenres = new ArrayList<>();
                         for (int i = 0; i < checkedItems.length; i++) {
                             if (checkedItems[i]) {
-                                tvSelectedItemsPreview.setText(tvSelectedItemsPreview.getText() + selectedItems.get(i) + ", ");
+                                selectedGenres.add(selectedItems.get(i));
                                 bOpenAlertDialog.setVisibility(View.GONE);
                             }
                         }
+                        tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
                     }
                 });
 
@@ -181,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("First Name", firstName.getText().toString());
                             reg_entry.put("Last Name", lastName.getText().toString());
                             reg_entry.put("Email", email.getText().toString());
-                            reg_entry.put("Genres", genres.getText().toString());
+                            reg_entry.put("Genres", String.join(";",selectedGenres));
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
                             reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -58,7 +58,7 @@ public class CategoryListActivity extends AppCompatActivity {
                         String email1 = d.getString("Email");
                         if (currentEmail.equals(email1)) {
                             String genresString = d.getString("Genres");
-                            genreArray = genresString.split(",");
+                            genreArray = genresString.split(";");
                             break;
                         }
                     }
