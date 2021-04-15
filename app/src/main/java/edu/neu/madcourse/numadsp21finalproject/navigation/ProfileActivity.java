@@ -141,8 +141,6 @@ public class ProfileActivity extends AppCompatActivity {
                     last_name.setText(last_name_str);
                     dob.setText(value.getString("Date of Birth"));
                     oldUserName = first_name_str + " " + last_name_str;
-                    Toast.makeText(ProfileActivity.this, oldUserName, Toast.LENGTH_SHORT).show();
-
 
                 }
             });
@@ -167,8 +165,6 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onSuccess(Void aVoid) {
                     newUserName = first_name.getText().toString() + " " + last_name.getText().toString();
                     updateFriendShips();
-                    // Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
-
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

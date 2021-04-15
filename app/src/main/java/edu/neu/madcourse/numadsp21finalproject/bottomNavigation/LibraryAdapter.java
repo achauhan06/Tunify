@@ -37,6 +37,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryHolder> {
     public void onBindViewHolder(@NonNull LibraryHolder holder, int position) {
         LibraryItem currentItem = libraryItemArrayList.get(position);
         holder.libraryItemName.setText(currentItem.getProjectName());
+        holder.libraryItemGenre.setText(currentItem.getGenre());
 
     }
 

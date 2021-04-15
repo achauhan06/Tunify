@@ -12,12 +12,14 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class LibraryHolder extends RecyclerView.ViewHolder {
     TextView libraryItemName;
+    TextView libraryItemGenre;
     Button libraryItemBtn;
 
     public LibraryHolder(@NonNull View itemView, Context context, LibraryViewClickListener libraryViewClickListener) {
         super(itemView);
 
         libraryItemName = itemView.findViewById(R.id.library_item_name);
+        libraryItemGenre = itemView.findViewById(R.id.library_item_genre);
         libraryItemBtn = itemView.findViewById(R.id.library_item_button);
 
         libraryItemBtn.setOnClickListener(v -> {

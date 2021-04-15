@@ -17,16 +17,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:layout_margin="10dp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/library_item_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/library_item_name"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:layout_margin="10dp"
+            />
 
         <Button
             android:id="@+id/library_item_button"
-            android:text="play"
+            android:text="play | pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
