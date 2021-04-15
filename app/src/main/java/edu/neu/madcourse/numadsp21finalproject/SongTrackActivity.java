@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -83,9 +84,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         setActionBar(toolbar);
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setTitle("");
-        /*setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -100,7 +98,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         youtubeBackButton.setOnClickListener(v-> this.finish());
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
-        fileName += "new_audio.mp3";
+        fileName += songName+".mp3";
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
@@ -214,10 +212,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
     private void startRecording() {
         recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(fileName);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
             recorder.prepare();
@@ -249,10 +247,19 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         ref.set(reg_entry);
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference mFilePath = mStorageRef.child(currentEmail).child(reg_entry.get("fileName"));
+        StorageReference mFilePath = mStorageRef.child("audios")
+                .child(userId)
+                .child(reg_entry.get("fileName"));
 
-        Uri u = Uri.fromFile(new File(fileName));
-        mFilePath.putFile(u,metadata).addOnSuccessListener(taskSnapshot ->
+        Uri uri = Uri.fromFile(new File(fileName));
+        mFilePath.putFile(uri,metadata)
+                .addOnProgressListener(taskSnapshot -> {
+
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    System.out.println("Upload is " + progress + "% done");
+                })
+
+                .addOnSuccessListener(taskSnapshot ->
                 Snackbar.make(findViewById(android.R.id.content),
                 "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
