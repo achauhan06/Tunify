@@ -28,6 +28,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -60,6 +62,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
     private ImageButton playButton = null;
     private MediaPlayer player = null;
+    private String userId;
 
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -67,6 +70,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private static final String LOG_TAG = "AudioRecordTest";
     boolean mStartRecording = true;
     boolean mStartPlaying = true;
+    private String currentEmail;
 
     YouTubePlayer player1;
     DocumentReference ref;
@@ -84,6 +88,13 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            currentEmail = user.getEmail();
+            userId = user.getUid();
+        } else {
+            currentEmail = getIntent().getStringExtra("email");
+        }
         createYoutubeView();
         youtubeBackButton = findViewById(R.id.youtubeBackButton);
         youtubeBackButton.setOnClickListener(v-> this.finish());
@@ -232,16 +243,17 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 .setContentType("audio/mpeg")
                 .build();
 
-        ref = firebaseFirestore.collection("recordings").document("file1");
-        Map<String, Object> reg_entry = new HashMap<>();
-        reg_entry.put("fileName", "new_audio.mp3");
+        ref = firebaseFirestore.collection("recordings").document(userId);
+        Map<String, String> reg_entry = new HashMap<>();
+        reg_entry.put("fileName", songName+".mp3");
         ref.set(reg_entry);
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference mFilePath = mStorageRef.child("aishwarya").child("songs");
+        StorageReference mFilePath = mStorageRef.child(currentEmail).child(reg_entry.get("fileName"));
 
         Uri u = Uri.fromFile(new File(fileName));
-        mFilePath.putFile(u,metadata).addOnSuccessListener(taskSnapshot -> Snackbar.make(findViewById(android.R.id.content),
+        mFilePath.putFile(u,metadata).addOnSuccessListener(taskSnapshot ->
+                Snackbar.make(findViewById(android.R.id.content),
                 "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
                     @Override

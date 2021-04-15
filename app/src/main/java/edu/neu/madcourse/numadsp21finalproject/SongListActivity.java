@@ -21,6 +21,7 @@ public class SongListActivity extends AppCompatActivity {
     private SongAdapter songAdapter;
     private ArrayList<SongItem> songItemList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
