@@ -34,15 +34,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_song_track_view" />
 
     <TableLayout
         android:id="@+id/songDetailsTable"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:textSize="12dp"
         app:layout_constraintBottom_toTopOf="@+id/play"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,13 +51,20 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="1px"
+            android:background="@drawable/tablebackground"
+            android:paddingRight="1dp"
+            android:paddingBottom="1dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
+                android:background="@drawable/tablebackground"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="Song Name: "
                 android:textStyle="bold" />
 
@@ -65,19 +72,29 @@
                 android:id="@+id/songName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
-                android:ems="15" />
+                android:background="@drawable/tablebackground"
+                android:padding="5dp" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="1px"
+            android:background="@drawable/tablebackground"
+            android:paddingRight="1dp"
+            android:paddingBottom="1dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
+                android:background="@drawable/tablebackground"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="Duration: "
                 android:textStyle="bold" />
 
@@ -85,19 +102,29 @@
                 android:id="@+id/songDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
-                android:ems="15" />
+                android:background="@drawable/tablebackground"
+                android:padding="5dp" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="1px"
+            android:background="@drawable/tablebackground"
+            android:paddingRight="1dp"
+            android:paddingBottom="1dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
+                android:background="@drawable/tablebackground"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="Artist: "
                 android:textStyle="bold" />
 
@@ -105,8 +132,11 @@
                 android:id="@+id/songArtist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:layout_margin="2dp"
                 android:layout_weight="3"
-                android:ems="15" />
+                android:background="@drawable/tablebackground"
+                android:padding="5dp" />
         </TableRow>
     </TableLayout>
 
