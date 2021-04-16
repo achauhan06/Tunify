@@ -43,7 +43,7 @@
         android:background="@color/primaryLightColor"
         android:foreground="@drawable/search_button_effect"
         android:src="@drawable/microphone_block"
-        app:layout_constraintBottom_toTopOf="@+id/save"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toStartOf="@+id/play"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/youtubePlayerView" />
@@ -55,10 +55,21 @@
         android:background="@color/primaryLightColor"
         android:foreground="@drawable/search_button_effect"
         android:src="@drawable/play"
-        app:layout_constraintBottom_toTopOf="@+id/save"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/record"
         app:layout_constraintTop_toBottomOf="@id/youtubePlayerView" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/save"
+        />
 
     <Button
         android:id="@+id/save"
@@ -67,7 +78,7 @@
         android:text="SAVE"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/play"
+        app:layout_constraintTop_toBottomOf="@+id/chronometer"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     boolean mStartRecording = true;
     boolean mStartPlaying = true;
     private String currentEmail;
+    Chronometer chronometer;
 
     YouTubePlayer player1;
     DocumentReference ref;
@@ -93,6 +95,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         } else {
             currentEmail = getIntent().getStringExtra("email");
         }
+
+        chronometer = (Chronometer)findViewById(R.id.chronometer);
         createYoutubeView();
         youtubeBackButton = findViewById(R.id.youtubeBackButton);
         youtubeBackButton.setOnClickListener(v-> this.finish());
@@ -225,12 +229,14 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
         player1.play();
         recorder.start();
+        chronometer.start();
     }
 
     private void stopRecording() {
         recorder.stop();
         recorder.release();
         recorder = null;
+        chronometer.stop();
     }
 
     private void uploadAudio() {
