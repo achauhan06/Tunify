@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -80,6 +81,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     Chronometer chronometer;
 
     YouTubePlayer player1;
+    ProgressBar recordingProgressbar;
     DocumentReference ref;
 
     @Override
@@ -112,6 +114,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         fileName += songName+".mp3";
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        recordingProgressbar = findViewById(R.id.recordProgressBar);
+        recordingProgressbar.setMax(100);
     }
 
     private void setSongsDetailSection() {
@@ -253,6 +257,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder.release();
         recorder = null;
         chronometer.stop();
+        recordingProgressbar.setProgress(0);
     }
 
     private void uploadAudio() {

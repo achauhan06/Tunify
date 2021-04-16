@@ -140,6 +140,16 @@
         </TableRow>
     </TableLayout>
 
+    <ProgressBar
+        android:id="@+id/recordProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/chronometer"
+        app:layout_constraintEnd_toStartOf="@+id/play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
+
     <ImageButton
         android:id="@+id/record"
         android:layout_width="40dp"
@@ -150,7 +160,7 @@
         app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toStartOf="@+id/play"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
+        app:layout_constraintTop_toBottomOf="@id/songDetailsTable"/>
 
     <ImageButton
         android:id="@+id/play"
@@ -161,7 +171,7 @@
         android:src="@drawable/play"
         app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/record"
+        app:layout_constraintStart_toEndOf="@+id/recordProgressBar"
         app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
 
     <Chronometer
@@ -183,6 +193,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chronometer"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
