@@ -126,7 +126,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
         recordingProgressbar = findViewById(R.id.recordProgressBar);
-        recordingProgressbar.setMax(100);
+        recordingProgressbar.setMax(length);
     }
 
     private void setSongsDetailSection() {

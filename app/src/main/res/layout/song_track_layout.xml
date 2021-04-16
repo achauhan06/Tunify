@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryLightColor"
-    tools:visibility="visible">
+    tools:context=".SongTrackActivity"
+    >
 
 
     <Toolbar
@@ -18,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_scrollFlags="scroll|enterAlways">
-
         <ImageButton
             android:id="@+id/youtubeBackButton"
             android:layout_width="wrap_content"
@@ -29,178 +29,206 @@
             tools:layout_editor_absoluteY="18dp" />
     </Toolbar>
 
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:id="@+id/youtubePlayerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ScrollView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_song_track_view" />
-
-    <TableLayout
-        android:id="@+id/songDetailsTable"
-        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_song_track_view"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/recordProgressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/youtubePlayerView">
+        android:layout_width="match_parent">
 
-        <TableRow
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/tablebackground"
-            android:paddingRight="1dp"
-            android:paddingBottom="1dp">
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_song_track_view">
 
-            <TextView
+            <com.google.android.youtube.player.YouTubePlayerView
+                android:id="@+id/youtubePlayerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+
+            <TableLayout
+                android:id="@+id/songDetailsTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toTopOf="@+id/recordProgressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/youtubePlayerView">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@drawable/tablebackground"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Song Name: "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/songName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:padding="5dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@drawable/tablebackground"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Duration: "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/songDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:padding="5dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@drawable/tablebackground"
+                    android:paddingRight="1dp"
+                    android:paddingBottom="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Artist: "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/songArtist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="2dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/tablebackground"
+                        android:padding="5dp" />
+                </TableRow>
+            </TableLayout>
+
+            <ProgressBar
+                android:id="@+id/recordProgressBar"
+                style="?android:progressBarStyleHorizontal"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/background_circle"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="-90"
+                app:layout_constraintBottom_toTopOf="@+id/chronometer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
+
+            <ImageButton
+                android:id="@+id/record"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/primaryLightColor"
+                android:foreground="@drawable/microphone_background"
+                android:src="@drawable/microphone_block"
+                app:layout_constraintBottom_toTopOf="@+id/chronometer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
+
+            <Chronometer
+                android:id="@+id/chronometer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Song Name: "
-                android:textStyle="bold" />
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/record" />
 
-            <TextView
-                android:id="@+id/songName"
+            <ImageButton
+                android:id="@+id/play"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@color/primaryLightColor"
+                android:foreground="@drawable/microphone_background"
+                android:src="@drawable/play"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@id/save"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/songDetailsTable"/>
+
+            <Button
+                android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:padding="5dp" />
-        </TableRow>
+                android:text="Publish Song"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                android:outlineAmbientShadowColor="@color/secondaryLightColor"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/play"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/tablebackground"
-            android:paddingRight="1dp"
-            android:paddingBottom="1dp">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Duration: "
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/songDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:padding="5dp" />
-        </TableRow>
+    </ScrollView>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/tablebackground"
-            android:paddingRight="1dp"
-            android:paddingBottom="1dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Artist: "
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/songArtist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_margin="2dp"
-                android:layout_weight="3"
-                android:background="@drawable/tablebackground"
-                android:padding="5dp" />
-        </TableRow>
-    </TableLayout>
-
-    <ProgressBar
-        android:id="@+id/recordProgressBar"
-        style="?android:progressBarStyleHorizontal"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/background_circle"
-        android:progressDrawable="@drawable/progress_circle"
-        android:rotation="-90"
-        app:layout_constraintBottom_toTopOf="@+id/chronometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
-
-    <ImageButton
-        android:id="@+id/record"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/primaryLightColor"
-        android:foreground="@drawable/microphone_background"
-        android:src="@drawable/microphone_block"
-        app:layout_constraintBottom_toTopOf="@+id/chronometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
-
-    <Chronometer
-        android:id="@+id/chronometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/record" />
-
-    <ImageButton
-        android:id="@+id/play"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@color/primaryLightColor"
-        android:foreground="@drawable/microphone_background"
-        android:src="@drawable/play"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songDetailsTable"/>
-
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Publish Song"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/play"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 
