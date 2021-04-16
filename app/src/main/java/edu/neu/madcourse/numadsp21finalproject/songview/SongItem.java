@@ -28,6 +28,7 @@ public class SongItem implements Parcelable,SongViewListener {
         this.songName = in.readString();
         this.songLength = in.readString();
         this.songURL =  in.readString();
+        this.songArtist =  in.readString();
     }
 
     @Override
@@ -35,6 +36,7 @@ public class SongItem implements Parcelable,SongViewListener {
         dest.writeString(songName);
         dest.writeString(songLength);
         dest.writeString(songURL);
+        dest.writeString(songArtist);
     }
 
     @Override
