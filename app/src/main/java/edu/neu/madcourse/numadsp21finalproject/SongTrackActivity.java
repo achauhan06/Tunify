@@ -2,6 +2,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -22,6 +24,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -66,7 +69,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private ImageButton recordButton = null;
     private MediaRecorder recorder = null;
-    private Button save;
+    private Button saveSong;
     FirebaseFirestore firebaseFirestore;
 
     private ImageButton playButton = null;
@@ -112,7 +115,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             currentEmail = getIntent().getStringExtra("email");
         }
 
-        chronometer = (Chronometer)findViewById(R.id.chronometer);
+        chronometer = findViewById(R.id.chronometer);
         createYoutubeView();
         setSongsDetailSection();
         youtubeBackButton = findViewById(R.id.youtubeBackButton);
@@ -140,28 +143,21 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recordButton = findViewById(R.id.record);
         recordButton.setOnClickListener(v -> {
             onRecord(mStartRecording);
-            if (mStartRecording) {
-                recordButton.setImageResource(R.drawable.microphone);
-
-            } else {
-                recordButton.setImageResource(R.drawable.microphone_block);
-            }
-            mStartRecording = !mStartRecording;
         });
 
         playButton = findViewById(R.id.play);
         playButton.setOnClickListener(v -> {
             onPlay(mStartPlaying);
             if (mStartPlaying) {
-                playButton.setImageResource(R.drawable.stop);
+                playButton.setImageResource(R.drawable.stop_button);
             } else {
                 playButton.setImageResource(R.drawable.play);
             }
             mStartPlaying = !mStartPlaying;
         });
 
-        save = findViewById(R.id.save);
-        save.setOnClickListener(v-> {
+        saveSong = findViewById(R.id.save);
+        saveSong.setOnClickListener(v-> {
             uploadAudio();
         });
     }
@@ -192,12 +188,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         this.finish();
     }
 
-    /*@Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -213,8 +203,26 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private void onRecord(boolean start) {
         if (start) {
             startRecording();
+            mStartRecording = false;
         } else {
-            stopRecording();
+            pauseRecording();
+            AlertDialog.Builder songCloseAlert
+                    = new AlertDialog
+                    .Builder(SongTrackActivity.this);
+            songCloseAlert.setMessage("Do you want stop recording?");
+            songCloseAlert.setTitle("Recording Paused");
+            songCloseAlert.setCancelable(false);
+            songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
+                        stopRecording();
+                    });
+
+            songCloseAlert.setNegativeButton("No", (dialog, which) -> {
+                isRecording = true;
+                resumeRecording();
+                dialog.cancel();
+            });
+            AlertDialog alertDialog = songCloseAlert.create();
+            alertDialog.show();
         }
     }
 
@@ -243,6 +251,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void startRecording() {
+        recordButton.setImageResource(R.drawable.microphone);
         recorder = new MediaRecorder();
         recorder.setOutputFile(fileName);
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -260,12 +269,16 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
         isRecording = true;
+        recordingProgressbar.setProgress(0);
+        startProgressBarForRecording();
 
+    }
 
+    private void startProgressBarForRecording() {
         Handler handler = new Handler();
         new Thread(() -> {
             progress[0] = recordingProgressbar.getProgress();
-            while (isRecording == true && progress[0] < length) {
+            while (isRecording && progress[0] < length) {
                 progress[0]++;
                 handler.post(() -> recordingProgressbar.setProgress(progress[0]));
                 try {
@@ -276,7 +289,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
             }
         }).start();
-
     }
 
     private void stopRecording() {
@@ -284,9 +296,37 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder.release();
         recorder = null;
         chronometer.stop();
-
         progress[0] = 0;
         isRecording = false;
+        recordButton.setImageResource(R.drawable.microphone_block);
+        mStartRecording = true;
+        player1.pause();
+        showPlayer();
+    }
+
+    private void showPlayer() {
+        recordingProgressbar.setVisibility(View.INVISIBLE);
+        recordButton.setVisibility(View.INVISIBLE);
+        chronometer.setVisibility(View.INVISIBLE);
+        playButton.setVisibility(View.VISIBLE);
+        saveSong.setVisibility(View.VISIBLE);
+
+    }
+
+    private void pauseRecording() {
+        recorder.pause();
+        player1.pause();
+        chronometer.stop();
+        isRecording = false;;
+    }
+
+    private void resumeRecording() {
+        recorder.resume();
+        player1.play();
+        chronometer.start();
+        isRecording = true;
+        startProgressBarForRecording();
+        mStartRecording = false;
     }
 
     private void uploadAudio() {
