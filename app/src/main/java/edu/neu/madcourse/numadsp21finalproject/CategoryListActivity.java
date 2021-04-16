@@ -71,17 +71,18 @@ public class CategoryListActivity extends AppCompatActivity {
     private void createCategoryListView(List<String> selectedCategories) {
         categoryItemList = new ArrayList<>();
         for(int i = 0; i<Helper.CATEGORY_LIST.length; i++) {
+            final String categoryName = Helper.CATEGORY_LIST[i];
             List<SongItem> songItemList = new ArrayList(){{
                 add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril"));
+                        "xNN372Ud0EE", "Avril", categoryName));
                 add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril"));
+                        "xNN372Ud0EE", "Avril", categoryName));
                 add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril"));
+                        "xNN372Ud0EE", "Avril", categoryName));
             }};
-            CategoryItem categoryItem = new CategoryItem(Helper.CATEGORY_LIST[i],
+            CategoryItem categoryItem = new CategoryItem(categoryName,
                     songItemList,
-                    !selectedCategories.contains(Helper.CATEGORY_LIST[i]));
+                    !selectedCategories.contains(categoryName));
             categoryItemList.add(categoryItem);
         }
 

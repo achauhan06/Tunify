@@ -16,12 +16,14 @@ public class SongItem implements Parcelable,SongViewListener {
     private String songLength;
     private String songURL;
     private String songArtist;
+    private String genre;
 
-    public SongItem(String songName, String songLength, String songURL, String songArtist) {
+    public SongItem(String songName, String songLength, String songURL, String songArtist, String genre) {
         this.songName = songName;
         this.songLength = songLength;
         this.songURL = songURL;
         this.songArtist = songArtist;
+        this.genre = genre;
     }
 
     public SongItem(Parcel in) {
@@ -29,6 +31,7 @@ public class SongItem implements Parcelable,SongViewListener {
         this.songLength = in.readString();
         this.songURL =  in.readString();
         this.songArtist =  in.readString();
+        this.genre = in.readString();
     }
 
     @Override
@@ -37,6 +40,7 @@ public class SongItem implements Parcelable,SongViewListener {
         dest.writeString(songLength);
         dest.writeString(songURL);
         dest.writeString(songArtist);
+        dest.writeString(genre);
     }
 
     @Override
@@ -68,6 +72,8 @@ public class SongItem implements Parcelable,SongViewListener {
         return songURL;
     }
 
+    public String getGenre() {return genre;}
+
 
     @Override
     public void onItemClick(int position, Context context) {
@@ -76,6 +82,7 @@ public class SongItem implements Parcelable,SongViewListener {
         intent.putExtra("songUrl", songURL);
         intent.putExtra("duration", songLength);
         intent.putExtra("artist", songArtist);
+        intent.putExtra("genre", genre);
         context.startActivity(intent);
     }
 }

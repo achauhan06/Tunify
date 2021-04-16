@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -38,8 +39,12 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -53,6 +58,7 @@ import com.google.firebase.storage.UploadTask;*/
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
@@ -63,6 +69,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private String songUrl;
     private String songName;
     private String duration;
+    private String categoryName;
     private int length;
     private String artist;
     private ImageButton youtubeBackButton;
@@ -101,9 +108,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         setActionBar(toolbar);
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setTitle("");
-        songName = getIntent().getStringExtra("songName");
+        songName = getIntent().getStringExtra("songName")+"12345";
         songUrl = getIntent().getStringExtra("songUrl");
         duration = getIntent().getStringExtra("duration");
+        categoryName = getIntent().getStringExtra("genre");
         String[] lengthArray = duration.split(":");
         length = Integer.parseInt(lengthArray[0])*60 + Integer.parseInt(lengthArray[1]);
         artist = getIntent().getStringExtra("artist");
@@ -330,22 +338,54 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void uploadAudio() {
-        /*mProgressDialog.setMessage("Uploading Audio...");//declare it globally and initialize it with passing the current activity i.e this
-        mProgressDialog.show();*/
+        CollectionReference collection = firebaseFirestore
+                .collection("songsList/" + userId + "/" + songName);
+        collection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Long version = -1L;
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot d : list) {
+                        String currentSongName = d.getString("songName");
+                        if (currentSongName.equals(songName)) {
+                            version = d.getLong("version");
+                            d.getReference().update("version",version+1);
+                            break;
+                        }
+                    }
 
+                    if (version > -1L) {
+                        buildSongData(version+1);
+                    }
+                }
+            }
+
+
+        });
+    }
+
+    private void buildSongData(Long version) {
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("audio/mpeg")
                 .build();
 
-        ref = firebaseFirestore.collection("recordings").document(userId);
-        Map<String, String> reg_entry = new HashMap<>();
-        reg_entry.put("fileName", songName+".mp3");
-        ref.set(reg_entry);
+        ref = firebaseFirestore.collection("recordings").document();
+        Map song_entry = new HashMap<>();
+        song_entry.put("fileName", songName+".mp3");
+        song_entry.put("genre", categoryName);
+        song_entry.put("link", "");
+        song_entry.put("name", songName);
+        song_entry.put("owner", userId);
+        song_entry.put("time", ServerValue.TIMESTAMP);
+        song_entry.put("contributors",new HashMap<>());
+        song_entry.put("version",version);
+        ref.set(song_entry);
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference mFilePath = mStorageRef.child("audios")
                 .child(userId)
-                .child(reg_entry.get("fileName"));
+                .child(songName+"_"+version+".mp3");
 
         Uri uri = Uri.fromFile(new File(fileName));
         mFilePath.putFile(uri,metadata)
@@ -356,18 +396,14 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 })
 
                 .addOnSuccessListener(taskSnapshot ->
-                Snackbar.make(findViewById(android.R.id.content),
-                "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
+                                .setAction("CLOSE", view -> {
 
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
-                .show());
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                                .show());
     }
-
 
 
 }
