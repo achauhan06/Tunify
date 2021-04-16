@@ -15,11 +15,13 @@ public class SongItem implements Parcelable,SongViewListener {
     private String songName;
     private String songLength;
     private String songURL;
+    private String songArtist;
 
-    public SongItem(String songName, String songLength, String songURL) {
+    public SongItem(String songName, String songLength, String songURL, String songArtist) {
         this.songName = songName;
         this.songLength = songLength;
         this.songURL = songURL;
+        this.songArtist = songArtist;
     }
 
     public SongItem(Parcel in) {
@@ -70,6 +72,8 @@ public class SongItem implements Parcelable,SongViewListener {
         Intent intent = new Intent(context, SongTrackActivity.class);
         intent.putExtra("songName", songName);
         intent.putExtra("songUrl", songURL);
+        intent.putExtra("duration", songLength);
+        intent.putExtra("artist", songArtist);
         context.startActivity(intent);
     }
 }

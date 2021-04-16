@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -55,6 +56,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private YouTubePlayerView youtubePlayerView;
     private String songUrl;
     private String songName;
+    private String duration;
+    private String artist;
     private ImageButton youtubeBackButton;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private ImageButton recordButton = null;
@@ -64,7 +67,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
     private ImageButton playButton = null;
     private MediaPlayer player = null;
-    private String userId;
 
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -73,6 +75,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     boolean mStartRecording = true;
     boolean mStartPlaying = true;
     private String currentEmail;
+    private String userId;
+    
     Chronometer chronometer;
 
     YouTubePlayer player1;
@@ -88,6 +92,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         getActionBar().setTitle("");
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
+        duration = getIntent().getStringExtra("duration");
+        artist = getIntent().getStringExtra("artist");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             currentEmail = user.getEmail();
@@ -98,6 +104,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
         chronometer = (Chronometer)findViewById(R.id.chronometer);
         createYoutubeView();
+        setSongsDetailSection();
         youtubeBackButton = findViewById(R.id.youtubeBackButton);
         youtubeBackButton.setOnClickListener(v-> this.finish());
         fileName = getExternalCacheDir().getAbsolutePath();
@@ -105,6 +112,15 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         fileName += songName+".mp3";
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
+    }
+
+    private void setSongsDetailSection() {
+        TextView name = findViewById(R.id.songName);
+        TextView songDuration = findViewById(R.id.songDuration);
+        TextView songArtist = findViewById(R.id.songArtist);
+        name.setText(songName);
+        songDuration.setText(duration);
+        songArtist.setText(artist);
     }
 
     private void setRecordSection() {
@@ -145,7 +161,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                         YouTubePlayer youTubePlayer, boolean b) {
-                        youTubePlayer.cueVideo("xNN372Ud0EE");
+                        youTubePlayer.cueVideo(songUrl);
                         player1 = youTubePlayer;
                         youTubePlayer.play();
                     }

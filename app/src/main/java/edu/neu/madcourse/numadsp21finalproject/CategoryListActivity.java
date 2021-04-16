@@ -72,10 +72,12 @@ public class CategoryListActivity extends AppCompatActivity {
         categoryItemList = new ArrayList<>();
         for(int i = 0; i<Helper.CATEGORY_LIST.length; i++) {
             List<SongItem> songItemList = new ArrayList(){{
-                add(new SongItem("Complicated", "Hello",
-                        "https://www.youtube.com/watch?v=vnsZ6VrprHw&ab_channel=KaraFunKaraoke"));
-                add(new SongItem("Hello1", "Hello1", "Hello1"));
-                add(new SongItem("Hello2", "Hello2", "Hello2"));
+                add(new SongItem("Complicated", "03:22",
+                        "xNN372Ud0EE", "Avril"));
+                add(new SongItem("Complicated", "03:22",
+                        "xNN372Ud0EE", "Avril"));
+                add(new SongItem("Complicated", "03:22",
+                        "xNN372Ud0EE", "Avril"));
             }};
             CategoryItem categoryItem = new CategoryItem(Helper.CATEGORY_LIST[i],
                     songItemList,
