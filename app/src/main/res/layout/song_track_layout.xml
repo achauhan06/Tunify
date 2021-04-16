@@ -142,13 +142,16 @@
 
     <ProgressBar
         android:id="@+id/recordProgressBar"
-        style="?android:attr/progressBarStyle"
+        style="?android:progressBarStyleHorizontal"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@+id/chronometer"
         app:layout_constraintEnd_toStartOf="@+id/play"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/songDetailsTable" />
+        app:layout_constraintTop_toBottomOf="@id/songDetailsTable"
+        android:rotation="-90"
+        android:background="@drawable/background_circle"
+        android:progressDrawable="@drawable/progress_circle"/>
 
     <ImageButton
         android:id="@+id/record"

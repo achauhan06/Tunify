@@ -7,6 +7,8 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +60,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private String songUrl;
     private String songName;
     private String duration;
+    private int length;
     private String artist;
     private ImageButton youtubeBackButton;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -77,6 +80,9 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     boolean mStartPlaying = true;
     private String currentEmail;
     private String userId;
+    private boolean isRecording;
+
+    final int[] progress = {0};
     
     Chronometer chronometer;
 
@@ -95,6 +101,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
         duration = getIntent().getStringExtra("duration");
+        String[] lengthArray = duration.split(":");
+        length = Integer.parseInt(lengthArray[0])*60 + Integer.parseInt(lengthArray[1]);
         artist = getIntent().getStringExtra("artist");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -249,7 +257,26 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
         player1.play();
         recorder.start();
+        chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
+        isRecording = true;
+
+
+        Handler handler = new Handler();
+        new Thread(() -> {
+            progress[0] = recordingProgressbar.getProgress();
+            while (isRecording == true && progress[0] < length) {
+                progress[0]++;
+                handler.post(() -> recordingProgressbar.setProgress(progress[0]));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
     }
 
     private void stopRecording() {
@@ -257,7 +284,9 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder.release();
         recorder = null;
         chronometer.stop();
-        recordingProgressbar.setProgress(0);
+
+        progress[0] = 0;
+        isRecording = false;
     }
 
     private void uploadAudio() {
