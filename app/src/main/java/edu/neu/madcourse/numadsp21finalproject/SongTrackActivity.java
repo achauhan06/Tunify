@@ -341,6 +341,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 .collection("songsList")
                 .document(userId);
 
+        //TODO fix path for versions
         userDocumentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
