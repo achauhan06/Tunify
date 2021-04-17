@@ -37,6 +37,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -330,9 +331,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void uploadAudio() {
-        /*CollectionReference collection = firebaseFirestore
-                .collection("songsList").document(userId).collection(songName);*/
-
         Map<String, Object> songObject = new HashMap<>();
         songObject.put("songName", songName);
         songObject.put("version", 0);
@@ -373,9 +371,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     });
 
                 } else {
-                    firebaseFirestore
-                            .collection("songsList")
-                            .document(userId).collection(songName).add(songObject);
+                    Map song_entry = new HashMap<>();
+                    song_entry.put("fileName", songName+".mp3");
+                    userDocumentReference.set(song_entry);
+                    userDocumentReference.collection(songName).add(songObject);
                     buildSongData(0L);
 
                 }
