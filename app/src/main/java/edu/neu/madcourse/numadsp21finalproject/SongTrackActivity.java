@@ -1,8 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -12,24 +10,19 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,19 +30,17 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 /*import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -57,8 +48,8 @@ import com.google.firebase.storage.UploadTask;*/
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
@@ -108,7 +99,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         setActionBar(toolbar);
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setTitle("");
-        songName = getIntent().getStringExtra("songName")+"12345";
+        //songName = getIntent().getStringExtra("songName")+"12345";
+        songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
         duration = getIntent().getStringExtra("duration");
         categoryName = getIntent().getStringExtra("genre");
@@ -338,30 +330,57 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void uploadAudio() {
-        CollectionReference collection = firebaseFirestore
-                .collection("songsList/" + userId + "/" + songName);
-        collection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Long version = -1L;
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot d : list) {
-                        String currentSongName = d.getString("songName");
-                        if (currentSongName.equals(songName)) {
-                            version = d.getLong("version");
-                            d.getReference().update("version",version+1);
-                            break;
+        /*CollectionReference collection = firebaseFirestore
+                .collection("songsList").document(userId).collection(songName);*/
+
+        Map<String, Object> songObject = new HashMap<>();
+        songObject.put("songName", songName);
+        songObject.put("version", 0);
+
+        DocumentReference userDocumentReference = firebaseFirestore
+                .collection("songsList")
+                .document(userId);
+
+        userDocumentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if(document.exists()) {
+                    System.out.println("test");
+                    CollectionReference songCollection = document.getReference()
+                            .collection(songName);
+
+                    songCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            if(task.isSuccessful()) {
+                                QuerySnapshot queryDocumentSnapshots = task.getResult();
+                                if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
+                                    DocumentSnapshot songDoc = queryDocumentSnapshots.getDocuments()
+                                            .get(0);
+                                    Long version = (Long) songDoc.get("version");
+                                    songDoc.getReference().update("version", version+1);
+                                    buildSongData(version+1);
+                                } else {
+                                    songCollection.add(songObject);
+                                }
+                            } else {
+                                System.out.println("jikuhyt");
+                            }
+
                         }
-                    }
+                    });
 
-                    if (version > -1L) {
-                        buildSongData(version+1);
-                    }
+                } else {
+                    firebaseFirestore
+                            .collection("songsList")
+                            .document(userId).collection(songName).add(songObject);
+                    buildSongData(0L);
+
                 }
+            }  else {
+                //Log.d(TAG, "Failed with: ", task.getException());
             }
-
-
         });
     }
 
@@ -374,35 +393,42 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         Map song_entry = new HashMap<>();
         song_entry.put("fileName", songName+".mp3");
         song_entry.put("genre", categoryName);
-        song_entry.put("link", "");
         song_entry.put("name", songName);
         song_entry.put("owner", userId);
-        song_entry.put("time", ServerValue.TIMESTAMP);
+        song_entry.put("time", new Timestamp(new Date()));
         song_entry.put("contributors",new HashMap<>());
         song_entry.put("version",version);
-        ref.set(song_entry);
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference mFilePath = mStorageRef.child("audios")
                 .child(userId)
                 .child(songName+"_"+version+".mp3");
 
+        song_entry.put("path", mFilePath.toString());
+
         Uri uri = Uri.fromFile(new File(fileName));
         mFilePath.putFile(uri,metadata)
                 .addOnProgressListener(taskSnapshot -> {
-
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                     System.out.println("Upload is " + progress + "% done");
                 })
 
-                .addOnSuccessListener(taskSnapshot ->
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
-                                .setAction("CLOSE", view -> {
+                .addOnSuccessListener(taskSnapshot -> {
+                    mFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            song_entry.put("link", uri.toString());
+                            ref.set(song_entry);
+                        }
+                    });
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
+                            .setAction("CLOSE", view -> {
 
-                                })
-                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
-                                .show());
+                            })
+                            .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                            .show();
+                });
     }
 
 
