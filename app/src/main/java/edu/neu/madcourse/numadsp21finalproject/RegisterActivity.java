@@ -44,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText password;
     EditText passwordConfirmation;
     TextView genres;
+    TextView tvSelectedItemsPreview;
     String userId;
     List<String> selectedGenres;
 
@@ -92,8 +93,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
         EditText bOpenAlertDialog = findViewById(R.id.openAlertDialogButton);
-        final TextView tvSelectedItemsPreview = findViewById(R.id.selectedItemPreview);
+        tvSelectedItemsPreview = findViewById(R.id.selectedItemPreview);
+        //tvSelectedItemsPreview.setOnClickListener(this);
 
         final String[] listItems = Helper.CATEGORY_LIST;
         final boolean[] checkedItems = new boolean[listItems.length];
@@ -108,14 +112,24 @@ public class RegisterActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
 
-                builder.setTitle("Choose Genres:");
+                builder.setTitle("Choose any 3 genres:");
 
 
                 builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    int count = 0;
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        checkedItems[which] = isChecked;
-                        String currentItem = selectedItems.get(which);
+                        if (isChecked && count < 3) {
+                            count++;
+                            checkedItems[which] = isChecked;
+                            String currentItem = selectedItems.get(which);
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                            checkedItems[which]=false;
+                        }
+                        if (!isChecked) count--;
                     }
                 });
 
@@ -156,6 +170,34 @@ public class RegisterActivity extends AppCompatActivity {
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+        });
+
+        tvSelectedItemsPreview.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+
+                builder.setTitle("Choose any 3 genres:");
+
+                builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    int count = 0;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked && count < 3) {
+                            count++;
+                            checkedItems[which] = isChecked;
+                            String currentItem = selectedItems.get(which);
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                            checkedItems[which]=false;
+                        }
+                        if (!isChecked) count--;
+                    }
+                });
             }
         });
         reg_registration.setOnClickListener(new View.OnClickListener() {

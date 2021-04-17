@@ -79,6 +79,7 @@
         android:id="@+id/selectedItemPreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@id/register_dob"
         app:layout_constraintEnd_toEndOf="parent"
