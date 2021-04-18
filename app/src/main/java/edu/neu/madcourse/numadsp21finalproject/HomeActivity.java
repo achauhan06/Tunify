@@ -54,6 +54,7 @@ import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -214,6 +215,7 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.logout_title:
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    Helper.clearLoggedInName(this);
                     Toast.makeText(HomeActivity.this, "You've logged out",Toast.LENGTH_SHORT).show();
                     break;
                 default:
