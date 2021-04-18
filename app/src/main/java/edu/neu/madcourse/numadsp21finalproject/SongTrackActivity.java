@@ -344,30 +344,25 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if(document.exists()) {
-                    System.out.println("test");
                     CollectionReference songCollection = document.getReference()
                             .collection(songName);
 
-                    songCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    songCollection.get().addOnCompleteListener(task1 -> {
 
-                            if(task.isSuccessful()) {
-                                QuerySnapshot queryDocumentSnapshots = task.getResult();
-                                if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
-                                    DocumentSnapshot songDoc = queryDocumentSnapshots.getDocuments()
-                                            .get(0);
-                                    Long version = (Long) songDoc.get("version");
-                                    songDoc.getReference().update("version", version+1);
-                                    buildSongData(version+1);
-                                } else {
-                                    songCollection.add(songObject);
-                                }
+                        if(task1.isSuccessful()) {
+                            QuerySnapshot queryDocumentSnapshots = task1.getResult();
+                            if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
+                                DocumentSnapshot songDoc = queryDocumentSnapshots.getDocuments()
+                                        .get(0);
+                                Long version = (Long) songDoc.get("version");
+                                songDoc.getReference().update("version", version+1);
+                                buildSongData(version+1);
                             } else {
-                                System.out.println("jikuhyt");
+                                songCollection.add(songObject);
                             }
-
+                        } else {
                         }
+
                     });
 
                 } else {
@@ -391,7 +386,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
         ref = firebaseFirestore.collection("recordings").document();
         Map song_entry = new HashMap<>();
-        song_entry.put("fileName", songName+".mp3");
+        song_entry.put("fileName", songName+"_"+version+".mp3");
         song_entry.put("genre", categoryName);
         song_entry.put("name", songName);
         song_entry.put("owner", userId);
@@ -414,12 +409,9 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 })
 
                 .addOnSuccessListener(taskSnapshot -> {
-                    mFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            song_entry.put("link", uri.toString());
-                            ref.set(song_entry);
-                        }
+                    mFilePath.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                        song_entry.put("link", uri1.toString());
+                        ref.set(song_entry);
                     });
                     Snackbar.make(findViewById(android.R.id.content),
                             "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
