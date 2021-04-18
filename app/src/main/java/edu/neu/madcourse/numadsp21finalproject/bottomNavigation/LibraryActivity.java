@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 
@@ -51,7 +53,7 @@ public class LibraryActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
-
+        setBottomNavigationListener();
         getLibraryItems();
     }
 
@@ -96,6 +98,27 @@ public class LibraryActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void setBottomNavigationListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.music_player_navigation);
+        bottomNavigationView.getMenu().getItem(0).setCheckable(false);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item->{
+            int id = item.getItemId();
+            switch(id) {
+                case R.id.action_play:
+                    break;
+                case R.id.action_pause:
+                    break;
+                case R.id.action_stop:
+                    break;
+                default:
+                    return true;
+            }
+            return true;
+
+        });
+    }
+
 
     @Override
     public void onBackPressed() {
