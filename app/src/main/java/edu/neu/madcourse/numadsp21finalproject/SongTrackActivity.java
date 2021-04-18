@@ -1,10 +1,12 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -21,10 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -53,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class SongTrackActivity extends YouTubeBaseActivity {
@@ -69,7 +68,10 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private ImageButton recordButton = null;
     private MediaRecorder recorder = null;
     private Button saveSong;
+    private Button recordagain;
     FirebaseFirestore firebaseFirestore;
+
+    private long timeWhenStopped = 0;
 
     private ImageButton playButton = null;
     private MediaPlayer player = null;
@@ -100,7 +102,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         setActionBar(toolbar);
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setTitle("");
-        //songName = getIntent().getStringExtra("songName")+"12345";
         songName = getIntent().getStringExtra("songName");
         songUrl = getIntent().getStringExtra("songUrl");
         duration = getIntent().getStringExtra("duration");
@@ -119,15 +120,68 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         chronometer = findViewById(R.id.chronometer);
         createYoutubeView();
         setSongsDetailSection();
-        youtubeBackButton = findViewById(R.id.youtubeBackButton);
-        youtubeBackButton.setOnClickListener(v-> this.finish());
+
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
         fileName += songName+".mp3";
+        setPlayUploadSection();
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
         recordingProgressbar = findViewById(R.id.recordProgressBar);
+        recordingProgressbar.setProgress(0);
         recordingProgressbar.setMax(length);
+        createRecorder();
+        createBackButton();
+    }
+
+    private void setPlayUploadSection() {
+        saveSong = findViewById(R.id.save);
+        saveSong.setOnClickListener(v-> {
+            uploadAudio();
+        });
+        recordagain = findViewById(R.id.record_again);
+        recordagain.setOnClickListener(v-> {
+            if (Build.VERSION.SDK_INT >= 11) {
+                recreate();
+            } else {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+
+        });
+    }
+
+    private void createRecorder() {
+        recorder = new MediaRecorder();
+        recorder.setOutputFile(fileName);
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void createBackButton() {
+        youtubeBackButton = findViewById(R.id.youtubeBackButton);
+        youtubeBackButton.setOnClickListener(v-> {
+            if (isRecording) {
+                pauseRecording();
+                alertButton("Recording Paused",
+                        "Are you sure you want to quit?", true);
+            } else {
+                this.finish();
+            }
+
+        });
     }
 
     private void setSongsDetailSection() {
@@ -156,11 +210,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             }
             mStartPlaying = !mStartPlaying;
         });
-
-        saveSong = findViewById(R.id.save);
-        saveSong.setOnClickListener(v-> {
-            uploadAudio();
-        });
     }
 
     private void createYoutubeView() {
@@ -169,10 +218,19 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 new YouTubePlayer.OnInitializedListener() {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
-                                                        YouTubePlayer youTubePlayer, boolean b) {
-                        youTubePlayer.cueVideo(songUrl);
+                                                        YouTubePlayer youTubePlayer, boolean wasRestored) {
                         player1 = youTubePlayer;
-                        youTubePlayer.play();
+                        youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+                        if (!wasRestored) {
+                            youTubePlayer.cueVideo(songUrl);
+                        } else {
+                            if (isRecording) {
+                                youTubePlayer.loadVideo(songUrl);
+                            } else {
+                                youTubePlayer.cueVideo(songUrl);
+                            }
+
+                        }
                     }
 
                     @Override
@@ -207,24 +265,33 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             mStartRecording = false;
         } else {
             pauseRecording();
-            AlertDialog.Builder songCloseAlert
-                    = new AlertDialog
-                    .Builder(SongTrackActivity.this);
-            songCloseAlert.setMessage("Do you want stop recording?");
-            songCloseAlert.setTitle("Recording Paused");
-            songCloseAlert.setCancelable(false);
-            songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
-                        stopRecording();
-                    });
-
-            songCloseAlert.setNegativeButton("No", (dialog, which) -> {
-                isRecording = true;
-                resumeRecording();
-                dialog.cancel();
-            });
-            AlertDialog alertDialog = songCloseAlert.create();
-            alertDialog.show();
+            alertButton("Recording Paused",
+                    "Do you want stop recording?", false);
         }
+    }
+
+    private void alertButton(String title, String message, boolean isBackButton) {
+        AlertDialog.Builder songCloseAlert
+                = new AlertDialog
+                .Builder(SongTrackActivity.this);
+        songCloseAlert.setMessage(message);
+        songCloseAlert.setTitle(title);
+        songCloseAlert.setCancelable(false);
+        songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
+            stopRecording();
+            if (isBackButton) {
+                this.finish();
+            }
+        });
+
+        songCloseAlert.setNegativeButton("No", (dialog, which) -> {
+            isRecording = true;
+            resumeRecording();
+            dialog.cancel();
+        });
+        AlertDialog alertDialog = songCloseAlert.create();
+        alertDialog.show();
+
     }
 
     private void onPlay(boolean start) {
@@ -253,18 +320,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
 
     private void startRecording() {
         recordButton.setImageResource(R.drawable.microphone);
-        recorder = new MediaRecorder();
-        recorder.setOutputFile(fileName);
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
         player1.play();
         recorder.start();
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -273,9 +328,11 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recordingProgressbar.setProgress(0);
         startProgressBarForRecording();
 
+
     }
 
     private void startProgressBarForRecording() {
+
         Handler handler = new Handler();
         new Thread(() -> {
             progress[0] = recordingProgressbar.getProgress();
@@ -296,6 +353,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder.stop();
         recorder.release();
         recorder = null;
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        timeWhenStopped = 0;
         chronometer.stop();
         progress[0] = 0;
         isRecording = false;
@@ -311,19 +370,24 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         chronometer.setVisibility(View.INVISIBLE);
         playButton.setVisibility(View.VISIBLE);
         saveSong.setVisibility(View.VISIBLE);
+        recordagain.setVisibility(View.VISIBLE);
+        recordingProgressbar.setProgress(0);
 
     }
 
     private void pauseRecording() {
         recorder.pause();
         player1.pause();
+
+        timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
         chronometer.stop();
-        isRecording = false;;
+        isRecording = false;
     }
 
     private void resumeRecording() {
         recorder.resume();
         player1.play();
+        chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         chronometer.start();
         isRecording = true;
         startProgressBarForRecording();
@@ -339,7 +403,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 .collection("songsList")
                 .document(userId);
 
-        //TODO fix path for versions
         userDocumentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -414,13 +477,23 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                         ref.set(song_entry);
                     });
                     Snackbar.make(findViewById(android.R.id.content),
-                            "Audio has been uploaded successfully", Snackbar.LENGTH_LONG)
-                            .setAction("CLOSE", view -> {
-
+                            "Audio has been published successfully", Snackbar.LENGTH_SHORT)
+                            .addCallback(new Snackbar.Callback(){
+                                @Override
+                                public void onDismissed(Snackbar snackbar, int event) {
+                                    if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                                        openLibrary();
+                                    }
+                                }
                             })
-                            .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                             .show();
                 });
+    }
+
+    private void openLibrary() {
+        Intent intent = new Intent(this, LibraryActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 
