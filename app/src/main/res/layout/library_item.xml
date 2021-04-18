@@ -35,22 +35,54 @@
             android:textSize="12sp"
             android:layout_margin="10dp"
             />
-
-        <ImageView
-            android:id="@+id/library_item_button"
-            android:text=""
-            android:clickable="true"
-            android:foreground="@drawable/search_button_effect"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:src="@drawable/play"/>
+            android:layout_margin="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/library_item_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"
+                android:foreground="@drawable/search_button_effect"
+                android:src="@drawable/play"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/library_item_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible"
+                android:foreground="@drawable/search_button_effect"
+                android:src="@drawable/pause_48"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/library_item_stop"
+                android:visibility="invisible"
+                android:clickable="true"
+                android:foreground="@drawable/search_button_effect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:src="@drawable/stop_button"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -69,14 +69,22 @@ public class LibraryItem implements LibraryViewClickListener{
         });
     }
 
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     @Override
     public void onItemClick(int position) {
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
+        mediaPlayer.start();
+    }
 
-        }else {
-            mediaPlayer.start();
-        }
+    @Override
+    public void onPauseClick(int position) {
+        mediaPlayer.pause();
+    }
 
+    @Override
+    public void onStopClick(int position) {
+        mediaPlayer.stop();
     }
 }

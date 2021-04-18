@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ public class LibraryActivity extends AppCompatActivity {
     FirebaseUser user;
     private String userId;
     FirebaseFirestore firebaseFirestore;
+    private int currentSelectedSong = -1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +55,6 @@ public class LibraryActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
-        setBottomNavigationListener();
         getLibraryItems();
     }
 
@@ -64,7 +65,20 @@ public class LibraryActivity extends AppCompatActivity {
         LibraryViewClickListener libraryViewClickListener = new LibraryViewClickListener() {
             @Override
             public void onItemClick(int position) {
+                currentSelectedSong = position;
                 libraryList.get(position).onItemClick(position);
+            }
+
+            @Override
+            public void onPauseClick(int position) {
+                currentSelectedSong = position;
+                libraryList.get(position).onPauseClick(position);
+            }
+
+            @Override
+            public void onStopClick(int position) {
+                currentSelectedSong = -1;
+                libraryList.get(position).onStopClick(position);
             }
         };
         libraryAdapter = new LibraryAdapter(libraryList, libraryViewClickListener, this);
@@ -99,31 +113,34 @@ public class LibraryActivity extends AppCompatActivity {
                 });
     }
 
-    private void setBottomNavigationListener() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.music_player_navigation);
-        bottomNavigationView.getMenu().getItem(0).setCheckable(false);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item->{
-            int id = item.getItemId();
-            switch(id) {
-                case R.id.action_play:
-                    break;
-                case R.id.action_pause:
-                    break;
-                case R.id.action_stop:
-                    break;
-                default:
-                    return true;
-            }
-            return true;
-
-        });
-    }
-
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
+        createBackAlert();
+    }
+
+    private void createBackAlert() {
+        if (currentSelectedSong==-1) {
+            this.finish();
+        } else {
+            libraryList.get(currentSelectedSong).getMediaPlayer().pause();
+            AlertDialog.Builder songCloseAlert = new AlertDialog
+                    .Builder(LibraryActivity.this);
+            songCloseAlert.setMessage("Going back will stop playing the song. "
+                    + "Are you sure you want to leave?");
+            songCloseAlert.setTitle("Song paused");
+            songCloseAlert.setCancelable(false);
+            songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
+                libraryList.get(currentSelectedSong).getMediaPlayer().stop();
+                this.finish();
+            });
+
+            songCloseAlert.setNegativeButton("No", (dialog, which) -> {
+                libraryList.get(currentSelectedSong).getMediaPlayer().start();
+                dialog.cancel();
+            });
+            AlertDialog alertDialog = songCloseAlert.create();
+            alertDialog.show();
+        }
     }
 
     @Override
