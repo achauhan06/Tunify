@@ -43,7 +43,7 @@ public class FeedsItem implements FeedsViewListener{
         this.context = context;
 
 
-        // prepareAudio();
+        prepareAudio();
     }
 
 
@@ -106,7 +106,7 @@ public class FeedsItem implements FeedsViewListener{
 
     @Override
     public void onItemClick(int position) {
-        /*
+
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
 
@@ -114,7 +114,7 @@ public class FeedsItem implements FeedsViewListener{
             mediaPlayer.start();
         }
 
-         */
+
 
     }
 }

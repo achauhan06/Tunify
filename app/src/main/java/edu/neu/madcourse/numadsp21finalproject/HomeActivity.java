@@ -112,7 +112,6 @@ public class HomeActivity extends AppCompatActivity {
         setNavigationListener();
         setBottomNavigationListener();
         setSearchComponent();
-        // TODO: change feeds view to card view
         getFriendsList();
 
 
