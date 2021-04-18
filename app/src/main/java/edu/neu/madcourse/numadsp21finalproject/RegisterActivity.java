@@ -44,8 +44,11 @@ public class RegisterActivity extends AppCompatActivity {
     EditText password;
     EditText passwordConfirmation;
     TextView genres;
+    TextView tvSelectedItemsPreview;
     String userId;
     List<String> selectedGenres;
+    int counttracker = 0;
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +95,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
         EditText bOpenAlertDialog = findViewById(R.id.openAlertDialogButton);
-        final TextView tvSelectedItemsPreview = findViewById(R.id.selectedItemPreview);
+        tvSelectedItemsPreview = (TextView) findViewById(R.id.selectedItemPreview);
+        //tvSelectedItemsPreview.setOnClickListener(this);
+        if (count == 0) tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
+
 
         final String[] listItems = Helper.CATEGORY_LIST;
         final boolean[] checkedItems = new boolean[listItems.length];
@@ -102,20 +110,30 @@ public class RegisterActivity extends AppCompatActivity {
 
         bOpenAlertDialog.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 tvSelectedItemsPreview.setText(null);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
 
-                builder.setTitle("Choose Genres:");
+                builder.setTitle("Choose any 3 genres:");
 
 
                 builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    //int count = 0;
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        checkedItems[which] = isChecked;
-                        String currentItem = selectedItems.get(which);
+                        if (isChecked && count < 3) {
+                            count++;
+                            checkedItems[which] = isChecked;
+                            String currentItem = selectedItems.get(which);
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                            checkedItems[which]=false;
+                        }
+                        if (!isChecked) count--;
                     }
                 });
 
@@ -129,17 +147,23 @@ public class RegisterActivity extends AppCompatActivity {
                         for (int i = 0; i < checkedItems.length; i++) {
                             if (checkedItems[i]) {
                                 selectedGenres.add(selectedItems.get(i));
-                                bOpenAlertDialog.setVisibility(View.GONE);
+                                bOpenAlertDialog.setVisibility(View.INVISIBLE);
                             }
                         }
-                        tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+                        if (selectedGenres.size() > 0) {
+                            tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+                            tvSelectedItemsPreview.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
 
                 builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            checkedItems[i] = false;
+                        }
+                        count = 0;
                     }
                 });
 
@@ -149,12 +173,88 @@ public class RegisterActivity extends AppCompatActivity {
                         for (int i = 0; i < checkedItems.length; i++) {
                             checkedItems[i] = false;
                         }
+                        count = 0;
                     }
                 });
 
                 builder.create();
 
                 AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+        tvSelectedItemsPreview.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(RegisterActivity.this, "Opening", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(RegisterActivity.this);
+
+                builder1.setTitle("Choose any 3 genres:");
+
+                builder1.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+
+
+                    //tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked && count < 3) {
+                            count++;
+                            checkedItems[which] = isChecked;
+                            String currentItem = selectedItems.get(which);
+                        }
+                        else {
+                            //Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
+                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                            checkedItems[which]=false;
+                        }
+                        if (!isChecked) {
+                            count--;
+                            if (count == 0) {
+                                tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
+                                bOpenAlertDialog.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        Toast.makeText(RegisterActivity.this, String.valueOf(count), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder1.setCancelable(false);
+
+                builder1.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selectedGenres = new ArrayList<>();
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            if (checkedItems[i]) {
+                                selectedGenres.add(selectedItems.get(i));
+                                bOpenAlertDialog.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                        tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+                    }
+                });
+
+                builder1.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder1.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            checkedItems[i] = false;
+                        }
+                    }
+                });
+                builder1.create();
+
+                AlertDialog alertDialog = builder1.create();
                 alertDialog.show();
             }
         });

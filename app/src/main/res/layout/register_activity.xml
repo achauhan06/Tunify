@@ -79,13 +79,16 @@
         android:id="@+id/selectedItemPreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="onClick"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@id/register_dob"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_last_name"
-        android:textSize="18sp">
+        android:textSize="18sp"
+        tools:ignore="OnClick">
     </TextView>
 
     <EditText
