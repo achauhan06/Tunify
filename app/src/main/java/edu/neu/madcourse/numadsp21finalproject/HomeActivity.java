@@ -263,12 +263,15 @@ public class HomeActivity extends AppCompatActivity {
     private void createFeedsRecyclerView() {
         // Toast.makeText(HomeActivity.this, "recycler view",Toast.LENGTH_SHORT).show();
 
-        Collections.sort(feedsItemArrayList, new Comparator<FeedsItem>() {
-            @Override
-            public int compare(FeedsItem o1, FeedsItem o2) {
-                return o2.getTimestamp().compareTo(o1.getTimestamp());
-            }
-        });
+        if(feedsItemArrayList.size() > 0) {
+            Collections.sort(feedsItemArrayList, new Comparator<FeedsItem>() {
+                @Override
+                public int compare(FeedsItem o1, FeedsItem o2) {
+                    return o2.getTimestamp().compareTo(o1.getTimestamp());
+                }
+            });
+        }
+
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.feeds_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -318,7 +321,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void getFeed() {
         // Toast.makeText(HomeActivity.this, friendsList.get(1),Toast.LENGTH_SHORT).show();
-
+        if(friendsList.size() == 0) {
+            return;
+        }
         firebaseFirestore.getInstance().collection("recordings")
                 .whereIn ("owner", friendsList)
                 // .orderBy("time")
