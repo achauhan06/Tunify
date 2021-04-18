@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Logged in successfully.",
-                            Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(MainActivity.this, "Logged in successfully.",
+                    //         Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                     intent.putExtra("email", email);
                     startActivity(intent);

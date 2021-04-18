@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,18 +23,33 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.core.OrderBy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryAdapter;
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryViewClickListener;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
@@ -47,11 +63,16 @@ public class HomeActivity extends AppCompatActivity {
     private EditText searchTextBox;
     private Button meet;
     private String currentEmail;
+    private FirebaseUser user;
+    private String userId;
 
     private RecyclerView.LayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private FeedsAdapter feedsAdapter;
     private ArrayList<FeedsItem> feedsItemArrayList;
+    private ArrayList<String> friendsList;
+    FirebaseFirestore firebaseFirestore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +81,8 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = user.getUid();
         if (user != null) {
             currentEmail = user.getEmail();
         } else {
@@ -76,8 +98,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });*/
         feedsItemArrayList = new ArrayList<>();
-
-
+        friendsList = new ArrayList<>();
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -91,7 +112,9 @@ public class HomeActivity extends AppCompatActivity {
         setNavigationListener();
         setBottomNavigationListener();
         setSearchComponent();
-        createFeedsRecyclerView();
+        // TODO: change feeds view to card view
+        getFriendsList();
+
 
     }
 
@@ -239,14 +262,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void createFeedsRecyclerView() {
-        FeedsItem item1 = new FeedsItem("test1","path","genre",this);
-        FeedsItem item2 = new FeedsItem("test2","path","genre",this);
-        feedsItemArrayList.add(item1);
-        feedsItemArrayList.add(item2);
-        feedsItemArrayList.add(item1);
-        feedsItemArrayList.add(item2);
-        feedsItemArrayList.add(item1);
-        feedsItemArrayList.add(item2);
+        // Toast.makeText(HomeActivity.this, "recycler view",Toast.LENGTH_SHORT).show();
+
+        Collections.sort(feedsItemArrayList, new Comparator<FeedsItem>() {
+            @Override
+            public int compare(FeedsItem o1, FeedsItem o2) {
+                return o2.getTimestamp().compareTo(o1.getTimestamp());
+            }
+        });
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.feeds_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -261,6 +284,85 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setAdapter(feedsAdapter);
 
     }
+
+
+    private void getFriendsList() {
+
+        firebaseFirestore.getInstance().collection("friends")
+                .document(userId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        friendsList = (ArrayList<String>) document.get("friendsId");
+                    } else {
+                        Log.d("get friends list", "No such document");
+                    }
+                    // fetching recordings based on friends list
+                    getFeed();
+                } else {
+                    Log.d("get friends list", "get failed with ", task.getException());
+                }
+
+
+
+            }
+
+
+
+        });
+
+    }
+
+    private void getFeed() {
+        // Toast.makeText(HomeActivity.this, friendsList.get(1),Toast.LENGTH_SHORT).show();
+
+        firebaseFirestore.getInstance().collection("recordings")
+                .whereIn ("owner", friendsList)
+                // .orderBy("time")
+                // not sure if i should limit or not
+                // .limit(10)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String path = documentSnapshot.get("path").toString();
+                                String projectName = documentSnapshot.get("name").toString();
+                                String genre = documentSnapshot.get("genre").toString();
+                                String ownerName = documentSnapshot.get("username").toString();
+                                Timestamp timestamp= (Timestamp) documentSnapshot.get("time");
+                                String time =  timestamp.toDate().toString();
+                                FeedsItem item = new FeedsItem(projectName, path, genre, ownerName,
+                                        timestamp,time,HomeActivity.this);
+                                feedsItemArrayList.add(item);
+
+                                Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
+
+                            }
+
+
+
+
+                        } else {
+                            Log.d("firebase", "Error getting feeds items", task.getException());
+                        }
+                        createFeedsRecyclerView();
+
+                    }
+                });
+
+
+    }
+
+
+
+
+
 
 
 
