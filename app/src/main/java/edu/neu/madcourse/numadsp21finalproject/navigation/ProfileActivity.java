@@ -265,6 +265,7 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -273,6 +274,8 @@ public class ProfileActivity extends AppCompatActivity {
             profilePicture.setImageURI(imageUri);
         }
     }
+
+
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);

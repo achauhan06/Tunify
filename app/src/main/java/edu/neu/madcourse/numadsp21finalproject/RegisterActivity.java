@@ -312,6 +312,10 @@ public class RegisterActivity extends AppCompatActivity {
                                         user.setToken(token);
                                         Toast.makeText(RegisterActivity.this, token, Toast.LENGTH_SHORT).show();
                                         reg_entry.put("Mobile Token", user.getToken());
+                                        //TODO update username
+                                        Helper.setEmailPassword(RegisterActivity.this,
+                                                email.getText().toString(), password.getText().toString(),
+                                                email.getText().toString());
                                         reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -327,7 +331,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     });
                             //Toast.makeText(RegisterActivity.this, "Token : " +user.getToken(), Toast.LENGTH_SHORT).show();
                             //firebaseInstanceMessagingService.sendRegistrationToServer(reg_entry);
-
                         }
                         else {
                             Toast.makeText(RegisterActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();

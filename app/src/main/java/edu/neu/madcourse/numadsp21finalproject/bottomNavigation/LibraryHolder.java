@@ -3,6 +3,8 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,7 +15,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 public class LibraryHolder extends RecyclerView.ViewHolder {
     TextView libraryItemName;
     TextView libraryItemGenre;
-    Button libraryItemBtn;
+    ImageView libraryItemBtn;
 
     public LibraryHolder(@NonNull View itemView, Context context, LibraryViewClickListener libraryViewClickListener) {
         super(itemView);

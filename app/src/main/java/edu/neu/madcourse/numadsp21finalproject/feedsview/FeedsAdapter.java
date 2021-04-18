@@ -36,6 +36,8 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsHolder> {
         FeedsItem currentItem = feedsItemArrayList.get(position);
         holder.feedsItemName.setText(currentItem.getProjectName());
         holder.feedsItemGenre.setText(currentItem.getGenre());
+        holder.feedsItemOwner.setText(currentItem.getOwnerName());
+        holder.feedsItemTime.setText(currentItem.getTime());
     }
 
     @Override

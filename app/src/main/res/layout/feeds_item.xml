@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
+    android:background="@color/design_default_color_secondary"
+    android:outlineAmbientShadowColor="@color/cardview_shadow_start_color"
     android:layout_margin="4dp"
     app:cardCornerRadius="5dp">
 
@@ -16,6 +18,7 @@
             android:id="@+id/feeds_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="name"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
@@ -27,7 +30,35 @@
             android:id="@+id/feeds_item_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/feeds_item_name"
+            android:text="genre"
+            android:layout_below="@id/feeds_item_name"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/feeds_item_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="owner"
+            android:layout_below="@+id/feeds_item_genre"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:id="@+id/feeds_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:layout_below="@+id/feeds_item_owner"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
@@ -35,6 +66,7 @@
             android:textSize="12sp"
             android:layout_margin="10dp"
             />
+
 
         <Button
             android:id="@+id/feeds_item_button"

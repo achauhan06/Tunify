@@ -42,7 +42,6 @@ public class LibraryItem implements LibraryViewClickListener{
 
     private void prepareAudio() {
         StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(this.path);
-
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

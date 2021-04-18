@@ -14,6 +14,8 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
 
     TextView feedsItemName;
     TextView feedsItemGenre;
+    TextView feedsItemOwner;
+    TextView feedsItemTime;
     Button feedsItemBtn;
 
     public FeedsHolder(@NonNull View itemView, Context context, FeedsViewListener feedsViewListener) {
@@ -21,6 +23,9 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
 
         feedsItemName = itemView.findViewById(R.id.feeds_item_name);
         feedsItemGenre = itemView.findViewById(R.id.feeds_item_genre);
+        feedsItemOwner = itemView.findViewById(R.id.feeds_item_owner);
+        feedsItemTime = itemView.findViewById(R.id.feeds_item_time);
+
         feedsItemBtn = itemView.findViewById(R.id.feeds_item_button);
 
         feedsItemBtn.setOnClickListener(v -> {
