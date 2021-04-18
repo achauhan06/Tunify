@@ -54,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
     UserItem user;
     int counttracker = 0;
     int count = 0;
-    MyFirebaseInstanceMessagingService firebaseInstanceMessagingService;
     //String token = "";
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
