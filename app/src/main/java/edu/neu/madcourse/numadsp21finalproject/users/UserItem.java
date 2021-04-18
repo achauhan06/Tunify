@@ -15,6 +15,7 @@ public class UserItem implements Parcelable, UserViewListener{
 
     private String userName;
     private String profileLink;
+    private String token;
 
     public String getEmail() {
         return email;
@@ -25,6 +26,9 @@ public class UserItem implements Parcelable, UserViewListener{
     }
 
     private String email;
+    public UserItem() {
+
+    }
 
     public UserItem(String userName, String profileLink, String email) {
         this.userName =  userName;
@@ -67,6 +71,14 @@ public class UserItem implements Parcelable, UserViewListener{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getProfileLink() {
