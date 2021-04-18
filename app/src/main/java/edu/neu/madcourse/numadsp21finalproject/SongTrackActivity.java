@@ -82,7 +82,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private static final String LOG_TAG = "AudioRecordTest";
     boolean mStartRecording = true;
     boolean mStartPlaying = true;
-    private String currentEmail;
+    private String userName;
     private String userId;
     private boolean isRecording;
 
@@ -93,6 +93,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     YouTubePlayer player1;
     ProgressBar recordingProgressbar;
     DocumentReference ref;
+    private String currentEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,11 +112,12 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         artist = getIntent().getStringExtra("artist");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            currentEmail = user.getEmail();
             userId = user.getUid();
         } else {
-            currentEmail = getIntent().getStringExtra("email");
+            currentEmail = Helper.getEmail(this);
         }
+
+        userName = Helper.getUsername(this);
 
         chronometer = findViewById(R.id.chronometer);
         createYoutubeView();
@@ -474,6 +476,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 .addOnSuccessListener(taskSnapshot -> {
                     mFilePath.getDownloadUrl().addOnSuccessListener(uri1 -> {
                         song_entry.put("link", uri1.toString());
+                        song_entry.put("username", userName);
                         ref.set(song_entry);
                     });
                     Snackbar.make(findViewById(android.R.id.content),

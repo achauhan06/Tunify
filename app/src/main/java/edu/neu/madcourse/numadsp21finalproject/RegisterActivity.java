@@ -291,13 +291,14 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("Genres", String.join(";",selectedGenres));
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
-                            reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
+                            //TODO update username
+                            Helper.setEmailPassword(RegisterActivity.this,
+                                    email.getText().toString(), password.getText().toString(),
+                                    email.getText().toString());
+                            reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
+                                Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                startActivity(intent);
                             });
                         }
                         else {

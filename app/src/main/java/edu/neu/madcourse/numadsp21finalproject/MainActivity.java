@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +15,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Helper.setEmailPassword(MainActivity.this, email, password);
                     logInService(email, password);
 
                 }
@@ -93,11 +97,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    // Toast.makeText(MainActivity.this, "Logged in successfully.",
-                    //         Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.putExtra("email", email);
-                    startActivity(intent);
+                    Helper.db.collection("users")
+                            .whereEqualTo("Email", email)
+                            .get()
+                            .addOnCompleteListener(task1 -> {
+                                if(task1.isSuccessful()) {
+                                    QuerySnapshot documentSnapshot = task1.getResult();
+                                    String username = documentSnapshot.getDocuments()
+                                            .get(0).get("Username").toString();
+                                    Helper.setEmailPassword(MainActivity.this,
+                                            email, password, username);
+                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                    intent.putExtra("email", email);
+                                    startActivity(intent);
+                                } else {
+                                    Log.d("firebase", "Error getting library items", task1.getException());
+                                }
+
+                            });
                 } else {
                     Toast.makeText(MainActivity.this, "Unable to log in.",
                             Toast.LENGTH_SHORT).show();

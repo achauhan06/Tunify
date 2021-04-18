@@ -18,6 +18,7 @@ import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 
 public class Helper {
     public static final String NO_INTERNET = "No internet connection";
+    private static final String USERNAME = "userName";
     public static String SERVER_KEY = "AAAAf-Efg5c:APA91bH5jUEnPT04fw-qdgAMl5ghx_ZAgNL6x4cMKoxz9MRoMEXYS2g4UHOEEuDs2Eb2ysEFfgtp48D8oxMpCiUt7ir6ezA09tv0FjvyH1mQ6jUtLkO_4_xadmzKlgQXfmNVmXgGoarB";
     public static String YOUTUBE_API_KEY = "AIzaSyBDzjjH-ILn5GSzmBpG3tEa5KJjOqS4KO8";
     public static String[] CATEGORY_LIST = {"Rock", "Pop", "Hip Hop", "Blues", "Jazz", "Reggae", "Folk", "Country", "Classical",
@@ -45,11 +46,12 @@ public class Helper {
         return PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
     }
 
-    public static void setEmailPassword(Context ctx, String userName, String password)
+    public static void setEmailPassword(Context ctx, String email, String password, String username)
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
-        editor.putString(EMAIL, userName);
+        editor.putString(EMAIL, email);
         editor.putString(PASSWORD, password);
+        editor.putString(USERNAME, username);
         editor.putBoolean(LOGGED_IN, true);
         editor.apply();
     }
@@ -67,6 +69,10 @@ public class Helper {
         SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
         editor.putString(USER_TOKEN, userToken);
         editor.apply();
+    }
+
+    public static String getUsername(Context ctx) {
+        return getSharedPreferences(ctx.getApplicationContext()).getString(USERNAME, "");
     }
 
     public static String getEmail(Context ctx)
