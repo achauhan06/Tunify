@@ -53,27 +53,37 @@
                 android:orientation="horizontal"
                 android:padding="5dp"
                 >
+
                 <TextView
+                    android:id="@+id/user_profile_heading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/user_profile_heading"
-                    android:text=""
-                    android:textSize="20pt"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
                     android:gravity="center"
                     android:padding="3dp"
+                    android:text=""
+                    android:textAlignment="center"
                     android:textColor="@color/primaryTextColor"
-                    >
+                    android:textSize="20pt"
+                    android:textStyle="bold">
 
                 </TextView>
 
             </LinearLayout>
 
-            <ImageButton android:id="@+id/userProfilePicture"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="60dp"
+            >
+
+            <ImageView android:id="@+id/userProfilePicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:src="@drawable/collection_disc" />
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

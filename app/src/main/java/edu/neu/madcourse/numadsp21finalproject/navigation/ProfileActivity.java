@@ -2,13 +2,16 @@ package edu.neu.madcourse.numadsp21finalproject.navigation;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,11 +51,15 @@ public class ProfileActivity extends AppCompatActivity {
 
     EditText first_name, last_name, dob, genre;
     TextView email;
-    Button updateBtn;
+    Button updateBtn, uploadProfilePicture;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fireStore;
     FirebaseUser user;
     String userId, oldUserName, newUserName;
+    public static final int PICK_IMAGE = 100;
+    Uri imageUri;
+    ImageView profilePicture;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,12 +70,15 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         email = findViewById(R.id.profile_email);
         first_name = findViewById(R.id.profile_first_name);
         last_name = findViewById(R.id.profile_last_name);
         dob = findViewById(R.id.profile_dob);
         genre = findViewById(R.id.profile_genre);
         updateBtn = findViewById(R.id.profile_update);
+        uploadProfilePicture = findViewById(R.id.uploadProfilePicture);
+        profilePicture = (ImageView)findViewById(R.id.yourProfilePicture);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -81,6 +91,14 @@ public class ProfileActivity extends AppCompatActivity {
         userId = user.getUid();
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(userId);
         setProfile(documentReference);
+        uploadProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+
+
+        });
 
 
         dob.setOnClickListener(new View.OnClickListener() {
@@ -245,5 +263,19 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            imageUri = data.getData();
+            profilePicture.setImageURI(imageUri);
+        }
+    }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
     }
 }
