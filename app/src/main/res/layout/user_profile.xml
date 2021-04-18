@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/profile_heading"
+                    android:id="@+id/user_profile_heading"
                     android:text=""
                     android:textSize="20pt"
                     android:textAlignment="center"
@@ -70,97 +70,11 @@
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageButton android:id="@+id/userProfilePicture"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="3dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/secondaryLightColor"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email : "
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-                    >
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/profile_email"
-                    android:text=""
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
+                android:layout_gravity="center" />
 
-                    >
-                </TextView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="3dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/secondaryLightColor"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="First Name : "
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-                    >
-                </TextView>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/user_profile_first_name"
-                    android:inputType="text"
-                    android:text=""
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-
-                    >
-                </TextView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="3dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/secondaryLightColor"
-
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last Name : "
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-
-                    >
-                </TextView>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/user_profile_last_name"
-                    android:text=""
-                    android:textSize="10pt"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-
-                    >
-                </TextView>
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

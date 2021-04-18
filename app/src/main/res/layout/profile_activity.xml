@@ -68,9 +68,13 @@
 
             </TextView>
 
+
         </LinearLayout>
 
-
+        <ImageButton android:id="@+id/yourProfilePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,6 +83,7 @@
             android:layout_marginHorizontal="5dp"
             android:background="@color/secondaryLightColor"
             >
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -217,7 +222,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/profile_genre"
                 android:text=""
-                android:hint="Rock"
                 android:textSize="10pt"
                 android:padding="5dp"
                 android:textColor="@color/primaryTextColor"

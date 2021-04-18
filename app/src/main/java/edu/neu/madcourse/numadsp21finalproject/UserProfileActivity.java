@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.Lists;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,7 +27,7 @@ import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    TextView first_name, last_name, dob, genre;
+    TextView dob, genre, fullName;
     private String email;
     private FirebaseFirestore fireStore;
 
@@ -41,11 +42,12 @@ public class UserProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        first_name = findViewById(R.id.user_profile_first_name);
-        last_name = findViewById(R.id.user_profile_last_name);
+        //first_name = findViewById(R.id.user_profile_first_name);
+        //last_name = findViewById(R.id.user_profile_last_name);
         dob = findViewById(R.id.user_profile_dob);
         genre = findViewById(R.id.user_profile_genre);
         email = getIntent().getExtras().getString("email");
+        fullName = findViewById(R.id.user_profile_heading);
         fireStore.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
             @Override
@@ -55,10 +57,15 @@ public class UserProfileActivity extends AppCompatActivity {
                     for (DocumentSnapshot d : list) {
                         String email1 = d.getString("Email");
                         if (email.equals(email1)) {
-                            first_name.setText(d.getString("First Name"));
-                            last_name.setText(d.getString("Last Name"));
+                            fullName.setText(d.getString("First Name")+ " " +d.getString("Last Name"));
+
+                            //first_name.setText(d.getString("First Name"));
+                            //last_name.setText(d.getString("Last Name"));
                             dob.setText(d.getString("Date of Birth"));
-                            genre.setText(d.getString("Genres"));
+                            //genre.setText(d.getString("Genres"));
+                            String[] arr = d.getString("Genres").split(";");
+                            List<String> list1 = Lists.newArrayList(arr);
+                            genre.setText(list1.toString().replace("[", "").replace("]", ""));
                             break;
                         }
                     }

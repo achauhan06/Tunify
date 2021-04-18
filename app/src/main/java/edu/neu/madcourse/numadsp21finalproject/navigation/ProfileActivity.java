@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -32,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         first_name = findViewById(R.id.profile_first_name);
         last_name = findViewById(R.id.profile_last_name);
         dob = findViewById(R.id.profile_dob);
-        // genre = findViewById(R.id.profile_genre);
+        genre = findViewById(R.id.profile_genre);
         updateBtn = findViewById(R.id.profile_update);
 
 
@@ -141,7 +143,9 @@ public class ProfileActivity extends AppCompatActivity {
                     last_name.setText(last_name_str);
                     dob.setText(value.getString("Date of Birth"));
                     oldUserName = first_name_str + " " + last_name_str;
-
+                    String[] arr = value.getString("Genres").split(";");
+                    List<String> list = Lists.newArrayList(arr);
+                    genre.setText(list.toString().replace("[", "").replace("]", ""));
                 }
             });
 
