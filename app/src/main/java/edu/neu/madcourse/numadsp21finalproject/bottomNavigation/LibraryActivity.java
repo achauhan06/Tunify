@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,6 +83,9 @@ public class LibraryActivity extends AppCompatActivity {
             }
         };
         libraryAdapter = new LibraryAdapter(libraryList, libraryViewClickListener, this);
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new SwipeToDeleteLibrary(libraryAdapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(libraryAdapter);
 
