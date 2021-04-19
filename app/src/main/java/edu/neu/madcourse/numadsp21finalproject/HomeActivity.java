@@ -75,7 +75,8 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<FeedsItem> feedsItemArrayList;
     private ArrayList<String> friendsList;
     FirebaseFirestore firebaseFirestore;
-    private Handler homeHandler = new Handler();
+
+    private BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -147,6 +148,8 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     }
+
+
     private void setSearchComponent() {
         searchButton = findViewById(R.id.search_icon);
         searchButton.setOnClickListener(v ->
@@ -170,20 +173,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setBottomNavigationListener() {
-       BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-       bottomNavigationView.setOnNavigationItemSelectedListener(item->{
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item->{
            int id = item.getItemId();
            switch(id) {
                case R.id.navigation_home:
-                   Toast.makeText(HomeActivity.this, "My Home",Toast.LENGTH_SHORT).show();
                    break;
                case R.id.navigation_friends:
-                   // Toast.makeText(HomeActivity.this, "My Friends",Toast.LENGTH_SHORT).show();
                    Intent friendsIntent = new Intent(this, FriendsActivity.class);
                    startActivity(friendsIntent);
                    break;
                case R.id.navigation_library:
-                   // Toast.makeText(HomeActivity.this, "My Library",Toast.LENGTH_SHORT).show();
                    Intent libraryIntent = new Intent(this, LibraryActivity.class);
                    startActivity(libraryIntent);
                    break;
@@ -209,7 +210,6 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "My Account",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.profile_title:
-                    Toast.makeText(HomeActivity.this, "My Profile",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this,ProfileActivity.class);
                     startActivity(intent);
                     break;
@@ -223,9 +223,9 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.logout_title:
+                    Helper.clearLoggedInName(this);
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    Helper.clearLoggedInName(this);
                     Toast.makeText(HomeActivity.this, "You've logged out",Toast.LENGTH_SHORT).show();
                     break;
                 default:
@@ -276,8 +276,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void createFeedsRecyclerView() {
-        // Toast.makeText(HomeActivity.this, "recycler view",Toast.LENGTH_SHORT).show();
-
         if(feedsItemArrayList.size() > 0) {
             Collections.sort(feedsItemArrayList, new Comparator<FeedsItem>() {
                 @Override
@@ -343,7 +341,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getFeed() {
-        // Toast.makeText(HomeActivity.this, friendsList.get(1),Toast.LENGTH_SHORT).show();
         if(friendsList.size() == 0) {
             Toast.makeText(HomeActivity.this, "you have no friend" ,Toast.LENGTH_SHORT).show();
             return;
@@ -367,7 +364,6 @@ public class HomeActivity extends AppCompatActivity {
                                 FeedsItem item = new FeedsItem(projectName, path, genre, ownerName,
                                         timestamp,time,HomeActivity.this);
                                 feedsItemArrayList.add(item);
-
                                 // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
 
                             }
@@ -391,6 +387,12 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
     }
 
 

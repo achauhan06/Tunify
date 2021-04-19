@@ -22,6 +22,7 @@ public class LibraryItem implements LibraryViewClickListener{
     private final String genre;
     private Context context;
     private MediaPlayer mediaPlayer;
+    private Uri currentUri;
 
     public LibraryItem(String projectName, String path, String genre,  Context context) {
         this.projectName = projectName;
@@ -45,21 +46,8 @@ public class LibraryItem implements LibraryViewClickListener{
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-
-                try {
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setAudioAttributes(
-                            new AudioAttributes.Builder()
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .build()
-                    );
-                    mediaPlayer.setDataSource(String.valueOf(uri));
-                    mediaPlayer.prepare(); // might take long! (for buffering, etc)
-                } catch (IOException e) {
-                    Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
-                }
-
+                currentUri = uri;
+                createMediaPlayer(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -69,14 +57,39 @@ public class LibraryItem implements LibraryViewClickListener{
         });
     }
 
+    private void createMediaPlayer(Uri uri) {
+        try {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioAttributes(
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+            );
+            mediaPlayer.setDataSource(String.valueOf(uri));
+            mediaPlayer.prepare(); // might take long! (for buffering, etc)
+        } catch (IOException e) {
+            Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     @Override
     public void onItemClick(int position) {
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
+        mediaPlayer.start();
+    }
 
-        }else {
-            mediaPlayer.start();
-        }
+    @Override
+    public void onPauseClick(int position) {
+        mediaPlayer.pause();
+    }
 
+    @Override
+    public void onStopClick(int position) {
+        mediaPlayer.stop();
+        createMediaPlayer(currentUri);
     }
 }

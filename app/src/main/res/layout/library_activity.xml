@@ -44,7 +44,7 @@
          />
     </RelativeLayout>
     </ScrollView>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!--<com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/music_player_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -62,6 +62,6 @@
         app:itemTextColor="@color/color_selector"
         android:layout_alignParentBottom="true"
         app:itemRippleColor="@color/primaryLightColor"
-        />
+        />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

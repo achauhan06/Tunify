@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
@@ -44,5 +47,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryHolder> {
     @Override
     public int getItemCount() {
         return libraryItemArrayList.size();
+    }
+
+    public void deleteItem(int position) {
+        libraryItemArrayList.remove(position);
+        notifyItemRemoved(position);
+        Toast.makeText(context, "Recording is deleted", Toast.LENGTH_SHORT).show();
+
     }
 }
