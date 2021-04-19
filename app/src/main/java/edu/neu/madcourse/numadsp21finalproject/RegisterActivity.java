@@ -302,27 +302,19 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("Genres", String.join(";",selectedGenres));
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
-                            UserService registerUser = new UserService() {
-                                @Override
-                                public void register(String userToken) {
-                                    Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
-                                    reg_entry.put("MobileToken", userToken);
-                                    //TODO update username
-                                    Helper.setEmailPassword(RegisterActivity.this,
-                                            email.getText().toString(), password.getText().toString(),
-                                            email.getText().toString());
-                                    Helper.setUserToken(RegisterActivity.this, userToken);
-                                    reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                    });
-                                }
-
-                                @Override
-                                public void updateToken(String refreshToken) {
-
-                                }
+                            UserService registerUser = userToken -> {
+                                Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
+                                reg_entry.put("MobileToken", userToken);
+                                //TODO update username
+                                Helper.setEmailPassword(RegisterActivity.this,
+                                        email.getText().toString(), password.getText().toString(),
+                                        email.getText().toString());
+                                Helper.setUserToken(RegisterActivity.this, userToken);
+                                reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                });
                             };
                             firebaseInstanceMessagingService.register(registerUser);
 

@@ -19,13 +19,21 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     private static final String TAG = FirebaseInstanceMessagingService.class.getSimpleName();
+    private static String REFRESH_MOBILE_TOKEN;
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.d(TAG, "Refreshed token: " + token);
+        REFRESH_MOBILE_TOKEN = token;
         sendRegistrationToServer(token);
     }
+
+    public static String getMobileRefreshToken() {
+        return REFRESH_MOBILE_TOKEN;
+    }
+
+
 
     private static void sendRegistrationToServer(String token) {
     }
@@ -41,7 +49,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
     }
 
-    public static void login(UserService userService, String currentToken) {
+    //NOT NEEDED
+   /* public static void login(UserService userService, String currentToken) {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -54,6 +63,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                     }
                 });
 
-    }
+    }*/
 
 }

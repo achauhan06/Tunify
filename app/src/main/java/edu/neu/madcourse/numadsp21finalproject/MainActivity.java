@@ -115,7 +115,18 @@ public class MainActivity extends AppCompatActivity {
                                             ? documentSnapshot.getDocuments()
                                             .get(0).get("MobileToken").toString()
                                             : null;
-                                    UserService userService = new UserService() {
+                                    String refreshToken = FirebaseInstanceMessagingService
+                                            .getMobileRefreshToken();
+                                    if (mobileToken == null
+                                            || mobileToken.isEmpty()
+                                            || !mobileToken.equals(refreshToken)) {
+                                        documentSnapshot.getDocuments()
+                                                .get(0).getReference()
+                                                .update("MobileToken", refreshToken);
+                                        Helper.setUserToken(MainActivity.this, refreshToken);
+                                    }
+                                    //NOT NEEDED
+                                    /*UserService userService = new UserService() {
                                         @Override
                                         public void register(String userToken) {
                                         }
@@ -127,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                                                     .update("MobileToken", refreshToken);
                                             Helper.setUserToken(MainActivity.this, refreshToken);
                                         }
-                                    };
-                                    FirebaseInstanceMessagingService.login(userService, mobileToken);
+                                    };*/
+                                    //FirebaseInstanceMessagingService.login(userService, mobileToken);
                                     Helper.setUserToken(MainActivity.this, mobileToken);
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     intent.putExtra("email", email);
