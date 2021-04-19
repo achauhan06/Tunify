@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 
@@ -36,6 +38,14 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
 
     private static void sendRegistrationToServer(String token) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            Helper.db.collection("users")
+                    .document(userId)
+                    .update("MobileToken", token);
+        }
+
     }
 
     public static void register(UserService userService) {
