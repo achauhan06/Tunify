@@ -361,8 +361,11 @@ public class HomeActivity extends AppCompatActivity {
                                 String ownerName = documentSnapshot.get("username").toString();
                                 Timestamp timestamp= (Timestamp) documentSnapshot.get("time");
                                 String time =  timestamp.toDate().toString();
+                                ArrayList<String> likeList = (ArrayList<String>) documentSnapshot.get("likes");
+
                                 FeedsItem item = new FeedsItem(projectName, path, genre, ownerName,
-                                        timestamp,time,HomeActivity.this);
+                                        timestamp,time,likeList,
+                                        HomeActivity.this, documentSnapshot.getReference());
                                 feedsItemArrayList.add(item);
                                 // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
 
@@ -372,16 +375,6 @@ public class HomeActivity extends AppCompatActivity {
                             Log.d("firebase", "Error getting feeds items", task.getException());
                         }
                         createFeedsRecyclerView();
-                        /*
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                createFeedsRecyclerView();
-                            }
-                        });
-
-                         */
-
 
                     }
                 });

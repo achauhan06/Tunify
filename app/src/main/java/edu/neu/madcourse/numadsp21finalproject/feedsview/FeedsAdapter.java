@@ -38,6 +38,18 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsHolder> {
         holder.feedsItemGenre.setText(currentItem.getGenre());
         holder.feedsItemOwner.setText(currentItem.getOwnerName());
         holder.feedsItemTime.setText(currentItem.getTime());
+        holder.feedsLikeCount.setText(String.valueOf(currentItem.getLikeCount()));
+
+        if(currentItem.getLikedByMe()) {
+            holder.feedsItemLikeRedBtn.setVisibility(View.VISIBLE);
+            holder.feedsItemLikeWhiteBtn.setVisibility(View.INVISIBLE);
+        }else {
+            holder.feedsItemLikeRedBtn.setVisibility(View.INVISIBLE);
+            holder.feedsItemLikeWhiteBtn.setVisibility(View.VISIBLE);
+        }
+
+
+
     }
 
     @Override
