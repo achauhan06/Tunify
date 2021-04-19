@@ -34,19 +34,18 @@ import java.util.Date;
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 
 public class FeedsItem implements FeedsViewListener{
-    private final String projectName;
-    private final String path;
-    private final String genre;
-    private final String time;
+    private final String projectName, path, genre, ownerName, recordingId;
     private final Timestamp timestamp;
-    private final String ownerName;
+    private int commentsCount;
     private Context context;
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private boolean loaded = false;
     private ArrayList<String> likesList = new ArrayList<>();
+    private ArrayList<CommentItem> commentItemArrayList = new ArrayList<>();
     private boolean likedByMe;
     private int likeCount;
     private DocumentReference documentReference;
@@ -54,24 +53,22 @@ public class FeedsItem implements FeedsViewListener{
 
     private FirebaseFirestore firebaseFirestore;
 
-    public FeedsItem(String projectName, String path, String genre, String ownerName,
-                     Timestamp timestamp, String time, ArrayList<String> likesList,
-                     Context context, DocumentReference documentReference) {
-        this.projectName = projectName;
-        this.path = path;
-        this.genre = genre;
-        this.time = time;
-        this.timestamp = timestamp;
-        this.ownerName = ownerName;
-        this.likesList = likesList;
+    public FeedsItem(DocumentSnapshot documentSnapshot, Context context) {
+        this.path = documentSnapshot.get("path").toString();
+        this.projectName = documentSnapshot.get("name").toString();
+        this.genre = documentSnapshot.get("genre").toString();
+        this.ownerName = documentSnapshot.get("username").toString();
+        this.timestamp = (Timestamp) documentSnapshot.get("time");
+        this.likesList = (ArrayList<String>) documentSnapshot.get("likes");
         this.likeCount = likesList.size();
         this.likedByMe = likesList.contains(userId);
         this.context = context;
-        this.documentReference = documentReference;
-
-        // new Thread(new MediaRunnable()).start();
-        // prepareAudio();
+        this.documentReference = documentSnapshot.getReference();
+        this.recordingId = documentSnapshot.getId();
+        this.commentsCount = documentSnapshot.getLong("commentsCount").intValue();
     }
+
+
 
     class MediaRunnable implements Runnable {
         @Override
@@ -96,7 +93,7 @@ public class FeedsItem implements FeedsViewListener{
     }
 
     public String getTime() {
-        return time;
+        return timestamp.toDate().toString();
     }
 
     public String getGenre() {
@@ -112,8 +109,9 @@ public class FeedsItem implements FeedsViewListener{
         this.likeCount = likeCount;
     }
 
-
-
+    public int getCommentsCount() {
+        return commentsCount;
+    }
 
     private void prepareAudio() {
         StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(this.path);
@@ -203,6 +201,8 @@ public class FeedsItem implements FeedsViewListener{
     public void onCommentClick(int position) {
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra("userId", userId);
+        intent.putExtra("recordingId", recordingId);
+
         context.startActivity(intent);
         // Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
 

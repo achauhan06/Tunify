@@ -1,12 +1,15 @@
 package edu.neu.madcourse.numadsp21finalproject.commentview;
 
-public class CommentItem {
-    private final String username;
-    private final String content;
+import com.google.firebase.Timestamp;
 
-    public CommentItem(String username, String content) {
-        this.username = username;
+public class CommentItem {
+    private final String commenterName, content;
+    private final Timestamp timestamp;
+
+    public CommentItem(String commenterName, String content, Timestamp timestamp) {
+        this.commenterName = commenterName;
         this.content = content;
+        this.timestamp = timestamp;
     }
 
     public String getContent() {
@@ -14,6 +17,14 @@ public class CommentItem {
     }
 
     public String getUsername() {
-        return username;
+        return commenterName;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public String getTimeString() {
+        return timestamp.toDate().toString();
     }
 }

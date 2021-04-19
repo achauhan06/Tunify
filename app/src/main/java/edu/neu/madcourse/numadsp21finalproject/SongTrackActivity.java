@@ -47,8 +47,10 @@ import com.google.firebase.storage.UploadTask;*/
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
@@ -458,6 +460,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         song_entry.put("time", new Timestamp(new Date()));
         song_entry.put("contributors",new HashMap<>());
         song_entry.put("version",version);
+        song_entry.put("commentsCount", 0);
+        song_entry.put("likes", new ArrayList<String>());
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
         StorageReference mFilePath = mStorageRef.child("audios")

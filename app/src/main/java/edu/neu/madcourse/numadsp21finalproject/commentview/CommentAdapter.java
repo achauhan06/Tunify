@@ -34,6 +34,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
         CommentItem currentItem = commentItemArrayList.get(position);
         holder.username.setText(currentItem.getUsername() + ":");
         holder.content.setText(currentItem.getContent());
+        holder.time.setText(currentItem.getTimeString());
 
     }
 

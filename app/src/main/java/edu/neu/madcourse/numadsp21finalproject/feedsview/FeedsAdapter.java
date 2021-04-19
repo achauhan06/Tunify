@@ -39,6 +39,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsHolder> {
         holder.feedsItemOwner.setText(currentItem.getOwnerName());
         holder.feedsItemTime.setText(currentItem.getTime());
         holder.feedsLikeCount.setText(String.valueOf(currentItem.getLikeCount()));
+        holder.feedsCommentCount.setText(String.valueOf(currentItem.getCommentsCount()));
 
         if(currentItem.getLikedByMe()) {
             holder.feedsItemLikeRedBtn.setVisibility(View.VISIBLE);

@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class CommentHolder extends RecyclerView.ViewHolder {
-    TextView username, content;
+    TextView username, content, time;
 
     public CommentHolder(@NonNull View itemView) {
         super(itemView);
         username = itemView.findViewById(R.id.comment_item_username);
         content = itemView.findViewById(R.id.comment_item_content);
+        time = itemView.findViewById(R.id.comment_item_time);
 
     }
 }

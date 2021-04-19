@@ -355,17 +355,20 @@ public class HomeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                /*
                                 String path = documentSnapshot.get("path").toString();
                                 String projectName = documentSnapshot.get("name").toString();
                                 String genre = documentSnapshot.get("genre").toString();
                                 String ownerName = documentSnapshot.get("username").toString();
                                 Timestamp timestamp= (Timestamp) documentSnapshot.get("time");
-                                String time =  timestamp.toDate().toString();
+                                // String time =  timestamp.toDate().toString();
                                 ArrayList<String> likeList = (ArrayList<String>) documentSnapshot.get("likes");
-
                                 FeedsItem item = new FeedsItem(projectName, path, genre, ownerName,
-                                        timestamp,time,likeList,
-                                        HomeActivity.this, documentSnapshot.getReference());
+                                        timestamp,likeList, HomeActivity.this,
+                                        documentSnapshot.getReference(), documentSnapshot.getId());
+
+                                 */
+                                FeedsItem item = new FeedsItem(documentSnapshot, HomeActivity.this);
                                 feedsItemArrayList.add(item);
                                 // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
 
