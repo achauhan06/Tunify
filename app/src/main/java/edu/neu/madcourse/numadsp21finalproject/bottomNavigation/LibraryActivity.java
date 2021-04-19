@@ -1,6 +1,7 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -123,7 +124,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void createBackAlert() {
-        if (currentSelectedSong==-1) {
+        if (currentSelectedSong == -1) {
             this.finish();
         } else {
             libraryList.get(currentSelectedSong).getMediaPlayer().pause();

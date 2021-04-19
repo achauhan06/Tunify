@@ -3,6 +3,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
+import edu.neu.madcourse.numadsp21finalproject.model.User;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class MainActivity extends AppCompatActivity {
@@ -107,6 +110,26 @@ public class MainActivity extends AppCompatActivity {
                                             .get(0).get("Username").toString();
                                     Helper.setEmailPassword(MainActivity.this,
                                             email, password, username);
+                                    String mobileToken = documentSnapshot.getDocuments()
+                                            .get(0).get("MobileToken") != null
+                                            ? documentSnapshot.getDocuments()
+                                            .get(0).get("MobileToken").toString()
+                                            : null;
+                                    UserService userService = new UserService() {
+                                        @Override
+                                        public void register(String userToken) {
+                                        }
+
+                                        @Override
+                                        public void updateToken(String refreshToken) {
+                                            documentSnapshot.getDocuments()
+                                                    .get(0).getReference()
+                                                    .update("MobileToken", refreshToken);
+                                            Helper.setUserToken(MainActivity.this, refreshToken);
+                                        }
+                                    };
+                                    FirebaseInstanceMessagingService.login(userService, mobileToken);
+                                    Helper.setUserToken(MainActivity.this, mobileToken);
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     intent.putExtra("email", email);
                                     startActivity(intent);

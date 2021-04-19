@@ -19,7 +19,6 @@ public class LibraryHolder extends RecyclerView.ViewHolder {
 
     public LibraryHolder(@NonNull View itemView, Context context, LibraryViewClickListener libraryViewClickListener) {
         super(itemView);
-
         libraryItemName = itemView.findViewById(R.id.library_item_name);
         libraryItemGenre = itemView.findViewById(R.id.library_item_genre);
         libraryplayBtn = itemView.findViewById(R.id.library_item_button);

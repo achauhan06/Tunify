@@ -36,53 +36,66 @@
             android:textSize="12sp"
             android:layout_margin="10dp"
             />
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            >
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/library_item_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:layout_gravity="center_vertical"
+                android:clickable="true"
                 android:foreground="@drawable/search_button_effect"
                 android:src="@drawable/play"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/library_item_stop"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/library_item_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:layout_gravity="center_vertical"
-                android:visibility="invisible"
+                android:clickable="true"
                 android:foreground="@drawable/search_button_effect"
                 android:src="@drawable/pause_48"
                 android:text=""
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/library_item_stop"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/library_item_stop"
-                android:visibility="invisible"
-                android:clickable="true"
-                android:foreground="@drawable/search_button_effect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:foreground="@drawable/search_button_effect"
+                android:src="@drawable/stop_button"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:src="@drawable/stop_button"/>
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>
 

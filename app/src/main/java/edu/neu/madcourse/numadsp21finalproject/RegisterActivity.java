@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
@@ -52,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     String userId;
     List<String> selectedGenres;
     UserItem user;
+    FirebaseInstanceMessagingService firebaseInstanceMessagingService;
     int counttracker = 0;
     int count = 0;
     //String token = "";
@@ -300,36 +302,30 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("Genres", String.join(";",selectedGenres));
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
-                            FirebaseMessaging.getInstance().getToken()
-                                    .addOnCompleteListener(task1 -> {
-                                        if (!task1.isSuccessful()) {
-                                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                            return;
-                                        }
-                                        // Get new FCM registration token
-                                        String token = task1.getResult();
-                                        user.setToken(token);
-                                        Toast.makeText(RegisterActivity.this, token, Toast.LENGTH_SHORT).show();
-                                        reg_entry.put("Mobile Token", user.getToken());
-                                        //TODO update username
-                                        Helper.setEmailPassword(RegisterActivity.this,
-                                                email.getText().toString(), password.getText().toString(),
-                                                email.getText().toString());
-                                        reference1.set(reg_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        //sendRegistrationToServer(token,context);
-                                        //reg_entry.put("Mobile Token", token);
-
-                                        //openNewActivity("User created successfully", view, context);
+                            UserService registerUser = new UserService() {
+                                @Override
+                                public void register(String userToken) {
+                                    Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
+                                    reg_entry.put("MobileToken", userToken);
+                                    //TODO update username
+                                    Helper.setEmailPassword(RegisterActivity.this,
+                                            email.getText().toString(), password.getText().toString(),
+                                            email.getText().toString());
+                                    Helper.setUserToken(RegisterActivity.this, userToken);
+                                    reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        startActivity(intent);
                                     });
-                            //Toast.makeText(RegisterActivity.this, "Token : " +user.getToken(), Toast.LENGTH_SHORT).show();
-                            //firebaseInstanceMessagingService.sendRegistrationToServer(reg_entry);
+                                }
+
+                                @Override
+                                public void updateToken(String refreshToken) {
+
+                                }
+                            };
+                            firebaseInstanceMessagingService.register(registerUser);
+
                         }
                         else {
                             Toast.makeText(RegisterActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
