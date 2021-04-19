@@ -70,6 +70,10 @@
             android:name=".bottomNavigation.LibraryActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"/>
+        <activity
+            android:name=".commentview.CommentActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar"/>
 
         <service
             android:name=".service.FirebaseInstanceMessagingService"

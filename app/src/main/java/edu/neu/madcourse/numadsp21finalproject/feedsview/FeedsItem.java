@@ -1,6 +1,7 @@
 package edu.neu.madcourse.numadsp21finalproject.feedsview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 
 public class FeedsItem implements FeedsViewListener{
@@ -198,7 +201,10 @@ public class FeedsItem implements FeedsViewListener{
 
     @Override
     public void onCommentClick(int position) {
-        Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(context, CommentActivity.class);
+        intent.putExtra("userId", userId);
+        context.startActivity(intent);
+        // Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
 
     }
 }
