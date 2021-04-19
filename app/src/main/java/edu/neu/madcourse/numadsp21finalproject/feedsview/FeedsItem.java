@@ -30,7 +30,8 @@ public class FeedsItem implements FeedsViewListener{
     private final Timestamp timestamp;
     private final String ownerName;
     private Context context;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private boolean loaded = false;
 
     public FeedsItem(String projectName, String path, String genre, String ownerName,
                      Timestamp timestamp, String time, Context context) {
@@ -42,11 +43,16 @@ public class FeedsItem implements FeedsViewListener{
         this.ownerName = ownerName;
         this.context = context;
 
-
-        prepareAudio();
+        // new Thread(new MediaRunnable()).start();
+        // prepareAudio();
     }
 
-
+    class MediaRunnable implements Runnable {
+        @Override
+        public void run() {
+            prepareAudio();
+        }
+    }
 
     public String getOwnerName() {
 
@@ -82,7 +88,7 @@ public class FeedsItem implements FeedsViewListener{
             public void onSuccess(Uri uri) {
 
                 try {
-                    mediaPlayer = new MediaPlayer();
+
                     mediaPlayer.setAudioAttributes(
                             new AudioAttributes.Builder()
                                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -91,6 +97,8 @@ public class FeedsItem implements FeedsViewListener{
                     );
                     mediaPlayer.setDataSource(String.valueOf(uri));
                     mediaPlayer.prepare(); // might take long! (for buffering, etc)
+                    mediaPlayer.start();
+                    loaded = true;
                 } catch (IOException e) {
                     Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
                 }
@@ -105,16 +113,33 @@ public class FeedsItem implements FeedsViewListener{
     }
 
     @Override
-    public void onItemClick(int position) {
-
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-
+    public void onPlayPauseClick(int position) {
+        if(!loaded) {
+            prepareAudio();
         }else {
-            mediaPlayer.start();
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+
+            }else {
+                mediaPlayer.start();
+            }
+
         }
 
 
+
+
+    }
+
+    @Override
+    public void onLikeClick(int position) {
+        Toast.makeText(context , "liked " + position,Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onCommentClick(int position) {
+        Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
 
     }
 }

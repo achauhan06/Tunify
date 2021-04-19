@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +75,7 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<FeedsItem> feedsItemArrayList;
     private ArrayList<String> friendsList;
     FirebaseFirestore firebaseFirestore;
+    private Handler homeHandler = new Handler();
 
 
     @Override
@@ -113,9 +116,16 @@ public class HomeActivity extends AppCompatActivity {
         setNavigationListener();
         setBottomNavigationListener();
         setSearchComponent();
-        getFriendsList();
+        FeedsRunnable feedsRunnable = new FeedsRunnable();
+        new Thread(feedsRunnable).start();
 
+    }
 
+    class FeedsRunnable implements Runnable {
+        @Override
+        public void run() {
+            getFriendsList();
+        }
     }
 
     public void onClick(View view) {
@@ -262,6 +272,9 @@ public class HomeActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+
+
+
     private void createFeedsRecyclerView() {
         // Toast.makeText(HomeActivity.this, "recycler view",Toast.LENGTH_SHORT).show();
 
@@ -279,8 +292,16 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         FeedsViewListener feedsViewListener = new FeedsViewListener() {
             @Override
-            public void onItemClick(int position) {
-                feedsItemArrayList.get(position).onItemClick(position);
+            public void onPlayPauseClick(int position) {
+                feedsItemArrayList.get(position).onPlayPauseClick(position);
+            }
+            @Override
+            public void onLikeClick(int position) {
+                feedsItemArrayList.get(position).onLikeClick(position);
+            }
+            @Override
+            public void onCommentClick(int position) {
+                feedsItemArrayList.get(position).onCommentClick(position);
             }
         };
         feedsAdapter = new FeedsAdapter(feedsItemArrayList, feedsViewListener, this);
@@ -324,11 +345,11 @@ public class HomeActivity extends AppCompatActivity {
     private void getFeed() {
         // Toast.makeText(HomeActivity.this, friendsList.get(1),Toast.LENGTH_SHORT).show();
         if(friendsList.size() == 0) {
+            Toast.makeText(HomeActivity.this, "you have no friend" ,Toast.LENGTH_SHORT).show();
             return;
         }
         firebaseFirestore.getInstance().collection("recordings")
                 .whereIn ("owner", friendsList)
-                // .orderBy("time")
                 // not sure if i should limit or not
                 // .limit(10)
                 .get()
@@ -347,17 +368,24 @@ public class HomeActivity extends AppCompatActivity {
                                         timestamp,time,HomeActivity.this);
                                 feedsItemArrayList.add(item);
 
-                                Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
 
                             }
-
-
-
 
                         } else {
                             Log.d("firebase", "Error getting feeds items", task.getException());
                         }
                         createFeedsRecyclerView();
+                        /*
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                createFeedsRecyclerView();
+                            }
+                        });
+
+                         */
+
 
                     }
                 });
