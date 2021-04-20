@@ -6,17 +6,14 @@ import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -35,6 +32,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 public class JamActivity extends AppCompatActivity {
 
     private Dialog dialog;
-    private List<FriendGroupItem> friendsList;
+    private ArrayList<FriendGroupItem> friendsList;
     private String userId;
     private String userName;
     private RecyclerView.LayoutManager rLayoutManger;
@@ -58,7 +57,7 @@ public class JamActivity extends AppCompatActivity {
     private FriendGroupAdapter friendGroupAdapter;
 
     private RecyclerView jamRecyclerView;
-    private List<JamItem> jamItemList;
+    private ArrayList<JamItem> jamItemList;
     private RecyclerView.LayoutManager jamLayoutManger;
     private JamAdapter jamAdapter;
 
@@ -102,8 +101,6 @@ public class JamActivity extends AppCompatActivity {
             }
         };
         jamRecyclerView.setLayoutManager(jamLayoutManger);
-        jamAdapter = new JamAdapter(jamItemList, jamViewListener, this);
-        jamRecyclerView.setAdapter(jamAdapter);
         Helper.db.collection("jamGroups")
                 .document(userId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -112,13 +109,22 @@ public class JamActivity extends AppCompatActivity {
                                         @Nullable FirebaseFirestoreException e) {
 
                         Map<String, Object> fieldMap = snapshot.getData();
+                        int pos = 0;
                         if (fieldMap != null) {
+                            jamItemList = new ArrayList<>();
+                            jamAdapter = new JamAdapter(jamItemList, jamViewListener,
+                                    JamActivity.this);
+                            jamRecyclerView.setAdapter(jamAdapter);
+
                             for (Map.Entry<String, Object> entry : fieldMap.entrySet()) {
                                 HashMap<String, String> friendMap =
                                         (HashMap<String, String>) entry.getValue();
                                 jamItemList.add(new JamItem(entry.getKey(), friendMap));
+                                jamAdapter.notifyItemInserted(pos);
+                                pos++;
                             }
-                            jamRecyclerView.setAdapter(jamAdapter);
+
+
                         }
                     }
                 });
@@ -196,8 +202,16 @@ public class JamActivity extends AppCompatActivity {
         });
     }
 
+    private void clearDialogView() {
+        EditText groupName = dialog.findViewById(R.id.group_name_input);
+        groupName.setText("");
+        for (int i = 0; i < friendsList.size() ; i++) {
+            friendsList.get(i).setChecked();
 
+        }
+        friendGroupAdapter.notifyDataSetChanged();
 
+    }
 
     private void createNewGroupDialogView() {
 
@@ -209,46 +223,56 @@ public class JamActivity extends AppCompatActivity {
 
         EditText groupName = dialog.findViewById(R.id.group_name_input);
 
-
         Button createButton = dialog.findViewById(R.id.create_group_btn);
         createButton.setOnClickListener(v -> {
             String groupNameString = groupName.getText().toString();
             if (groupNameString.isEmpty()) {
                 Toast.makeText(JamActivity.this,
                         "Please provide a group name", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            else {
                 WriteBatch documentBatch = Helper.db.batch();
                 HashMap<String, String> friendMap = new HashMap<>();
                 for(FriendGroupItem friend : friendsList) {
                     if (friend.isChecked()) {
                         friendMap.put(friend.getFriendToken(), friend.getFriendName());
-
                     }
                 }
-                friendMap.put(userId, userName);
-                Map<String, Object> groupEntry = new HashMap<>();
-                groupEntry.put(groupNameString, friendMap);
+                if (!friendMap.isEmpty()) {
+                    friendMap.put(userId, userName);
+                    Map<String, Object> groupEntry = new HashMap<>();
+                    for (JamItem jamItem : jamItemList) {
+                        groupEntry.put(jamItem.getGroupName(),jamItem.getFriendMap());
+                    }
+                    groupEntry.put(groupNameString, friendMap);
 
-                for(String user : friendMap.keySet()) {
-                    documentBatch.set(Helper.db.collection("jamGroups")
-                            .document(user), groupEntry);
+                    for(String user : friendMap.keySet()) {
+                        documentBatch.set(Helper.db.collection("jamGroups")
+                                .document(user), groupEntry);
+                    }
 
-                }
-
-
-                documentBatch.commit().addOnSuccessListener(aVoid -> {
-                    Snackbar.make(findViewById(android.R.id.content)
-                            ,groupName.getText() + " group Created",Snackbar.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                    documentBatch.commit().addOnSuccessListener(aVoid -> {
                         Snackbar.make(findViewById(android.R.id.content)
-                                ,"Some error occurred. Group could not be created"
-                                ,Snackbar.LENGTH_SHORT).show();
+                                ,groupName.getText() + " group Created",Snackbar.LENGTH_SHORT).show();
                         dialog.dismiss();
-                    }
-                });
+                        clearDialogView();
+
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content)
+                                    ,"Some error occurred. Group could not be created"
+                                    ,Snackbar.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            clearDialogView();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(JamActivity.this,
+                            "Please select members to add.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

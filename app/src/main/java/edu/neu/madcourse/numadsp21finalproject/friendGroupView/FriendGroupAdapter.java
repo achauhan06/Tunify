@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
@@ -15,10 +16,10 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class FriendGroupAdapter extends RecyclerView.Adapter<FriendGroupHolder> {
 
-    private final List<FriendGroupItem> friendGroupItems;
+    private final ArrayList<FriendGroupItem> friendGroupItems;
     FriendGroupListener friendGroupListener;
 
-    public FriendGroupAdapter(List<FriendGroupItem> friendGroupItems,
+    public FriendGroupAdapter(ArrayList<FriendGroupItem> friendGroupItems,
                               FriendGroupListener friendGroupListener ) {
         this.friendGroupItems = friendGroupItems;
         this.friendGroupListener = friendGroupListener;

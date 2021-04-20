@@ -81,7 +81,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             //genre.setText(d.getString("Genres"));
                             userToken = d.getString("MobileToken");
                             Toast.makeText(UserProfileActivity.this, "Hi " +d.getString("MobileToken"), Toast.LENGTH_SHORT).show();
-                            String[] arr = d.getString("Genres").split(";");
+                            String[] arr = d.getString("Genres") == null ? new String[]{} : d.getString("Genres").split(";");
                             List<String> list1 = Lists.newArrayList(arr);
                             genre.setText(list1.toString().replace("[", "").replace("]", ""));
                             break;

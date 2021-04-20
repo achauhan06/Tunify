@@ -28,4 +28,8 @@ public class FriendGroupItem implements FriendGroupListener {
     public void onItemClicked(int position) {
         isChecked = !isChecked;
     }
+
+    public void setChecked() {
+        this.isChecked = false;
+    }
 }

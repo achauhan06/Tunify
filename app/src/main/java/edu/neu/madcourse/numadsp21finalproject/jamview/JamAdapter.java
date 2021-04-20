@@ -15,11 +15,11 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class JamAdapter extends RecyclerView.Adapter<JamHolder> {
 
-    private final List<JamItem> jamItems;
+    private final ArrayList<JamItem> jamItems;
     private final JamViewListener jamViewListener;
     private final Context context;
 
-    public JamAdapter(List<JamItem> jamItems, JamViewListener listener, Context context) {
+    public JamAdapter(ArrayList<JamItem> jamItems, JamViewListener listener, Context context) {
         this.jamItems = jamItems;
         this.jamViewListener = listener;
         this.context = context;
