@@ -95,12 +95,10 @@ public class LibraryActivity extends AppCompatActivity {
             }
             @Override
             public void onCommentClick(int position) {
-                currentSelectedSong = position;
                 libraryList.get(position).onCommentClick(position);
             }
             @Override
             public void onLikeClick(int position) {
-                currentSelectedSong = position;
                 libraryList.get(position).onLikeClick(position);
             }
         };
@@ -163,6 +161,7 @@ public class LibraryActivity extends AppCompatActivity {
             });
             AlertDialog alertDialog = songCloseAlert.create();
             alertDialog.show();
+
         }
     }
 
