@@ -45,10 +45,9 @@ public class FeedsItem implements FeedsViewListener{
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private boolean loaded = false;
     private ArrayList<String> likesList = new ArrayList<>();
-    private ArrayList<CommentItem> commentItemArrayList = new ArrayList<>();
     private boolean likedByMe;
     private int likeCount;
-    private DocumentReference documentReference;
+    private final DocumentReference documentReference;
     private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private FirebaseFirestore firebaseFirestore;
@@ -91,11 +90,9 @@ public class FeedsItem implements FeedsViewListener{
     public Timestamp getTimestamp() {
         return timestamp;
     }
-
-    public String getTime() {
+    public String getTimeString() {
         return timestamp.toDate().toString();
     }
-
     public String getGenre() {
         return genre;
     }
@@ -105,10 +102,6 @@ public class FeedsItem implements FeedsViewListener{
     public int getLikeCount() {
         return likeCount;
     }
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
     public int getCommentsCount() {
         return commentsCount;
     }
@@ -202,6 +195,8 @@ public class FeedsItem implements FeedsViewListener{
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("recordingId", recordingId);
+        intent.putExtra("prev","home");
+
 
         context.startActivity(intent);
         // Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();

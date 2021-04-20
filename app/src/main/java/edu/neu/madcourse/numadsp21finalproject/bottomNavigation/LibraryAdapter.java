@@ -41,6 +41,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryHolder> {
         LibraryItem currentItem = libraryItemArrayList.get(position);
         holder.libraryItemName.setText(currentItem.getProjectName());
         holder.libraryItemGenre.setText(currentItem.getGenre());
+        holder.libraryItemTime.setText(currentItem.getTimeString());
+        holder.libraryLikeCount.setText(String.valueOf(currentItem.getLikeCount()));
+        holder.libraryCommentCount.setText(String.valueOf(currentItem.getCommentCount()));
+        if(currentItem.isLikedByMe()) {
+            holder.libraryLikeRed.setVisibility(View.VISIBLE);
+            holder.libraryLikeWhite.setVisibility(View.INVISIBLE);
+        }else {
+            holder.libraryLikeRed.setVisibility(View.INVISIBLE);
+            holder.libraryLikeWhite.setVisibility(View.VISIBLE);
+        }
+
 
     }
 

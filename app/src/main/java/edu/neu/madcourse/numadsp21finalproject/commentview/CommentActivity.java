@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject.commentview;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,10 +33,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class CommentActivity extends AppCompatActivity {
@@ -44,7 +43,7 @@ public class CommentActivity extends AppCompatActivity {
     Button post;
     private ArrayList<CommentItem> commentItemArrayList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String userId, userName, recordingId;
+    private String userId, userName, recordingId, prev;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +57,7 @@ public class CommentActivity extends AppCompatActivity {
         userId = getIntent().getExtras().getString("userId");
         userName = Helper.getUsername(this);
         recordingId = getIntent().getExtras().getString("recordingId");
+        prev = getIntent().getExtras().getString("prev");
 
         commentItemArrayList = new ArrayList<>();
         input = findViewById(R.id.comment_input);
@@ -105,14 +105,14 @@ public class CommentActivity extends AppCompatActivity {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                DocumentSnapshot documentSnapshot = transaction.get(documentReference);
-                transaction.update(documentReference, "commentsCount", commentItemArrayList.size() + 1);
+                // DocumentSnapshot documentSnapshot = transaction.get(documentReference);
+                transaction.update(documentReference, "commentsCount", commentItemArrayList.size());
                 return null;
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(CommentActivity.this , "comments count updated",Toast.LENGTH_SHORT).show();
+                // Toast.makeText(CommentActivity.this , "comments count updated",Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -172,8 +172,16 @@ public class CommentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(prev.equals("home")){
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+
+        }else if(prev.equals("library")){
+            Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
+            startActivity(intent);
+        }
         this.finish();
+
     }
 
     @Override

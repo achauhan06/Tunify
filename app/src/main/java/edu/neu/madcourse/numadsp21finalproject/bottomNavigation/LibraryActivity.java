@@ -27,11 +27,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -61,6 +64,14 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView() {
+        if(libraryList.size() > 0) {
+            Collections.sort(libraryList, new Comparator<LibraryItem>() {
+                @Override
+                public int compare(LibraryItem o1, LibraryItem o2) {
+                    return o2.getTimestamp().compareTo(o1.getTimestamp());
+                }
+            });
+        }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.library_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -82,6 +93,16 @@ public class LibraryActivity extends AppCompatActivity {
                 currentSelectedSong = -1;
                 libraryList.get(position).onStopClick(position);
             }
+            @Override
+            public void onCommentClick(int position) {
+                currentSelectedSong = position;
+                libraryList.get(position).onCommentClick(position);
+            }
+            @Override
+            public void onLikeClick(int position) {
+                currentSelectedSong = position;
+                libraryList.get(position).onLikeClick(position);
+            }
         };
         libraryAdapter = new LibraryAdapter(libraryList, libraryViewClickListener, this);
         ItemTouchHelper itemTouchHelper = new
@@ -101,10 +122,7 @@ public class LibraryActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                String path = documentSnapshot.get("path").toString();
-                                String projectName = documentSnapshot.get("name").toString();
-                                String genre = documentSnapshot.get("genre").toString();
-                                LibraryItem item = new LibraryItem(projectName, path, genre,LibraryActivity.this);
+                                LibraryItem item = new LibraryItem(documentSnapshot, LibraryActivity.this, userId);
                                 libraryList.add(item);
                                 // Toast.makeText(LibraryActivity.this, projectName,Toast.LENGTH_SHORT).show();
 
