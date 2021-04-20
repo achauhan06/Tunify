@@ -90,7 +90,7 @@ public class JamActivity extends AppCompatActivity {
         JamViewListener jamViewListener = new JamViewListener() {
             @Override
             public void onItemClick(int position, Context context) {
-
+                jamItemList.get(position).onItemClick(position, context);
             }
 
             @Override
@@ -225,11 +225,10 @@ public class JamActivity extends AppCompatActivity {
             if (groupNameString.isEmpty()) {
                 Toast.makeText(JamActivity.this,
                         "Please provide a group name", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 WriteBatch documentBatch = Helper.db.batch();
                 HashMap<String, String> friendMap = new HashMap<>();
-                for(FriendGroupItem friend : friendsList) {
+                for (FriendGroupItem friend : friendsList) {
                     if (friend.isChecked()) {
                         friendMap.put(friend.getFriendToken(), friend.getFriendName());
                     }
@@ -238,18 +237,18 @@ public class JamActivity extends AppCompatActivity {
                     friendMap.put(userId, userName);
                     Map<String, Object> groupEntry = new HashMap<>();
                     for (JamItem jamItem : jamItemList) {
-                        groupEntry.put(jamItem.getGroupName(),jamItem.getFriendMap());
+                        groupEntry.put(jamItem.getGroupName(), jamItem.getFriendMap());
                     }
                     groupEntry.put(groupNameString, friendMap);
 
-                    for(String user : friendMap.keySet()) {
+                    for (String user : friendMap.keySet()) {
                         documentBatch.set(Helper.db.collection("jamGroups")
                                 .document(user), groupEntry);
                     }
 
                     documentBatch.commit().addOnSuccessListener(aVoid -> {
                         Snackbar.make(findViewById(android.R.id.content)
-                                ,groupName.getText() + " group Created",Snackbar.LENGTH_SHORT).show();
+                                , groupName.getText() + " group Created", Snackbar.LENGTH_SHORT).show();
                         dialog.dismiss();
                         clearDialogView();
 
@@ -258,8 +257,8 @@ public class JamActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Snackbar.make(findViewById(android.R.id.content)
-                                    ,"Some error occurred. Group could not be created"
-                                    ,Snackbar.LENGTH_SHORT).show();
+                                    , "Some error occurred. Group could not be created"
+                                    , Snackbar.LENGTH_SHORT).show();
                             dialog.dismiss();
                             clearDialogView();
                         }
@@ -272,8 +271,6 @@ public class JamActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     @Override
     public void onBackPressed() {

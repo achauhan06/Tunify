@@ -37,6 +37,11 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Jam"/>
         <activity
+            android:name=".JamSessionActivity"
+            android:label=""
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.Jam"/>
+        <activity
             android:name=".CategoryListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Practice" />
