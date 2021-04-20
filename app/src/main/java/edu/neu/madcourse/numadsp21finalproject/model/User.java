@@ -11,6 +11,14 @@ public class User {
         this.categories = categories;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User() {
+
+    }
+
     public String getEmail() {
         return email;
     }

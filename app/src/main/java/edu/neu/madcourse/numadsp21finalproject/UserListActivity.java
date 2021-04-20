@@ -7,20 +7,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.numadsp21finalproject.model.User;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
@@ -38,6 +44,13 @@ public class UserListActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private ArrayList<UserItem> userItemList2;
     private Button profile;
+    private User currentUser;
+    //FirebaseUser user;
+    //String userId;
+    //String email;
+    //private ProfileActivity profileActivity;
+    //FirebaseAuth firebaseAuth;
+
 
 
 
@@ -46,8 +59,12 @@ public class UserListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.users);
         profile = findViewById(R.id.profile_button);
+        currentUser = new User();
+        //profileActivity = new ProfileActivity();
         userItemList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
+        //email = getIntent().getExtras().getString("email");
+
         //UserItem user1 = new UserItem("user1", "");
         userItemList2 = new ArrayList<>();
 
@@ -58,6 +75,10 @@ public class UserListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //user = firebaseAuth.getCurrentUser();
+        //userId = user.getUid();
+        //DocumentReference documentReference = db.collection("users").document(userId);
+        //setProfile(documentReference);
         // userItemList = getIntent().getParcelableArrayListExtra("users");
         db.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
@@ -67,10 +88,13 @@ public class UserListActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 String userName = d.getString("First Name") + " " + d.getString("Last Name");
-                                String email = d.getString("Email");
-                                UserItem user = new UserItem(userName, "", email);
+                                String email1 = d.getString("Email");
+                                UserItem user = new UserItem(userName, "", email1);
                                 //userItemList
                                 //UserItem users = d.toObject(UserItem.class);
+                                //if (!email.equals(profileActivity.getEmail().getText().toString()))
+                                //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+                                //if (email != email1)
                                 userItemList.add(user);
                                 //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
 

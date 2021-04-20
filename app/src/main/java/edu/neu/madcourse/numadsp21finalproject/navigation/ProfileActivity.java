@@ -43,15 +43,21 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.UserListActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
+import edu.neu.madcourse.numadsp21finalproject.model.User;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class ProfileActivity extends AppCompatActivity {
 
     EditText first_name, last_name, dob, genre;
     TextView email;
-    Button updateBtn, uploadProfilePicture;
+    Button updateBtn;
+
+    User userItem;
+
+    Button uploadProfilePicture;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fireStore;
     FirebaseUser user;
@@ -66,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         Toolbar toolbar = findViewById(R.id.toolbar_profile);
+        userItem =  new User();
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -155,6 +162,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     email.setText(value.getString("Email"));
+                    userItem.setEmail(value.getString("Email"));
                     String first_name_str = value.getString("First Name");
                     first_name.setText(first_name_str);
                     String last_name_str = value.getString("Last Name");
@@ -164,6 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String[] arr = value.getString("Genres").split(";");
                     List<String> list = Lists.newArrayList(arr);
                     genre.setText(list.toString().replace("[", "").replace("]", ""));
+                    Toast.makeText(ProfileActivity.this, email.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
 

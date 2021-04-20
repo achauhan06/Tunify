@@ -37,7 +37,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsHolder> {
         holder.feedsItemName.setText(currentItem.getProjectName());
         holder.feedsItemGenre.setText(currentItem.getGenre());
         holder.feedsItemOwner.setText(currentItem.getOwnerName());
-        holder.feedsItemTime.setText(currentItem.getTime());
+        holder.feedsItemTime.setText(currentItem.getTimeString());
         holder.feedsLikeCount.setText(String.valueOf(currentItem.getLikeCount()));
         holder.feedsCommentCount.setText(String.valueOf(currentItem.getCommentsCount()));
 

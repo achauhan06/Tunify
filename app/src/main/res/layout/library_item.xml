@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="#E4DFEA"
     app:cardCornerRadius="5dp">
@@ -36,10 +36,24 @@
             android:textSize="12sp"
             android:layout_margin="10dp"
             />
+        <TextView
+            android:id="@+id/library_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:layout_below="@+id/library_item_genre"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:layout_margin="10dp"
+            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/library_item_buttons"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -96,6 +110,66 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/library_item_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="0"
+            android:layout_below="@id/library_item_time"
+            android:layout_toEndOf="@id/library_item_comment_btn"
+            android:layout_marginVertical="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            />
+        <ImageButton
+            android:id="@+id/library_item_comment_btn"
+            android:background="#E4DFEA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/library_item_time"
+            android:padding="5dp"
+            android:layout_marginVertical="5dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_comment"
+            />
+        <ImageButton
+            android:id="@+id/library_item_like_white"
+            android:background="#E4DFEA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/library_item_time"
+            android:layout_toStartOf="@id/library_item_like_count"
+            android:padding="5dp"
+            android:layout_marginVertical="5dp"
+            android:src="@drawable/ic_like_white"
+            android:visibility="invisible"
+            />
+        <ImageButton
+            android:id="@+id/library_item_like_red"
+            android:background="#E4DFEA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/library_item_time"
+            android:layout_toStartOf="@id/library_item_like_count"
+            android:padding="5dp"
+            android:layout_marginVertical="5dp"
+            android:src="@drawable/ic_like_red"
+            android:visibility="visible"
+            />
+        <TextView
+            android:id="@+id/library_item_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:padding="5dp"
+            android:layout_below="@id/library_item_time"
+            android:layout_alignParentEnd="true"
+            android:layout_marginVertical="5dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            />
 
     </RelativeLayout>
 
