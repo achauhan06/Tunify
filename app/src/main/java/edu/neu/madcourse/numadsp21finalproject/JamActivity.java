@@ -1,12 +1,13 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,18 +23,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryAdapter;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupAdapter;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupItem;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupListener;
@@ -116,11 +116,7 @@ public class JamActivity extends AppCompatActivity {
                                         }else {
                                             friendId = friendIds.get(0);
                                         }
-                                        for (int i = 0; i < 10 ; i++) {
-                                            friendsList.add(new FriendGroupItem(friendName,friendId));
-                                        }
-
-
+                                        friendsList.add(new FriendGroupItem(friendName,friendId));
                                         createDialogRecyclerView();
 
 
@@ -158,6 +154,41 @@ public class JamActivity extends AppCompatActivity {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.setCancelable(true);
+
+        EditText groupName = dialog.findViewById(R.id.group_name_input);
+
+
+        Button createButton = dialog.findViewById(R.id.create_group_btn);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String groupNameString = groupName.getText().toString();
+                if (groupNameString.isEmpty()) {
+                    Toast.makeText(JamActivity.this,
+                            "Please provide a group name", Toast.LENGTH_SHORT).show();
+                } else {
+                    HashMap<String, String> friendMap = new HashMap<>();
+                    for(FriendGroupItem friend : friendsList) {
+                        if (friend.isChecked()) {
+                            friendMap.put(friend.getFriendToken(), friend.getFriendName());
+                        }
+                    }
+                    friendMap.put(userId, userName);
+                    Map<String, Object> groupEntry = new HashMap<>();
+                    groupEntry.put("groupName", groupNameString);
+                    groupEntry.put("members", friendMap);
+                    Helper.db.collection("jamGroups").document()
+                            .set(groupEntry).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Snackbar.make(findViewById(android.R.id.content)
+                                    ,groupName + " group Created",Snackbar.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
