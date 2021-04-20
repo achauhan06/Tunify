@@ -304,7 +304,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("Date of Birth", dob.getText().toString());
                             UserService registerUser = userToken -> {
                                 Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
-                                reg_entry.put("MobileToken", userToken);
+                                reg_entry.put("MobileToken", userToken.toString());
                                 //TODO update username
                                 Helper.setEmailPassword(RegisterActivity.this,
                                         email.getText().toString(), password.getText().toString(),
