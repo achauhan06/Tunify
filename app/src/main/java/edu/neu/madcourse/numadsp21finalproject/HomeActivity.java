@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -11,13 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,7 +41,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -48,6 +54,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
@@ -77,6 +84,8 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
 
     private BottomNavigationView bottomNavigationView;
+
+    private Dialog levelDialog;
 
 
     @Override
@@ -119,6 +128,40 @@ public class HomeActivity extends AppCompatActivity {
         setSearchComponent();
         FeedsRunnable feedsRunnable = new FeedsRunnable();
         new Thread(feedsRunnable).start();
+        createLevelDialog();
+    }
+
+    private void createLevelDialog() {
+        levelDialog = new Dialog(HomeActivity.this);
+        levelDialog.setContentView(R.layout.level_section_layout);
+        levelDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        levelDialog.setCancelable(true);
+        Button closeButton = levelDialog.findViewById(R.id.close_level_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                levelDialog.dismiss();
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Helper.db.collection("users").document(userId)
+                        .addSnapshotListener((snapshot, error) -> {
+                            Map<String, Object> fieldMap = snapshot.getData();
+                            String currentLevel = fieldMap.get("currentLevel")!=null ?
+                                    fieldMap.get("currentLevel").toString() : "0";
+                            String currentScore = fieldMap.get("currentLevel")!=null ?
+                                    fieldMap.get("currentScore").toString() : "0";
+                            TextView level = levelDialog.findViewById(R.id.current_level);
+                            level.setText(currentLevel);
+                            TextView score = levelDialog.findViewById(R.id.current_score);
+                            score.setText(currentScore);
+
+                        });
+            }
+        }).start();
 
     }
 
@@ -244,6 +287,9 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(toggle.onOptionsItemSelected(item))
             return true;
+        if (item.getItemId() == R.id.reward) {
+            levelDialog.show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
