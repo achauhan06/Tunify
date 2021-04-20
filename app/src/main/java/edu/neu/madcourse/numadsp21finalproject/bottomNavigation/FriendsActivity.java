@@ -77,7 +77,7 @@ public class FriendsActivity extends AppCompatActivity {
 
 
         // query for all current user's friendships
-        fireStore.getInstance().collection("friendships")
+        Helper.db.collection("friendships")
                 .whereArrayContains("friends", userId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

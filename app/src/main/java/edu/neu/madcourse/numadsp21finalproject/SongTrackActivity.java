@@ -21,6 +21,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -482,6 +483,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                         song_entry.put("link", uri1.toString());
                         song_entry.put("username", userName);
                         ref.set(song_entry);
+                        sendPublishedItemNotification();
                     });
                     Snackbar.make(findViewById(android.R.id.content),
                             "Audio has been published successfully", Snackbar.LENGTH_SHORT)
@@ -497,11 +499,13 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                 });
     }
 
+    private void sendPublishedItemNotification() {
+    }
+
     private void openLibrary() {
         Intent intent = new Intent(this, LibraryActivity.class);
         startActivity(intent);
         this.finish();
     }
-
 
 }

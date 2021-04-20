@@ -21,4 +21,15 @@
     <color name="practiceSecondaryDarkColor">#a094b7</color>
     <color name="practicePrimaryTextColor">#000000</color>
     <color name="practiceSecondaryTextColor">#000000</color>
+
+    <!--Colors for Jam section-->
+        <color name="jamPrimaryColor">#c8e6c9</color>
+        <color name="jamPrimaryLightColor">#fbfffc</color>
+        <color name="jamPrimaryDarkColor">#97b498</color>
+        <color name="jamSecondaryColor">#a5d6a7</color>
+        <color name="jamSecondaryLightColor">#d7ffd9</color>
+        <color name="jamSecondaryDarkColor">#75a478</color>
+        <color name="jamPrimaryTextColor">#000000</color>
+        <color name="jamSecondaryTextColor">#000000</color>
+
 </resources>

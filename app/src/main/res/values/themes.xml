@@ -30,7 +30,24 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Tunify.NoActionBar" >
+    <style name="Theme.Tunify.Jam" parent="Theme.MaterialComponents.Light">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/jamPrimaryColor</item>
+        <item name="colorPrimaryVariant">@color/jamPrimaryLightColor</item>
+        <item name="colorOnPrimary">@color/jamPrimaryTextColor</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/jamSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/jamSecondaryLightColor</item>
+        <item name="colorOnSecondary">@color/jamSecondaryTextColor</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="Theme.Tunify.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

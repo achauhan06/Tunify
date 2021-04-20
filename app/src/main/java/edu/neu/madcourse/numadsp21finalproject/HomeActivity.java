@@ -132,16 +132,19 @@ public class HomeActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.practice_btn:
-                Intent intent = new Intent(this,CategoryListActivity.class);
-                intent.putExtra("currentEmail", currentEmail);
-                startActivity(intent);
+                Intent intentPractice = new Intent(this,CategoryListActivity.class);
+                intentPractice.putExtra("currentEmail", currentEmail);
+                startActivity(intentPractice);
                 break;
             case R.id.jam_btn:
+                Intent intentJam = new Intent(this, JamActivity.class);
+                intentJam.putExtra("currentEmail", currentEmail);
+                startActivity(intentJam);
                 break;
             case R.id.meet_btn:
-                Intent intent1 = new Intent(this, UserListActivity.class);
-                intent1.putExtra("currentEmail", currentEmail);
-                startActivity(intent1);
+                Intent intentMeet = new Intent(this, UserListActivity.class);
+                intentMeet.putExtra("currentEmail", currentEmail);
+                startActivity(intentMeet);
                 break;
             default:
                 return;
