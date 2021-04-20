@@ -2,10 +2,12 @@ package edu.neu.madcourse.numadsp21finalproject.jamview;
 
 import android.content.Context;
 
+import java.util.HashMap;
+
 public class JamItem implements JamViewListener {
     private String groupName;
 
-    public JamItem(String groupName) {
+    public JamItem(String groupName, HashMap<String, String> friendMap) {
         this.groupName = groupName;
     }
 
