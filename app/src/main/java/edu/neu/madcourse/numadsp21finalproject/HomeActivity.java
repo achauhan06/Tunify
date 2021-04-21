@@ -144,25 +144,27 @@ public class HomeActivity extends AppCompatActivity {
                 levelDialog.dismiss();
             }
         });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Helper.db.collection("users").document(userId)
-                        .addSnapshotListener((snapshot, error) -> {
-                            Map<String, Object> fieldMap = snapshot.getData();
-                            String currentLevel = fieldMap.get("currentLevel")!=null ?
-                                    fieldMap.get("currentLevel").toString() : "0";
-                            String currentScore = fieldMap.get("currentScore")!=null ?
-                                    fieldMap.get("currentScore").toString() : "0";
-                            TextView level = levelDialog.findViewById(R.id.current_level);
-                            level.setText(currentLevel);
-                            TextView score = levelDialog.findViewById(R.id.current_score);
-                            score.setText(currentScore);
+        createScoreBoard();
 
-                        });
-            }
-        }).start();
+    }
 
+    private void createScoreBoard() {
+        Helper.db.collection("users").document(userId)
+                .addSnapshotListener((DocumentSnapshot snapshot, FirebaseFirestoreException error) -> {
+                    if (snapshot!=null) {
+                        Map<String, Object> fieldMap = snapshot.getData();
+                        String currentLevel = fieldMap.get("currentLevel")!=null ?
+                                fieldMap.get("currentLevel").toString() : "0";
+                        String currentScore = fieldMap.get("currentScore")!=null ?
+                                fieldMap.get("currentScore").toString() : "0";
+                        TextView level = levelDialog.findViewById(R.id.current_level);
+                        level.setText(currentLevel);
+                        TextView score = levelDialog.findViewById(R.id.current_score);
+                        score.setText(currentScore);
+                    }
+
+
+                });
     }
 
     class FeedsRunnable implements Runnable {

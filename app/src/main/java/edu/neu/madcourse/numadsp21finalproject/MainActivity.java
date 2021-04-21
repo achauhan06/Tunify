@@ -107,7 +107,10 @@ public class MainActivity extends AppCompatActivity {
                                 if(task1.isSuccessful()) {
                                     QuerySnapshot documentSnapshot = task1.getResult();
                                     String username = documentSnapshot.getDocuments()
-                                            .get(0).get("Username").toString();
+                                            .get(0).get("Username") != null ?
+                                            documentSnapshot.getDocuments()
+                                                    .get(0).get("Username").toString() :
+                                            "username_" + email;
                                     Helper.setEmailPassword(MainActivity.this,
                                             email, password, username);
                                     String mobileToken = documentSnapshot.getDocuments()
