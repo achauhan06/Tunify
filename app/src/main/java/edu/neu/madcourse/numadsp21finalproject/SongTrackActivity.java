@@ -314,6 +314,12 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             player.setDataSource(fileName);
             player.prepare();
             player.start();
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    playButton.setImageResource(R.drawable.play);
+                }
+            });
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }

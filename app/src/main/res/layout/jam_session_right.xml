@@ -8,7 +8,7 @@
     android:clipToPadding="false">
 
     <TextView
-        android:id="@+id/show_name"
+        android:id="@+id/show_jam_name"
         android:layout_alignParentRight="true"
         android:text="friend A:"
         android:textSize="20sp"
@@ -18,14 +18,31 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/show_jam_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/show_name"
+        android:layout_below="@id/show_jam_name"
         android:layout_alignParentRight="true"
-        android:id="@+id/show_message"
+        android:text="time"
+        android:textSize="10sp"
+        />
+
+    <TextView
+        android:id="@+id/show_jam_message"
         android:layout_marginRight="15dp"
-        android:textSize="25sp"
-        android:text="Placeholder sticker"
+        android:textSize="15sp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/show_jam_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SongName"/>
+
+    <ImageButton
+        android:id="@+id/jam_play_pause_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_play_pause"
         />
 
 
