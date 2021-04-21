@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -17,11 +19,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -42,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button reg_registration;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
+    EditText userName;
     EditText firstName;
     EditText lastName;
     EditText dob;
@@ -68,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         dateEditText = (EditText) findViewById(R.id.register_dob);
         reg_registration = findViewById(R.id.register);
+        userName = findViewById(R.id.register_username);
         firstName = findViewById(R.id.register_first_name);
         lastName = findViewById(R.id.register_last_name);
         dob = findViewById(R.id.register_dob);
@@ -76,6 +86,43 @@ public class RegisterActivity extends AppCompatActivity {
         passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
         genres = findViewById(R.id.selectedItemPreview);
         auth = FirebaseAuth.getInstance();
+        /*userName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        event != null &&
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    if (event == null || !event.isShiftPressed()) {
+                        Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
+                        checkingIfUsernameExists(userName.getText().toString());
+                        return true; // consume.
+                    }
+                }
+                return false;
+            }});*/
+        userName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    //Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
+                    /*new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkingIfUsernameExists(userName.getText().toString());
+                    }
+                }).start();*/
+                    checkingIfUsernameExists(userName.getText().toString());
+                    //mEditing = false;
+                    ///Do the thing
+                }
+            }
+        });
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,7 +319,19 @@ public class RegisterActivity extends AppCompatActivity {
         reg_registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (firstName.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Entered", Toast.LENGTH_SHORT).show();
+
+                /*new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkingIfUsernameExists(userName.getText().toString());
+                    }
+                }).start();*/
+                //checkingIfUsernameExists(userName.getText().toString());
+                if (userName.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
+
+                } else if (firstName.getText().toString().equals("")) {
                     Toast.makeText(RegisterActivity.this, "Please enter your First Name", Toast.LENGTH_SHORT).show();
 
                 } else if (email.getText().toString().equals("")) {
@@ -280,6 +339,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 } else if (dob.getText().toString().equals("")) {
                     Toast.makeText(RegisterActivity.this, "Please enter a DOB", Toast.LENGTH_SHORT).show();
+
+                } else if (genres.getText().toString().equals("")) {
+                    Toast.makeText(RegisterActivity.this, "Please select at least 1 genre", Toast.LENGTH_SHORT).show();
 
                 } else if (lastName.getText().toString().equals("")) {
                     Toast.makeText(RegisterActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
@@ -296,6 +358,7 @@ public class RegisterActivity extends AppCompatActivity {
                             userId = auth.getCurrentUser().getUid();
                             DocumentReference reference1 = firebaseFirestore.collection("users").document(userId);
                             Map<String, Object> reg_entry = new HashMap<>();
+                            reg_entry.put("Username", userName.getText().toString());
                             reg_entry.put("First Name", firstName.getText().toString());
                             reg_entry.put("Last Name", lastName.getText().toString());
                             reg_entry.put("Email", email.getText().toString());
@@ -328,6 +391,72 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void checkingIfUsernameExists(String usernameToCompare) {
+        //FirebaseFirestore f1;
+        //f1 = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = firebaseFirestore.collection("users");
+        Query mQuery = collectionReference.whereEqualTo("Username", usernameToCompare);
+        mQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                //Log.d(TAG, "checkingIfusernameExist: checking if username exists");
+
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot ds : task.getResult()) {
+                        String userNames = ds.getString("Username");
+                        if (userNames.equals(usernameToCompare)) {
+                            //Log.d(TAG, "checkingIfusernameExist: FOUND A MATCH -username already exists");
+                            Toast.makeText(RegisterActivity.this, "username already exists", Toast.LENGTH_SHORT).show();
+                            //answer = true;
+                        }
+                    }
+                }
+                if (task.getResult().size() == 0) {
+                    try {
+
+                        //Log.d(TAG, "onComplete: MATCH NOT FOUND - username is available");
+                        Toast.makeText(RegisterActivity.this, "username changed", Toast.LENGTH_SHORT).show();
+
+
+                    } catch (NullPointerException e) {
+                        //Log.e(TAG, "NullPointerException: " + e.getMessage());
+                    }
+                }
+            }
+        });
+        /*firebaseFirestore.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Toast.makeText(RegisterActivity.this, "Hello", Toast.LENGTH_SHORT).show();
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot d : list) {
+                        String userName = d.getString("Username");
+                        if (userName.equals(usernameToCompare))
+                        Toast.makeText(RegisterActivity.this, "Username exists", Toast.LENGTH_SHORT).show();
+                        else Toast.makeText(RegisterActivity.this, "Username is unique", Toast.LENGTH_SHORT).show();
+                        //String email1 = d.getString("Email");
+                        //UserItem user = new UserItem(userName, "", email1);
+                        //userItemList
+                        //UserItem users = d.toObject(UserItem.class);
+                        //if (!email.equals(profileActivity.getEmail().getText().toString()))
+                        //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+                        //if (email != email1)
+                        //userItemList.add(user);
+                        //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(RegisterActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                }
+                //createRecyclerView();
+
+            }
+        });*/
     }
 
 }
