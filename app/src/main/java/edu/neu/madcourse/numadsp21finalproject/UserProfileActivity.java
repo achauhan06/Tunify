@@ -118,6 +118,8 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void sendMessageToDevice(String userToken, String message) {
+        String userName = "santosh shenoy";
+        String yourToken = "dfDcGn0gT2yrKMGczlpidf:APA91bHT4spTXm33MgQ6ufTt_fiEY-Dy8Q4xM9dqE2OGdIhnJ7NLzcUpkxxNlAZgQvzKnPqrTR2LTC-vmhRDAhRWBpjUmPFq6wXBimVfoz3CZMadVOYdcJCmhTs_BG2RtNMIUOR-AA-i";
         JSONObject jPayload = new JSONObject();
         JSONObject jNotification = new JSONObject();
         JSONObject jdata = new JSONObject();
@@ -130,8 +132,8 @@ public class UserProfileActivity extends AppCompatActivity {
             //citation : https://stackoverflow.com/a/43801355
             jNotification.put("click_action","chatNotification");
 
-            //jdata.put("friendName",userName);
-            //jdata.put("friendToken",yourToken);
+            jdata.put("friendName",userName);
+            jdata.put("friendToken",yourToken);
 
             /***
              * The Notification object is now populated.

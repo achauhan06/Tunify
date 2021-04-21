@@ -63,6 +63,7 @@ import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
 import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.notifications.NotificationListActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class HomeActivity extends AppCompatActivity {
@@ -237,7 +238,9 @@ public class HomeActivity extends AppCompatActivity {
                    startActivity(libraryIntent);
                    break;
                case R.id.navigation_notifications:
-                   Toast.makeText(HomeActivity.this, "My Notifications",Toast.LENGTH_SHORT).show();
+                   Intent notificationsIntent = new Intent(this, NotificationListActivity.class);
+                   startActivity(notificationsIntent);
+                   Toast.makeText(this, "My Notifications",Toast.LENGTH_SHORT).show();
                    break;
                default:
                    return true;

@@ -264,15 +264,7 @@ public class RegisterActivity extends AppCompatActivity {
         reg_registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(RegisterActivity.this, "Entered", Toast.LENGTH_SHORT).show();
 
-                /*new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkingIfUsernameExists(userName.getText().toString());
-                    }
-                }).start();*/
-                //checkingIfUsernameExists(userName.getText().toString());
                 if (userName.getText().toString().equals("")) {
                     Toast.makeText(RegisterActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
 
