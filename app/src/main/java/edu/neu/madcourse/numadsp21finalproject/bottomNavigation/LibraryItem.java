@@ -28,9 +28,11 @@ import java.util.ArrayList;
 
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class LibraryItem implements LibraryViewClickListener{
-    private final String projectName, path, genre, userId, recordingId;
+    private final String projectName, path, genre, userId, recordingId, ownerId;
     private final Context context;
     private final Timestamp timestamp;
     private ArrayList<String> likesList = new ArrayList<>();
@@ -41,11 +43,13 @@ public class LibraryItem implements LibraryViewClickListener{
     private final boolean isLoaded = false;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
+    private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     public LibraryItem(QueryDocumentSnapshot documentSnapshot, Context context, String userId) {
         this.projectName = documentSnapshot.get("name").toString();
         this.path = documentSnapshot.get("path").toString();
         this.genre = documentSnapshot.get("genre").toString();
+        this.ownerId = documentSnapshot.get("owner").toString();
         this.timestamp = (Timestamp) documentSnapshot.get("time");
         this.commentCount = documentSnapshot.getLong("commentsCount").intValue();
         this.likesList = (ArrayList<String>) documentSnapshot.get("likes");
@@ -162,6 +166,8 @@ public class LibraryItem implements LibraryViewClickListener{
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("recordingId", recordingId);
+        intent.putExtra("ownerId", ownerId);
+        intent.putExtra("projectName", projectName);
         intent.putExtra("prev","library");
 
         context.startActivity(intent);
@@ -179,6 +185,8 @@ public class LibraryItem implements LibraryViewClickListener{
             this.likedByMe = true;
             this.likeCount += 1;
             likesList.add(userId);
+            // firebaseInstanceMessagingService.sendMessageToDevice(userId, Helper.getUsername(context) + " liked your project " + projectName);
+
         }
         firebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
             @Nullable

@@ -22,7 +22,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Helper {
     public static final String NO_INTERNET = "No internet connection";
     private static final String USERNAME = "userName";
-    public static String SERVER_KEY = "AAAAf-Efg5c:APA91bH5jUEnPT04fw-qdgAMl5ghx_ZAgNL6x4cMKoxz9MRoMEXYS2g4UHOEEuDs2Eb2ysEFfgtp48D8oxMpCiUt7ir6ezA09tv0FjvyH1mQ6jUtLkO_4_xadmzKlgQXfmNVmXgGoarB";
+    public static String SERVER_KEY = "key=AAAAf-Efg5c:APA91bH5jUEnPT04fw-qdgAMl5ghx_ZAgNL6x4cMKoxz9MRoMEXYS2g4UHOEEuDs2Eb2ysEFfgtp48D8oxMpCiUt7ir6ezA09tv0FjvyH1mQ6jUtLkO_4_xadmzKlgQXfmNVmXgGoarB";
     public static String YOUTUBE_API_KEY = "AIzaSyBDzjjH-ILn5GSzmBpG3tEa5KJjOqS4KO8";
     public static String[] CATEGORY_LIST = {"Rock", "Pop", "Hip Hop", "Blues", "Jazz", "Reggae", "Folk", "Country", "Classical",
             "Soul", "R&B", "Heavy Metal"};

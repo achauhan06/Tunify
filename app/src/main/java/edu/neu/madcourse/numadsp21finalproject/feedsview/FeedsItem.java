@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,9 +37,11 @@ import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class FeedsItem implements FeedsViewListener{
-    private final String projectName, path, genre, ownerName, recordingId;
+    private final String projectName, path, genre, ownerName, recordingId, ownerId;
     private final Timestamp timestamp;
     private int commentsCount;
     private Context context;
@@ -51,12 +54,14 @@ public class FeedsItem implements FeedsViewListener{
     private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     public FeedsItem(DocumentSnapshot documentSnapshot, Context context) {
         this.path = documentSnapshot.get("path").toString();
         this.projectName = documentSnapshot.get("name").toString();
         this.genre = documentSnapshot.get("genre").toString();
         this.ownerName = documentSnapshot.get("username").toString();
+        this.ownerId = documentSnapshot.get("owner").toString();
         this.timestamp = (Timestamp) documentSnapshot.get("time");
         this.likesList = (ArrayList<String>) documentSnapshot.get("likes");
         this.likeCount = likesList.size();
@@ -163,6 +168,8 @@ public class FeedsItem implements FeedsViewListener{
             this.likedByMe = true;
             this.likeCount += 1;
             likesList.add(userId);
+            // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
+            firebaseInstanceMessagingService.sendMessageToDevice(ownerId, Helper.getUsername(context) + " liked your project " + projectName);
         }
         firebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
             @Nullable
@@ -175,7 +182,7 @@ public class FeedsItem implements FeedsViewListener{
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(context , "you liked " + projectName,Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context , "you liked " + projectName,Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -195,6 +202,9 @@ public class FeedsItem implements FeedsViewListener{
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("recordingId", recordingId);
+        intent.putExtra("ownerId", ownerId);
+        intent.putExtra("projectName", projectName);
+
         intent.putExtra("prev","home");
 
 
@@ -202,4 +212,5 @@ public class FeedsItem implements FeedsViewListener{
         // Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
 
     }
+
 }

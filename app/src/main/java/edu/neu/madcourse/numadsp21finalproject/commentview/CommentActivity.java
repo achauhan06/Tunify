@@ -36,6 +36,7 @@ import java.util.Map;
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class CommentActivity extends AppCompatActivity {
@@ -43,7 +44,8 @@ public class CommentActivity extends AppCompatActivity {
     Button post;
     private ArrayList<CommentItem> commentItemArrayList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String userId, userName, recordingId, prev;
+    private String userId, userName, recordingId,ownerId, projectName, prev;
+    private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +59,9 @@ public class CommentActivity extends AppCompatActivity {
         userId = getIntent().getExtras().getString("userId");
         userName = Helper.getUsername(this);
         recordingId = getIntent().getExtras().getString("recordingId");
+        ownerId = getIntent().getExtras().getString("ownerId");
+        projectName = getIntent().getExtras().getString("projectName");
+
         prev = getIntent().getExtras().getString("prev");
 
         commentItemArrayList = new ArrayList<>();
@@ -85,6 +90,8 @@ public class CommentActivity extends AppCompatActivity {
                         CommentItem myComment = new CommentItem(userName, inputStr, timestamp);
                         commentItemArrayList.add(myComment);
                         createCommentRecyclerView();
+                        firebaseInstanceMessagingService.sendMessageToDevice(ownerId, userName + " commented your project " + projectName);
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                             @Override

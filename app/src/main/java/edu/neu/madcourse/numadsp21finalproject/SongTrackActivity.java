@@ -241,6 +241,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     @Override
                     public void onInitializationFailure(YouTubePlayer.Provider provider,
                                                         YouTubeInitializationResult youTubeInitializationResult) {
+                        System.out.println("hello");
 
                     }
                 });

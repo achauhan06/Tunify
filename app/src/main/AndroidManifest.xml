@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.numadsp21finalproject">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -79,7 +78,14 @@
         <activity
             android:name=".bottomNavigation.LibraryActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar" />
+            android:theme="@style/Theme.Tunify.NoActionBar">
+            <intent-filter>
+                <action android:name="libraryNotification"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".commentview.CommentActivity"
             android:configChanges="orientation|screenSize"

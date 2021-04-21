@@ -9,14 +9,21 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+import java.net.URLEncoder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -84,9 +91,9 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
         String click_action = remoteMessage.getNotification().getClickAction();
         Intent intent = new Intent(click_action);
-        // intent.putExtra("click_action",click_action);
-        intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
-        intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
+        intent.putExtra("click_action",click_action);
+        // intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
+        // intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(this, 0 /* Request code */, intent,
@@ -169,30 +176,57 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
-    public static void sendMessageToDevice(String targetToken, String sticker) {
-        String userName = "bing test";
-        String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
+    public static void sendMessageToDevice(String id, String body) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getTokenByUserId(id, body);
+                // sendMessageToDeviceService(id, body);
+            }
+        }).start();
+    }
+
+    private static void getTokenByUserId(String id, String body) {
+
+        FirebaseFirestore.getInstance().collection("users").document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                // String targetToken = value.getString("MobileToken");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMessageToDeviceService(value.getString("MobileToken"), body);
+                    }
+                }).start();
+                // sendMessageToDeviceService(targetToken, body);
+            }
+        });
+
+    }
+
+    private static void sendMessageToDeviceService(String targetToken, String body) {
+        // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
+
         JSONObject jPayload = new JSONObject();
         JSONObject jNotification = new JSONObject();
         JSONObject jdata = new JSONObject();
         try {
             jNotification.put("title", "New Message");
-            jNotification.put("body", "You received a sticker from "
-                    + userName + " " + sticker);
+            jNotification.put("body", body);
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
 
             //citation : https://stackoverflow.com/a/43801355
-            // jNotification.put("click_action","chatNotification");
+            jNotification.put("click_action","libraryNotification");
 
-            jdata.put("friendName",userName);
-            jdata.put("friendToken",userToken);
+            // jdata.put("friendName",userName);
+            // jdata.put("friendToken",userToken);
 
             /***
              * The Notification object is now populated.
              * Next, build the Payload that we send to the server.
              */
-
             jPayload.put("to", targetToken); // CLIENT_REGISTRATION_TOKEN);
             jPayload.put("priority", "high");
             jPayload.put("notification", jNotification);
@@ -237,9 +271,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         return s.hasNext() ? s.next().replace(",", ",\n") : "";
     }
 
-    public static void test(String msg, Context context) {
-        Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
 
-    }
 
 }
