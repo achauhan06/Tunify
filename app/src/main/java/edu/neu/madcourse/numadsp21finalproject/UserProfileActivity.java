@@ -38,15 +38,18 @@ import java.util.Scanner;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class UserProfileActivity extends AppCompatActivity {
 
     TextView dob, genre, fullName;
-    private String email;
+    private String email, friendId;
     Button addFriend;
     private String userToken = "";
     private FirebaseFirestore fireStore;
+    private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                     for (DocumentSnapshot d : list) {
                         String email1 = d.getString("Email");
+                        friendId = d.getId();
                         if (email.equals(email1)) {
                             fullName.setText(d.getString("First Name")+ " " +d.getString("Last Name"));
 
@@ -79,8 +83,8 @@ public class UserProfileActivity extends AppCompatActivity {
                             //last_name.setText(d.getString("Last Name"));
                             dob.setText(d.getString("Date of Birth"));
                             //genre.setText(d.getString("Genres"));
-                            userToken = d.getString("MobileToken");
-                            Toast.makeText(UserProfileActivity.this, "Hi " +d.getString("MobileToken"), Toast.LENGTH_SHORT).show();
+                            // userToken = d.getString("MobileToken");
+                            // Toast.makeText(UserProfileActivity.this, "Hi " +d.getString("MobileToken"), Toast.LENGTH_SHORT).show();
                             String[] arr = d.getString("Genres") == null ? new String[]{} : d.getString("Genres").split(";");
                             List<String> list1 = Lists.newArrayList(arr);
                             genre.setText(list1.toString().replace("[", "").replace("]", ""));
@@ -97,10 +101,12 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addFriend.setEnabled(false);
                 addFriend.setText("Friend Request Sent");
-                sendMessageToDevice("New Friend Request!");
+                firebaseInstanceMessagingService.sendMessageToDevice(friendId, Helper.getUsername(UserProfileActivity.this) + " sent you a friend request.");
+                // sendMessageToDevice("New Friend Request!");
             }
         });
     }
+
     public void sendMessageToDevice(String message) {
 
         new Thread(new Runnable() {
