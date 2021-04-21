@@ -286,8 +286,8 @@ public class MainActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             msg = "subscription failed";
                         }
-                        // Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+                        Log.d("SUBSCRIBE", msg);
+                        // Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
                     }
                 });
     }

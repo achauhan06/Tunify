@@ -23,10 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+import java.util.ArrayList;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
 
@@ -74,9 +77,9 @@ public class FriendProfile extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if(task.isSuccessful()) {
                                     for(DocumentSnapshot documentSnapshot : task.getResult()) {
-                                        String name1 = documentSnapshot.get("name1").toString();
-                                        String name2 = documentSnapshot.get("name2").toString();
-                                        if(name1.equals(friendName) || name2.equals(friendName)) {
+                                        ArrayList<String> idList = (ArrayList<String>) documentSnapshot.get("friends");
+
+                                        if(friendId.equals(idList.get(0)) || friendId.equals(idList.get(1))) {
                                             documentSnapshot.getReference()
                                                     .delete()
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -100,6 +103,13 @@ public class FriendProfile extends AppCompatActivity {
                                 }
                             }
                         });
+                // remove friends from friends collection
+                fireStore.getInstance().collection("friends")
+                        .document(userId).update("friendsId", FieldValue.arrayRemove(friendId));
+
+                fireStore.getInstance().collection("friends")
+                        .document(friendId).update("friendsId", FieldValue.arrayRemove(userId));
+
             }
         });
 

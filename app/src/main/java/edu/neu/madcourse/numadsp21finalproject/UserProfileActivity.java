@@ -104,7 +104,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 addFriend.setText("Friend Request Sent");
                 firebaseInstanceMessagingService.sendMessageToDevice(friendId, friendName,"Friend Request",
                         Helper.getUsername(UserProfileActivity.this) + " sent you a friend request.",
-                        UserProfileActivity.this);
+                        "",UserProfileActivity.this);
                 // sendMessageToDevice("New Friend Request!");
             }
         });

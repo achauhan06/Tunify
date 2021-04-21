@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-
+import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 
@@ -150,6 +151,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void createBackAlert() {
         if (currentSelectedSong == -1) {
+            Intent intent = new Intent(LibraryActivity.this, HomeActivity.class);
+            startActivity(intent);
             this.finish();
         } else {
             libraryList.get(currentSelectedSong).getMediaPlayer().pause();

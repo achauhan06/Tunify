@@ -93,7 +93,7 @@ public class CommentActivity extends AppCompatActivity {
                         if(userId != ownerId) {
                             ownerName = getIntent().getExtras().getString("ownerName");
                             firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
-                                    userName + " commented your project " + projectName, CommentActivity.this);
+                                    userName + " commented your project " + projectName, recordingId,CommentActivity.this);
                         }
 
                     }
@@ -183,6 +183,7 @@ public class CommentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         if(prev.equals("home")){
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
             startActivity(intent);
@@ -191,6 +192,8 @@ public class CommentActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
             startActivity(intent);
         }
+
+
         this.finish();
 
     }
