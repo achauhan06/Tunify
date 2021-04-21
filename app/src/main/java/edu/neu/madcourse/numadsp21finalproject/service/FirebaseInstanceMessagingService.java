@@ -169,7 +169,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
-    private void sendMessageToDevice(String targetToken, String sticker) {
+    public static void sendMessageToDevice(String targetToken, String sticker) {
         String userName = "bing test";
         String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
         JSONObject jPayload = new JSONObject();
@@ -232,9 +232,14 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private String convertStreamToString(InputStream is) {
+    private static String convertStreamToString(InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next().replace(",", ",\n") : "";
+    }
+
+    public static void test(String msg, Context context) {
+        Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+
     }
 
 }
