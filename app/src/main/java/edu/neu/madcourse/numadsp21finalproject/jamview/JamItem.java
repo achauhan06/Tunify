@@ -36,6 +36,7 @@ public class JamItem implements JamViewListener {
         }
         Intent intent = new Intent(context,JamSessionActivity.class);
         intent.putExtra("groupName", groupName);
+        intent.putExtra("songVersion", songVersion);
         intent.putExtra("members", members);
         context.startActivity(intent);
     }

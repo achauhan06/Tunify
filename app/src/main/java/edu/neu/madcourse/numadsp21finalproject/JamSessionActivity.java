@@ -3,6 +3,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.Manifest;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -12,18 +13,31 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class JamSessionActivity extends AppCompatActivity {
 
@@ -42,8 +56,10 @@ public class JamSessionActivity extends AppCompatActivity {
     private ImageView playButton;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
     private static String fileName = null;
+    private static String songName = null;
     private ImageButton cancelRecording;
     private ImageButton sendRecording;
+    private Long version;
 
 
     @Override
@@ -56,9 +72,7 @@ public class JamSessionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         groupName = getIntent().getStringExtra("groupName");
-        fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/";
-        fileName += groupName + "_" + userName + ".mp3";
+        version = getIntent().getLongExtra("songVersion",0);
         TextView groupTitle = findViewById(R.id.group_title);
         groupTitle.setText(groupName);
         String[] membersAsString = getIntent().getStringExtra("members").split(";");
@@ -71,6 +85,10 @@ public class JamSessionActivity extends AppCompatActivity {
                 friendsMap.put(member[1],member[0]);
             }
         }
+        fileName = getExternalCacheDir().getAbsolutePath();
+        fileName += "/";
+        songName = groupName + "_" + userName + "_" + version + ".mp3";
+        fileName += songName;
 
         createRecorder();
         createPlayer();
@@ -90,9 +108,84 @@ public class JamSessionActivity extends AppCompatActivity {
         sendRecording.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadAudio();
+                    }
+                }).start();
+
 
             }
         });
+    }
+
+    private void uploadAudio() {
+
+        WriteBatch documentBatch = Helper.db.batch();
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("audio/mpeg")
+                .build();
+        Map song_entry = new HashMap<>();
+        song_entry.put("fileName", songName);
+        song_entry.put("time", new Timestamp(new Date()));
+
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference mFilePath = mStorageRef.child("audios")
+                .child(userId)
+                .child(songName);
+        Uri uri = Uri.fromFile(new File(fileName));
+        song_entry.put("path", mFilePath.toString());
+        mFilePath.putFile(uri,metadata).addOnProgressListener(taskSnapshot -> {
+            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            System.out.println("Upload is " + progress + "% done");
+        }).addOnSuccessListener(taskSnapshot -> {
+                    mFilePath.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                        song_entry.put("link", uri1.toString());
+                        song_entry.put("username", userName);
+
+                        for (String user : friendsMap.values()) {
+                            DocumentReference userDocumentReference = Helper.db
+                                    .collection("jamGroups")
+                                    .document(user)
+                                    .collection("groups")
+                                    .document(groupName);
+
+
+                            documentBatch.update(userDocumentReference ,new HashMap(){{
+                                        put("songVersion", version+1);
+                            }});
+                            documentBatch.set(userDocumentReference
+                                    .collection("recordings")
+                                    .document(userId)
+                                    .collection("songList")
+                                    .document(songName),song_entry);
+                        }
+
+                        documentBatch.commit().addOnSuccessListener(aVoid -> {
+                            sendPublishedItemNotification();
+                            Snackbar.make(findViewById(android.R.id.content)
+                                    , "Audio posted successfully",
+                                    Snackbar.LENGTH_SHORT).show();
+
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Snackbar.make(findViewById(android.R.id.content)
+                                        , "Some error occurred. Audio cannot be posted."
+                                        , Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
+                    });
+
+                });
+
+
+
+    }
+
+    private void sendPublishedItemNotification() {
     }
 
     private void createRecorder() {
