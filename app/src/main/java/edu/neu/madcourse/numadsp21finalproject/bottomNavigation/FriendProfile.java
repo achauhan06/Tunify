@@ -100,6 +100,44 @@ public class FriendProfile extends AppCompatActivity {
                                 }
                             }
                         });
+                // TODO: update friends collection
+                /*
+                fireStore.getInstance().collection("friends")
+                        .document(userId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()) {
+                                    for(DocumentSnapshot documentSnapshot : task.getResult()) {
+                                        String name1 = documentSnapshot.get("name1").toString();
+                                        String name2 = documentSnapshot.get("name2").toString();
+                                        if(name1.equals(friendName) || name2.equals(friendName)) {
+                                            documentSnapshot.getReference()
+                                                    .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(FriendProfile.this, "You have unfriended " + friendName,Toast.LENGTH_SHORT).show();
+
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(FriendProfile.this, "unable to unfriend" + friendName,Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                } else {
+                                    Log.d("firebase", "Error unfriending", task.getException());
+                                }
+                            }
+                        });
+
+                 */
             }
         });
 

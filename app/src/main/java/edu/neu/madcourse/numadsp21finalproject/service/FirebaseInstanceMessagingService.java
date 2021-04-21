@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -77,6 +78,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 //        extractPayloadDataForegroundCase(remoteMessage);
     }
 
+    /*
     private void showNotification(RemoteMessage remoteMessage) {
 
         NotificationCompat.Builder builder =
@@ -95,6 +97,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         manager.notify(0, builder.build());
 
     }
+
+     */
 
     private void showNotification2(RemoteMessage remoteMessage) {
 
@@ -196,34 +200,51 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
-    public static void sendMessageToDevice(String receiverId,String receiverName, String title, String body, Context context) {
+    public static void sendMessageToDevice(String receiverId,String receiverName, String title, String body,String contentId, Context context) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getTokenByUserId(receiverId,receiverName,title, body, context);
+                getTokenByUserId(receiverId,receiverName,title, body, contentId,context);
             }
         }).start();
     }
 
-    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, Context context) {
+    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, String contentId,Context context) {
 
-        FirebaseFirestore.getInstance().collection("users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        FirebaseFirestore.getInstance().collection("users").document(receiverId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendMessageToDeviceService(value.getString("MobileToken"), receiverId,receiverName,title,body, context);
-                    }
-                }).start();
+                String token = value.getString("MobileToken");
+
+                if(token == null) {
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "receiver token not found", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
+                }else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendMessageToDeviceService(token, receiverId,receiverName,title,body, contentId,context);
+                        }
+                    }).start();
+                }
             }
         });
+
+
 
     }
 
     private static void sendMessageToDeviceService(String targetToken,String receiverId,String receiverName,
-                                                   String title, String body, Context context) {
+                                                   String title, String body, String contentId,Context context) {
         // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
 
         JSONObject jPayload = new JSONObject();
@@ -290,6 +311,22 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
                     }
                 }).start();
+            }else if(title.equals("New Like")){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addNotification("like",senderName, senderId,receiverName,receiverId,contentId,timestamp,context);
+
+                    }
+                }).start();
+            } else if(title.equals("New Comment")){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addNotification("comment",senderName, senderId,receiverName,receiverId,contentId,timestamp,context);
+
+                    }
+                }).start();
             }
 
             Handler h = new Handler(Looper.getMainLooper());
@@ -320,12 +357,16 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         friendRequest.put("receiverName", receiverName);
         friendRequest.put("receiverId", receiverId);
         friendRequest.put("time", timestamp);
+        friendRequest.put("status", "pending");
 
-        FirebaseFirestore.getInstance().collection("notifications")
+
+        FirebaseFirestore.getInstance().collection("friendRequests")
                 .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(context, "friend request sent",Toast.LENGTH_SHORT).show();
+                String contentId = documentReference.getId();
+                addNotification("friendRequest",senderName,senderId,receiverName, receiverId,contentId,timestamp,context);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -334,7 +375,33 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
             }
         });
+    }
 
+        private static void addNotification(String type,String senderName, String senderId, String receiverName,
+                String receiverId, String contentId,Timestamp timestamp, Context context) {
+            Map<String, Object> friendRequest = new HashMap<>();
+            friendRequest.put("senderName", senderName);
+            friendRequest.put("senderId", senderId);
+            friendRequest.put("receiverName", receiverName);
+            friendRequest.put("receiverId", receiverId);
+            friendRequest.put("contentId", contentId);
+            friendRequest.put("time", timestamp);
+            friendRequest.put("type", type);
+
+
+            FirebaseFirestore.getInstance().collection("notifications")
+                    .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(context, "notification added",Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(context, "failed to add notification",Toast.LENGTH_SHORT).show();
+
+                }
+            });
 
 
     }
