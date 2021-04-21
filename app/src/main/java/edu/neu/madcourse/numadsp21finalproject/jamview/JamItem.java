@@ -10,11 +10,13 @@ import edu.neu.madcourse.numadsp21finalproject.JamSessionActivity;
 
 public class JamItem implements JamViewListener {
     private String groupName;
+    private Long songVersion;
     private HashMap<String, String> friendMap;
 
-    public JamItem(String groupName, HashMap<String, String> friendMap) {
+    public JamItem(String groupName, HashMap<String, String> friendMap, Long songVersion) {
         this.groupName = groupName;
         this.friendMap = friendMap;
+        this.songVersion = songVersion;
     }
 
     public String getGroupName() {

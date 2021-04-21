@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -101,28 +102,30 @@ public class JamActivity extends AppCompatActivity {
         jamRecyclerView.setLayoutManager(jamLayoutManger);
         Helper.db.collection("jamGroups")
                 .document(userId)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                .collection("groups")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                        @Nullable FirebaseFirestoreException e) {
-
-                        Map<String, Object> fieldMap = snapshot.getData();
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException error) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                         int pos = 0;
-                        if (fieldMap != null) {
-                            jamItemList = new ArrayList<>();
-                            jamAdapter = new JamAdapter(jamItemList, jamViewListener,
-                                    JamActivity.this);
-                            jamRecyclerView.setAdapter(jamAdapter);
+                        jamItemList = new ArrayList<>();
+                        jamAdapter = new JamAdapter(jamItemList, jamViewListener,
+                                JamActivity.this);
+                        jamRecyclerView.setAdapter(jamAdapter);
+                        for(DocumentSnapshot documentSnapshot : documents) {
+                            String groupName = documentSnapshot.getId();
+                            Map<String, Object> fieldMap = documentSnapshot.getData();
+                            if (fieldMap != null) {
 
-                            for (Map.Entry<String, Object> entry : fieldMap.entrySet()) {
-                                HashMap<String, String> friendMap =
-                                        (HashMap<String, String>) entry.getValue();
-                                jamItemList.add(new JamItem(entry.getKey(), friendMap));
+                                HashMap<String, String> friendMap = (HashMap<String, String>)
+                                        fieldMap.get("members");
+                                Long songVersion = (Long) fieldMap.get("songVersion");
+                                jamItemList.add(new JamItem(groupName, friendMap,
+                                        songVersion));
                                 jamAdapter.notifyItemInserted(pos);
                                 pos++;
                             }
-
-
                         }
                     }
                 });
@@ -236,14 +239,13 @@ public class JamActivity extends AppCompatActivity {
                 if (!friendMap.isEmpty()) {
                     friendMap.put(userId, userName);
                     Map<String, Object> groupEntry = new HashMap<>();
-                    for (JamItem jamItem : jamItemList) {
-                        groupEntry.put(jamItem.getGroupName(), jamItem.getFriendMap());
-                    }
-                    groupEntry.put(groupNameString, friendMap);
+                    groupEntry.put("members",friendMap);
+                    groupEntry.put("songVersion", 0);
 
                     for (String user : friendMap.keySet()) {
                         documentBatch.set(Helper.db.collection("jamGroups")
-                                .document(user), groupEntry);
+                                .document(user).collection("groups")
+                                .document(groupNameString), groupEntry);
                     }
 
                     documentBatch.commit().addOnSuccessListener(aVoid -> {
