@@ -6,10 +6,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,16 +26,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
@@ -77,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.register_activity);
         user = new UserItem();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        dateEditText = (EditText) findViewById(R.id.register_dob);
+        dateEditText = findViewById(R.id.register_dob);
         reg_registration = findViewById(R.id.register);
         userName = findViewById(R.id.register_username);
         firstName = findViewById(R.id.register_first_name);
@@ -170,77 +163,27 @@ public class RegisterActivity extends AppCompatActivity {
 
         bOpenAlertDialog.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
+
+                AlertDialog alertDialog = createCategoryDialog(listItems, checkedItems,
+                        selectedItems, bOpenAlertDialog).create();
+                alertDialog.show();
+            }
+        });
+
+        bOpenAlertDialog.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
 
                 tvSelectedItemsPreview.setText(null);
+                if (hasFocus) {
+                    AlertDialog alertDialog = createCategoryDialog(listItems, checkedItems,
+                            selectedItems, bOpenAlertDialog).create();
+                    alertDialog.show();
+                }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
 
-                builder.setTitle("Choose any 3 genres:");
-
-
-                builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-                    //int count = 0;
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked && count < 3) {
-                            count++;
-                            checkedItems[which] = isChecked;
-                            String currentItem = selectedItems.get(which);
-                        }
-                        else {
-                            Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
-                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
-                            checkedItems[which]=false;
-                        }
-                        if (!isChecked) count--;
-                    }
-                });
-
-                builder.setCancelable(false);
-
-                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        selectedGenres = new ArrayList<>();
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            if (checkedItems[i]) {
-                                selectedGenres.add(selectedItems.get(i));
-                                bOpenAlertDialog.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                        if (selectedGenres.size() > 0) {
-                            tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
-                            tvSelectedItemsPreview.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            checkedItems[i] = false;
-                        }
-                        count = 0;
-                    }
-                });
-
-                builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            checkedItems[i] = false;
-                        }
-                        count = 0;
-                    }
-                });
-
-                builder.create();
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
             }
         });
 
@@ -395,6 +338,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+
+
     private boolean checkingIfUsernameExists(String usernameToCompare) {
         CollectionReference collectionReference = firebaseFirestore.collection("users");
         Query mQuery = collectionReference.whereEqualTo("Username", usernameToCompare);
@@ -421,6 +366,74 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         return answer;
+    }
+
+    private  AlertDialog.Builder createCategoryDialog(String[] listItems, boolean[] checkedItems, List<String> selectedItems, EditText bOpenAlertDialog) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+
+        builder.setTitle("Choose any 3 genres:");
+
+
+        builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            //int count = 0;
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked && count < 3) {
+                    count++;
+                    checkedItems[which] = isChecked;
+                    String currentItem = selectedItems.get(which);
+                }
+                else {
+                    Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
+                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                    checkedItems[which]=false;
+                }
+                if (!isChecked) count--;
+            }
+        });
+
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedGenres = new ArrayList<>();
+                for (int i = 0; i < checkedItems.length; i++) {
+                    if (checkedItems[i]) {
+                        selectedGenres.add(selectedItems.get(i));
+                        bOpenAlertDialog.setVisibility(View.INVISIBLE);
+                    }
+                }
+                if (selectedGenres.size() > 0) {
+                    tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+                    tvSelectedItemsPreview.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedItems.length; i++) {
+                    checkedItems[i] = false;
+                }
+                count = 0;
+            }
+        });
+
+        builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < checkedItems.length; i++) {
+                    checkedItems[i] = false;
+                }
+                count = 0;
+            }
+        });
+
+        builder.create();
+        return builder;
     }
 
 }
