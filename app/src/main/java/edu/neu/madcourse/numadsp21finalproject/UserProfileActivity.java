@@ -45,7 +45,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 public class UserProfileActivity extends AppCompatActivity {
 
     TextView dob, genre, fullName;
-    private String email, friendId;
+    private String email, friendId, friendName;
     Button addFriend;
     private String userToken = "";
     private FirebaseFirestore fireStore;
@@ -77,7 +77,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         String email1 = d.getString("Email");
                         friendId = d.getId();
                         if (email.equals(email1)) {
-                            fullName.setText(d.getString("First Name")+ " " +d.getString("Last Name"));
+                            friendName = d.getString("First Name")+ " " +d.getString("Last Name");
+                            fullName.setText(friendName);
 
                             //first_name.setText(d.getString("First Name"));
                             //last_name.setText(d.getString("Last Name"));
@@ -101,7 +102,9 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addFriend.setEnabled(false);
                 addFriend.setText("Friend Request Sent");
-                firebaseInstanceMessagingService.sendMessageToDevice(friendId, Helper.getUsername(UserProfileActivity.this) + " sent you a friend request.");
+                firebaseInstanceMessagingService.sendMessageToDevice(friendId, friendName,"Friend Request",
+                        Helper.getUsername(UserProfileActivity.this) + " sent you a friend request.",
+                        UserProfileActivity.this);
                 // sendMessageToDevice("New Friend Request!");
             }
         });

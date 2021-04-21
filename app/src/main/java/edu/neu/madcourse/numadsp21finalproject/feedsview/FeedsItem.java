@@ -169,7 +169,8 @@ public class FeedsItem implements FeedsViewListener{
             this.likeCount += 1;
             likesList.add(userId);
             // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
-            firebaseInstanceMessagingService.sendMessageToDevice(ownerId, Helper.getUsername(context) + " liked your project " + projectName);
+            firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Like",
+                    Helper.getUsername(context) + " liked your project " + projectName, context);
         }
         firebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
             @Nullable
@@ -203,6 +204,7 @@ public class FeedsItem implements FeedsViewListener{
         intent.putExtra("userId", userId);
         intent.putExtra("recordingId", recordingId);
         intent.putExtra("ownerId", ownerId);
+        intent.putExtra("ownerName", ownerName);
         intent.putExtra("projectName", projectName);
 
         intent.putExtra("prev","home");

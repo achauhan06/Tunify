@@ -44,7 +44,7 @@ public class CommentActivity extends AppCompatActivity {
     Button post;
     private ArrayList<CommentItem> commentItemArrayList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String userId, userName, recordingId,ownerId, projectName, prev;
+    private String userId, userName, recordingId,ownerId,ownerName, projectName, prev;
     private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     @Override
@@ -90,7 +90,11 @@ public class CommentActivity extends AppCompatActivity {
                         CommentItem myComment = new CommentItem(userName, inputStr, timestamp);
                         commentItemArrayList.add(myComment);
                         createCommentRecyclerView();
-                        firebaseInstanceMessagingService.sendMessageToDevice(ownerId, userName + " commented your project " + projectName);
+                        if(userId != ownerId) {
+                            ownerName = getIntent().getExtras().getString("ownerName");
+                            firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
+                                    userName + " commented your project " + projectName, CommentActivity.this);
+                        }
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {

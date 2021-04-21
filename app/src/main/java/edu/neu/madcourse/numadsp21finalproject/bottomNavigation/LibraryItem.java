@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.solver.state.State;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -168,6 +169,7 @@ public class LibraryItem implements LibraryViewClickListener{
         intent.putExtra("userId", userId);
         intent.putExtra("recordingId", recordingId);
         intent.putExtra("ownerId", ownerId);
+        intent.putExtra("ownerName", Helper.getUsername(context));
         intent.putExtra("projectName", projectName);
         intent.putExtra("prev","library");
 

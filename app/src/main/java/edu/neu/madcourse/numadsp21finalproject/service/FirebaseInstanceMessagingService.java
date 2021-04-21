@@ -17,9 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,12 +39,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Time;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.RegisterActivity;
 import edu.neu.madcourse.numadsp21finalproject.UserService;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 
@@ -89,9 +98,20 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
     private void showNotification2(RemoteMessage remoteMessage) {
 
+        // TODO: switch click action from library to myNotification
         String click_action = remoteMessage.getNotification().getClickAction();
+        String title = remoteMessage.getNotification().getTitle();
+        String body = remoteMessage.getNotification().getBody();
         Intent intent = new Intent(click_action);
         intent.putExtra("click_action",click_action);
+
+        intent.putExtra("title",title);
+        intent.putExtra("body",body);
+        intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
+        intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
+        intent.putExtra("friendId",remoteMessage.getData().get("friendId"));
+        intent.putExtra("time",remoteMessage.getData().get("time"));
+
         // intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
         // intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -120,10 +140,10 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         int notificationId = new Random().nextInt();
 
 
-        notification = builder.setContentTitle(remoteMessage.getNotification().getTitle())
+        notification = builder.setContentTitle(title)
                 /*.setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("Much longer text that cannot fit one line..."))*/
-                .setContentText(remoteMessage.getNotification().getBody())
+                .setContentText(body)
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
@@ -176,52 +196,61 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
-    public static void sendMessageToDevice(String id, String body) {
+    public static void sendMessageToDevice(String receiverId,String receiverName, String title, String body, Context context) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getTokenByUserId(id, body);
-                // sendMessageToDeviceService(id, body);
+                getTokenByUserId(receiverId,receiverName,title, body, context);
             }
         }).start();
     }
 
-    private static void getTokenByUserId(String id, String body) {
+    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, Context context) {
 
-        FirebaseFirestore.getInstance().collection("users").document(id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        FirebaseFirestore.getInstance().collection("users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                // String targetToken = value.getString("MobileToken");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        sendMessageToDeviceService(value.getString("MobileToken"), body);
+                        sendMessageToDeviceService(value.getString("MobileToken"), receiverId,receiverName,title,body, context);
                     }
                 }).start();
-                // sendMessageToDeviceService(targetToken, body);
             }
         });
 
     }
 
-    private static void sendMessageToDeviceService(String targetToken, String body) {
+    private static void sendMessageToDeviceService(String targetToken,String receiverId,String receiverName,
+                                                   String title, String body, Context context) {
         // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
 
         JSONObject jPayload = new JSONObject();
         JSONObject jNotification = new JSONObject();
         JSONObject jdata = new JSONObject();
         try {
-            jNotification.put("title", "New Message");
+
+            jNotification.put("title", title);
             jNotification.put("body", body);
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
 
+            // TODO: change to myNotification, change manifest too
             //citation : https://stackoverflow.com/a/43801355
             jNotification.put("click_action","libraryNotification");
 
-            // jdata.put("friendName",userName);
-            // jdata.put("friendToken",userToken);
+            String senderName = Helper.getUsername(context);
+            // String senderToken = Helper.getUserToken(context);
+            String senderId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Timestamp timestamp = new Timestamp(new Date());
+            // String time = timestamp.toDate().toString();
+
+            jdata.put("senderName",senderName);
+            // jdata.put("senderToken",senderToken);
+            jdata.put("friendId",senderId);
+            jdata.put("time",timestamp);
+
 
             /***
              * The Notification object is now populated.
@@ -253,14 +282,26 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             InputStream inputStream = conn.getInputStream();
             final String resp = convertStreamToString(inputStream);
 
+            if(title.equals("Friend Request")){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addFriendRequest(senderName, senderId,receiverName,receiverId,timestamp,context);
+
+                    }
+                }).start();
+            }
+
             Handler h = new Handler(Looper.getMainLooper());
             h.post(new Runnable() {
                 @Override
                 public void run() {
                     Log.d("TAG", "run: " + resp);
-                    //Toast.makeText(ChatActivity.this,resp,Toast.LENGTH_LONG).show();
                 }
             });
+
+
+
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
@@ -269,6 +310,33 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     private static String convertStreamToString(InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next().replace(",", ",\n") : "";
+    }
+
+    private static void addFriendRequest(String senderName, String senderId, String receiverName,
+                                         String receiverId, Timestamp timestamp, Context context) {
+        Map<String, Object> friendRequest = new HashMap<>();
+        friendRequest.put("senderName", senderName);
+        friendRequest.put("senderId", senderId);
+        friendRequest.put("receiverName", receiverName);
+        friendRequest.put("receiverId", receiverId);
+        friendRequest.put("time", timestamp);
+
+        FirebaseFirestore.getInstance().collection("notifications")
+                .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(context, "friend request sent",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "failed to send friend request",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+
     }
 
 
