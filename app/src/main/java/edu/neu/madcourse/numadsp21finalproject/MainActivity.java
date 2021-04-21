@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 100:
                 if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED
+                ) {
                     Toast.makeText(MainActivity.this,
                             "Permission granted",
                             Toast.LENGTH_SHORT)
@@ -259,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     intent.putExtra("email", email);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     Log.d("firebase", "Error getting library items", task1.getException());
                                 }
