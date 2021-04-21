@@ -303,6 +303,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("Password", password.getText().toString());
                             reg_entry.put("Date of Birth", dob.getText().toString());
                             reg_entry.put("currentLevel", 0);
+                            reg_entry.put("currentScore", 0);
                             UserService registerUser = userToken -> {
                                 Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
                                 reg_entry.put("MobileToken", userToken.toString());

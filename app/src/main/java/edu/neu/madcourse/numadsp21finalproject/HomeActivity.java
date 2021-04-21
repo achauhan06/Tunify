@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
                             Map<String, Object> fieldMap = snapshot.getData();
                             String currentLevel = fieldMap.get("currentLevel")!=null ?
                                     fieldMap.get("currentLevel").toString() : "0";
-                            String currentScore = fieldMap.get("currentLevel")!=null ?
+                            String currentScore = fieldMap.get("currentScore")!=null ?
                                     fieldMap.get("currentScore").toString() : "0";
                             TextView level = levelDialog.findViewById(R.id.current_level);
                             level.setText(currentLevel);
