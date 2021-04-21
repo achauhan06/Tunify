@@ -39,10 +39,7 @@ import java.util.Comparator;
 
 
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
-import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
-
 
 public class LibraryActivity extends AppCompatActivity {
 

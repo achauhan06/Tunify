@@ -47,6 +47,7 @@ public class JamSessionAdapter extends RecyclerView.Adapter<JamSessionHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull JamSessionHolder holder, int position) {
+        holder.setIsRecyclable(false);
         JamSessionItem jamSessionItem = jamSessionItemList.get(position);
         holder.friendName.setText(jamSessionItem.getUserName());
         holder.songName.setText(jamSessionItem.getSongName());

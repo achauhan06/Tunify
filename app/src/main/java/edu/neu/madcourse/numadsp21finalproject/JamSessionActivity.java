@@ -38,11 +38,14 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionAdapter;
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionItem;
@@ -70,6 +73,7 @@ public class JamSessionActivity extends AppCompatActivity {
     private ImageButton sendRecording;
     private Long version;
     private List<JamSessionItem> jamSessionItemList;
+    private Set<JamSessionItem> tempJamSet;
     private LinearLayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private JamSessionAdapter jamSessionAdapter;
@@ -115,7 +119,11 @@ public class JamSessionActivity extends AppCompatActivity {
     }
 
     private void createJamSessionChatView() {
-        jamSessionItemList = new ArrayList<>();
+        rLayoutManger = new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.jam_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(rLayoutManger);
+        tempJamSet = new HashSet<>();
         Helper.db.collection("jamGroups")
                 .document(userId)
                 .collection("groups")
@@ -128,28 +136,31 @@ public class JamSessionActivity extends AppCompatActivity {
 
                         if (value!= null && !value.isEmpty()) {
                             List<DocumentSnapshot> documents = value.getDocuments();
+
                             for (DocumentSnapshot documentSnapshot : documents) {
                                 String currentUserId = documentSnapshot.getId();
-                                String userName = friendsMap.get(currentUserId);
+                                if (currentUserId.equals(userId)) {
+                                    userName = friendsMap.get(currentUserId);
+                                }
+                                String currentUserName = friendsMap.get(currentUserId);;
                                 documentSnapshot.getReference()
                                         .collection("songList")
                                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                             @Override
                                             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                                                 final List<DocumentSnapshot> songList = queryDocumentSnapshots.getDocuments();
-                                                jamSessionItemList.clear();
                                                 for (DocumentSnapshot songSnapShot : songList) {
                                                     String songName = songSnapShot.getId();
                                                     Timestamp time = (Timestamp) songSnapShot.get("time");
                                                     String path = songSnapShot.get("path").toString();
                                                     JamSessionItem jamSessionItem = new JamSessionItem(
-                                                            userName,
+                                                            currentUserName,
                                                             currentUserId,
                                                             songName, time, path,
                                                             JamSessionActivity.this);
-                                                    jamSessionItemList.add(jamSessionItem);
+                                                    tempJamSet.add(jamSessionItem);
                                                 }
-                                                showDataInJamChat();
+                                               showDataInJamChat();
                                             }
                                         });
                             }
@@ -161,14 +172,13 @@ public class JamSessionActivity extends AppCompatActivity {
     }
 
     private void showDataInJamChat() {
-        Collections.sort(jamSessionItemList, (o1, o2) -> o2.getTimeUpdated().compareTo(o1.getTimeUpdated()));
-        rLayoutManger = new LinearLayoutManager(this);
-        recyclerView = findViewById(R.id.jam_recycler_view);
-        recyclerView.setHasFixedSize(true);
+        jamSessionItemList = Arrays.asList(tempJamSet.toArray(new JamSessionItem[]{}));
+        Collections.sort(jamSessionItemList, (o1, o2) -> o1.getTimeUpdated().compareTo(o2.getTimeUpdated()));
+
         jamSessionAdapter = new JamSessionAdapter(jamSessionItemList, userName);
         jamSessionAdapter.setListener(pos -> jamSessionItemList.get(pos).onButtonClick(pos));
-        recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(jamSessionAdapter);
+        recyclerView.scrollToPosition(jamSessionItemList.size()-1);
 
     }
 
@@ -244,6 +254,8 @@ public class JamSessionActivity extends AppCompatActivity {
                         }
 
                         documentBatch.commit().addOnSuccessListener(aVoid -> {
+                            version = version+1;
+                            songName = groupName + "_" + userId + "_" + version + ".mp3";
                             sendPublishedItemNotification();
                             Snackbar.make(findViewById(android.R.id.content)
                                     , "Audio posted successfully",

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class JamSessionItem implements JamSessionListener {
 
@@ -98,5 +100,21 @@ public class JamSessionItem implements JamSessionListener {
         } catch (IOException e) {
             Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId,songName);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof JamSessionItem))
+            return false;
+        if (obj == this)
+            return true;
+        return this.getUserId().equals(((JamSessionItem) obj ).getUserId())
+                && this.getSongName().equals(((JamSessionItem) obj ).getSongName());
     }
 }
