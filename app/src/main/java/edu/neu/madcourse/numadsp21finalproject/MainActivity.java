@@ -45,25 +45,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         boolean permitted = getPermissionsForApp();
         if (permitted) {
-            fAuth = FirebaseAuth.getInstance();
-            if(fAuth.getCurrentUser() != null) {
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                finish();
-            }
-            logIn();
-            register = findViewById(R.id.main_button_register);
-            register.setOnClickListener(new View.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(View v) {
-                                                startRegisterActivity();
-                                            }
-                                        }
-
-            );
+            setLogin();
         }
 
 
+    }
+
+    private void setLogin() {
+        fAuth = FirebaseAuth.getInstance();
+        if(fAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            finish();
+        }
+        logIn();
+        register = findViewById(R.id.main_button_register);
+        register.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View v) {
+                                            startRegisterActivity();
+                                        }
+                                    }
+
+        );
     }
 
     private boolean getPermissionsForApp() {
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                             "Permission granted",
                             Toast.LENGTH_SHORT)
                             .show();
+                    setLogin();
 
                 } else {
                     String permissionString = "Please allow audio permissions and storage " +
