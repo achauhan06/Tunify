@@ -62,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
     String userId;
     List<String> selectedGenres;
     UserItem user;
+    boolean answer = false;
+
     FirebaseInstanceMessagingService firebaseInstanceMessagingService;
     int counttracker = 0;
     int count = 0;
@@ -393,70 +395,32 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void checkingIfUsernameExists(String usernameToCompare) {
-        //FirebaseFirestore f1;
-        //f1 = FirebaseFirestore.getInstance();
+    private boolean checkingIfUsernameExists(String usernameToCompare) {
         CollectionReference collectionReference = firebaseFirestore.collection("users");
         Query mQuery = collectionReference.whereEqualTo("Username", usernameToCompare);
         mQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                //Log.d(TAG, "checkingIfusernameExist: checking if username exists");
 
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot ds : task.getResult()) {
                         String userNames = ds.getString("Username");
                         if (userNames.equals(usernameToCompare)) {
-                            //Log.d(TAG, "checkingIfusernameExist: FOUND A MATCH -username already exists");
                             Toast.makeText(RegisterActivity.this, "username already exists", Toast.LENGTH_SHORT).show();
-                            //answer = true;
+                            userName.setText("");
+                            userName.requestFocus();
                         }
                     }
                 }
                 if (task.getResult().size() == 0) {
                     try {
-
-                        //Log.d(TAG, "onComplete: MATCH NOT FOUND - username is available");
-                        Toast.makeText(RegisterActivity.this, "username changed", Toast.LENGTH_SHORT).show();
-
-
+                        answer = true;
                     } catch (NullPointerException e) {
-                        //Log.e(TAG, "NullPointerException: " + e.getMessage());
                     }
                 }
             }
         });
-        /*firebaseFirestore.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-
-
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Toast.makeText(RegisterActivity.this, "Hello", Toast.LENGTH_SHORT).show();
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot d : list) {
-                        String userName = d.getString("Username");
-                        if (userName.equals(usernameToCompare))
-                        Toast.makeText(RegisterActivity.this, "Username exists", Toast.LENGTH_SHORT).show();
-                        else Toast.makeText(RegisterActivity.this, "Username is unique", Toast.LENGTH_SHORT).show();
-                        //String email1 = d.getString("Email");
-                        //UserItem user = new UserItem(userName, "", email1);
-                        //userItemList
-                        //UserItem users = d.toObject(UserItem.class);
-                        //if (!email.equals(profileActivity.getEmail().getText().toString()))
-                        //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-                        //if (email != email1)
-                        //userItemList.add(user);
-                        //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
-
-                    }
-                } else {
-                    Toast.makeText(RegisterActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
-                }
-                //createRecyclerView();
-
-            }
-        });*/
+        return answer;
     }
 
 }
