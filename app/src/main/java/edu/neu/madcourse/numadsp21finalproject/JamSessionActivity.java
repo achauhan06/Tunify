@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -370,8 +371,51 @@ public class JamSessionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
+        if (isRecording) {
+            pauseRecording();
+            alertButton("Recording Paused",
+                    "Are you sure you want to quit?", true);
+        } else {
+            this.finish();
+        }
+    }
+
+    private void alertButton(String title, String message, boolean isBackButton) {
+        AlertDialog.Builder songCloseAlert
+                = new AlertDialog
+                .Builder(JamSessionActivity.this);
+        songCloseAlert.setMessage(message);
+        songCloseAlert.setTitle(title);
+        songCloseAlert.setCancelable(false);
+        songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
+            stopRecording();
+            if (isBackButton) {
+                this.finish();
+            }
+        });
+
+        songCloseAlert.setNegativeButton("No", (dialog, which) -> {
+            isRecording = true;
+            resumeRecording();
+            dialog.cancel();
+        });
+        AlertDialog alertDialog = songCloseAlert.create();
+        alertDialog.show();
+
+    }
+
+    private void pauseRecording() {
+        if (player!= null && player.isPlaying()) {
+            player.pause();
+        }
+        recorder.pause();
+        isRecording = false;
+    }
+
+    private void resumeRecording() {
+        recorder.resume();
+        isRecording = true;
+        mStartRecording = false;
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 
