@@ -1,10 +1,16 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,26 +35,127 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     Button register;
 
+    String microphonePermission = Manifest.permission.RECORD_AUDIO;
+    String readExternalStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+    boolean openAppSettings = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fAuth = FirebaseAuth.getInstance();
-        if(fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-            finish();
-        }
-        logIn();
-        register = findViewById(R.id.main_button_register);
-        register.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                startRegisterActivity();
+        boolean permitted = getPermissionsForApp();
+        if (permitted) {
+            fAuth = FirebaseAuth.getInstance();
+            if(fAuth.getCurrentUser() != null) {
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                finish();
             }
+            logIn();
+            register = findViewById(R.id.main_button_register);
+            register.setOnClickListener(new View.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(View v) {
+                                                startRegisterActivity();
+                                            }
+                                        }
+
+            );
         }
 
-        );
+
+    }
+
+    private boolean getPermissionsForApp() {
+
+        if ((ContextCompat.checkSelfPermission(MainActivity.this,
+                microphonePermission) == PackageManager.PERMISSION_DENIED)
+                || (ContextCompat.checkSelfPermission(MainActivity.this,
+                readExternalStorage) == PackageManager.PERMISSION_DENIED)) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{microphonePermission, readExternalStorage},
+                    100);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+        switch (requestCode) {
+            case 100:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivity.this,
+                            "Permission granted",
+                            Toast.LENGTH_SHORT)
+                            .show();
+
+                } else {
+                    String permissionString = "Please allow audio permissions and storage " +
+                            "permissions as they will be required for smooth functionality of app";
+                    if (Helper.getApplicationLaunchedFirstTime(MainActivity.this)) {
+                        Helper.setApplicationLaunchedFirstTime(MainActivity.this);
+                    } else {
+                        if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this
+                                , microphonePermission)
+                                ||
+                                !ActivityCompat.shouldShowRequestPermissionRationale(
+                                        MainActivity.this
+                                        , readExternalStorage)
+                        ) {
+
+                            String permissionType = "";
+                            if (!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this
+                                    , microphonePermission)
+                                    &&
+                                    !ActivityCompat.shouldShowRequestPermissionRationale(
+                                            MainActivity.this
+                                            , readExternalStorage)) {
+                                permissionType += "Audio and Storage permissions have";
+                            } else if (
+                                    !ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this
+                                            , microphonePermission)
+                            ) {
+                                permissionType += "Audio permission has";
+                            } else {
+                                permissionType += "Storage permission has";
+                            }
+                            permissionString = " " + permissionType + " been denied. " +
+                                    "It is required for using certain app features." +
+                                    "Please allow this in the app settings in your device.";
+                            openAppSettings = true;
+                        }
+                    }
+                    setPermissionDialog(permissionString);
+
+                }
+                return;
+        }
+    }
+
+    private void setPermissionDialog(String permissionString) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(permissionString).setTitle("Permissions Required!")
+                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (openAppSettings) {
+                            openAppSettings = false;
+                            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
+                        }
+                        finish();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Permissions");
+        alert.show();
 
     }
 

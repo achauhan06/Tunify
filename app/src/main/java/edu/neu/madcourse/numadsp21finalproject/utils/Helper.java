@@ -1,5 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Helper {
     public static final String NO_INTERNET = "No internet connection";
     private static final String USERNAME = "userName";
@@ -25,6 +28,9 @@ public class Helper {
             "Soul", "R&B", "Heavy Metal"};
 
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private static final String PREF = "preference_permission";
+    private static final String IS_FIRST_TIME_LAUNCH = "is_activity_launched_first_time";
 
     private final static String EMAIL = "email";
     private final static String PASSWORD = "password";
@@ -69,6 +75,21 @@ public class Helper {
         SharedPreferences.Editor editor = getSharedPreferences(ctx.getApplicationContext()).edit();
         editor.putString(USER_TOKEN, userToken);
         editor.apply();
+    }
+
+
+    public static boolean getApplicationLaunchedFirstTime(Activity activity) {
+        SharedPreferences sharedPreferences =
+                activity.getSharedPreferences(PREF, MODE_PRIVATE);
+        return sharedPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+    }
+
+    public static void setApplicationLaunchedFirstTime(Activity activity) {
+        SharedPreferences sharedPreferences =
+                activity.getSharedPreferences(PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH, false);
+        editor.commit();
     }
 
     public static String getUsername(Context ctx) {
