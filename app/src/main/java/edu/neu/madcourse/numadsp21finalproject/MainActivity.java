@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
@@ -43,12 +44,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         boolean permitted = getPermissionsForApp();
         if (permitted) {
             setLogin();
         }
-
-
     }
 
     private void setLogin() {
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    logInService(email, password);
+                    logInService("bing4@test.com", "123456");
 
                 }
             }
@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                                     Helper.setUserToken(MainActivity.this, mobileToken);
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     intent.putExtra("email", email);
+                                    subscribeToNews();
                                     startActivity(intent);
                                     finish();
                                 } else {
@@ -274,4 +275,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void subscribeToNews(){
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "subscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "subscription failed";
+                        }
+                        // Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
 }

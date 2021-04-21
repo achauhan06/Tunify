@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +21,17 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Random;
+import java.util.Scanner;
+
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.RegisterActivity;
 import edu.neu.madcourse.numadsp21finalproject.UserService;
@@ -28,6 +41,9 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     private static final String TAG = FirebaseInstanceMessagingService.class.getSimpleName();
     private static String REFRESH_MOBILE_TOKEN;
+    private static final String CHANNEL_ID  = "CHANNEL_ID";
+    private static final String CHANNEL_NAME  = "CHANNEL_NAME";
+    private static final String CHANNEL_DESCRIPTION  = "CHANNEL_DESCRIPTION";
 
     @Override
     public void onNewToken(@NonNull String token) {
@@ -40,7 +56,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if(remoteMessage.getNotification() != null) {
-            showNotification(remoteMessage);
+            showNotification2(remoteMessage);
         }
 //        extractPayloadDataForegroundCase(remoteMessage);
     }
@@ -63,6 +79,52 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         manager.notify(0, builder.build());
 
     }
+
+    private void showNotification2(RemoteMessage remoteMessage) {
+
+        String click_action = remoteMessage.getNotification().getClickAction();
+        Intent intent = new Intent(click_action);
+        // intent.putExtra("click_action",click_action);
+        intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
+        intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(this, 0 /* Request code */, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                                | PendingIntent.FLAG_ONE_SHOT);
+
+        Notification notification;
+        NotificationCompat.Builder builder;
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel =
+                    new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_HIGH);
+            // Configure the notification channel
+            notificationChannel.setDescription(CHANNEL_DESCRIPTION);
+            notificationManager.createNotificationChannel(notificationChannel);
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID);
+
+        }
+        else {
+            builder = new NotificationCompat.Builder(this);
+        }
+        int notificationId = new Random().nextInt();
+
+
+        notification = builder.setContentTitle(remoteMessage.getNotification().getTitle())
+                /*.setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Much longer text that cannot fit one line..."))*/
+                .setContentText(remoteMessage.getNotification().getBody())
+                .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .build();
+        notificationManager.notify(notificationId,notification);
+
+    }
+
 
     public static String getMobileRefreshToken() {
         return REFRESH_MOBILE_TOKEN;
@@ -107,5 +169,77 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
+    public static void sendMessageToDevice(String targetToken, String sticker) {
+        String userName = "bing test";
+        String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
+        JSONObject jPayload = new JSONObject();
+        JSONObject jNotification = new JSONObject();
+        JSONObject jdata = new JSONObject();
+        try {
+            jNotification.put("title", "New Message");
+            jNotification.put("body", "You received a sticker from "
+                    + userName + " " + sticker);
+            jNotification.put("sound", "default");
+            jNotification.put("badge", "1");
+
+            //citation : https://stackoverflow.com/a/43801355
+            // jNotification.put("click_action","chatNotification");
+
+            jdata.put("friendName",userName);
+            jdata.put("friendToken",userToken);
+
+            /***
+             * The Notification object is now populated.
+             * Next, build the Payload that we send to the server.
+             */
+
+            jPayload.put("to", targetToken); // CLIENT_REGISTRATION_TOKEN);
+            jPayload.put("priority", "high");
+            jPayload.put("notification", jNotification);
+            jPayload.put("data", jdata);
+
+
+            /***
+             * The Payload object is now populated.
+             * Send it to Firebase to send the message to the appropriate recipient.
+             */
+            URL url = new URL("https://fcm.googleapis.com/fcm/send");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", Helper.SERVER_KEY);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            // Send FCM message content.
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(jPayload.toString().getBytes());
+            outputStream.close();
+
+            // Read FCM response.
+            InputStream inputStream = conn.getInputStream();
+            final String resp = convertStreamToString(inputStream);
+
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("TAG", "run: " + resp);
+                    //Toast.makeText(ChatActivity.this,resp,Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String convertStreamToString(InputStream is) {
+        Scanner s = new Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next().replace(",", ",\n") : "";
+    }
+
+    public static void test(String msg, Context context) {
+        Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+
+    }
 
 }

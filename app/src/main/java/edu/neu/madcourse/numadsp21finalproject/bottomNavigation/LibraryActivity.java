@@ -28,6 +28,8 @@ import java.util.Comparator;
 
 
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 
 
 public class LibraryActivity extends AppCompatActivity {
@@ -41,6 +43,7 @@ public class LibraryActivity extends AppCompatActivity {
     private String userId;
     FirebaseFirestore firebaseFirestore;
     private int currentSelectedSong = -1;
+    FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +97,10 @@ public class LibraryActivity extends AppCompatActivity {
             @Override
             public void onLikeClick(int position) {
                 libraryList.get(position).onLikeClick(position);
+                String santoshToken = "dfDcGn0gT2yrKMGczlpidf:APA91bHT4spTXm33MgQ6ufTt_fiEY-Dy8Q4xM9dqE2OGdIhnJ7NLzcUpkxxNlAZgQvzKnPqrTR2LTC-vmhRDAhRWBpjUmPFq6wXBimVfoz3CZMadVOYdcJCmhTs_BG2RtNMIUOR-AA-i";
+                String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
+                firebaseInstanceMessagingService.sendMessageToDevice(santoshToken,"test");
+                // firebaseInstanceMessagingService.test("Test", LibraryActivity.this);
             }
         };
         libraryAdapter = new LibraryAdapter(libraryList, libraryViewClickListener, this);
