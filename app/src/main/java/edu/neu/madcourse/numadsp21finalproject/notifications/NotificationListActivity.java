@@ -29,6 +29,7 @@ import java.util.Comparator;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
 
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class NotificationListActivity extends AppCompatActivity {
@@ -82,79 +83,13 @@ public class NotificationListActivity extends AppCompatActivity {
                 }
                 createNotificationRecyclerView();
 
-
-                // Toast.makeText(NotificationListActivity.this,"list: " + notificationItemArrayList.size(),Toast.LENGTH_SHORT).show();
-
-
             }
         });
     }
 
-    private void getFriendRequestStatus(String contentId, String senderName,Timestamp timestamp) {
-        db.collection("friendRequests").document(contentId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            status = task.getResult().get("status").toString();
-                            title = "Friend Request";
-                            body = senderName + " sent you a friend request.";
 
-
-                            // Toast.makeText(NotificationListActivity.this,"status for " + contentId,Toast.LENGTH_SHORT).show();
-
-                        }else {
-                            Toast.makeText(NotificationListActivity.this,"failed to get friend request status",Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-                });
-    }
-
-    private void getProjectName(String contentId, String type, String senderName, Timestamp timestamp){
-        db.collection("recordings").document(contentId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            projectName = task.getResult().get("name").toString();
-                            if(type.equals("like")){
-                                title = "New Like";
-                                body = senderName + " liked your project " + projectName;
-                                /*
-                                NotificationItem item = new NotificationItem(type,title,body,
-                                        timestamp,status,projectName
-                                        , NotificationListActivity.this);
-                                notificationItemArrayList.add(item);
-
-                                 */
-
-                            }else if(type.equals("comment")) {
-                                title = "New Comment";
-                                body = senderName + " commented your project " + projectName;
-                                /*
-                                NotificationItem item = new NotificationItem(type,title,body,
-                                        timestamp,status,projectName
-                                        , NotificationListActivity.this);
-                                notificationItemArrayList.add(item);
-
-                                 */
-                            }
-
-                            // Toast.makeText(NotificationListActivity.this,"name of " + contentId,Toast.LENGTH_SHORT).show();
-
-                        }else {
-                            Toast.makeText(NotificationListActivity.this,"failed to get project name",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 
     private void createNotificationRecyclerView() {
-        Toast.makeText(NotificationListActivity.this,"list: " + notificationItemArrayList.size(),Toast.LENGTH_SHORT).show();
 
         if(notificationItemArrayList.size() > 0) {
             Collections.sort(notificationItemArrayList, new Comparator<NotificationItem>() {
@@ -164,10 +99,15 @@ public class NotificationListActivity extends AppCompatActivity {
                 }
             });
         }
-<<<<<<< HEAD
-=======
-         */
->>>>>>> f7b75dbfe17e2168b1d601826b3fe3d54f2b6cbb
+        if(notificationItemArrayList.size() > 0) {
+            Collections.sort(notificationItemArrayList, new Comparator<NotificationItem>() {
+                @Override
+                public int compare(NotificationItem o1, NotificationItem o2) {
+                    return o2.getTimestamp().compareTo(o1.getTimestamp());
+                }
+            });
+        }
+
 
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.notifications_recycler_view);
