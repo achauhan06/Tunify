@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+// Citation
+// https://protocoderspoint.com/how-to-check-internet-connection-in-android/
 public class NetworkUtil {
     public static String getConnectivityStatusString(Context context) {
         String status = null;
