@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_internet_heading"
+        android:text="Oooops!"
+        android:layout_margin="5dp"
+        android:textSize="44sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/design_default_color_primary_dark"
+        >
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_internet_text"
+        android:text="no internet connection found"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/design_default_color_primary_dark"
+        >
+
+    </TextView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restart_btn"
+            android:text="Restart"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            >
+
+        </Button>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
