@@ -152,7 +152,7 @@ public class FriendsPlaylistActivity extends AppCompatActivity {
 
     private void createBackAlert() {
         if (currentSelectedSong == -1) {
-            Intent intent = new Intent(FriendsPlaylistActivity.this, HomeActivity.class);
+            Intent intent = new Intent(FriendsPlaylistActivity.this, FriendsActivity.class);
             startActivity(intent);
             this.finish();
         } else {
