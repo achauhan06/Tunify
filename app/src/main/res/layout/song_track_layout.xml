@@ -217,10 +217,9 @@
                 android:outlineAmbientShadowColor="@color/secondaryLightColor"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/save"
                 app:layout_constraintTop_toBottomOf="@+id/play"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/attempt_score"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
@@ -233,10 +232,22 @@
                 android:outlineAmbientShadowColor="@color/secondaryLightColor"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/record_again"
                 app:layout_constraintTop_toBottomOf="@+id/play"
+                app:layout_constraintBottom_toTopOf="@id/attempt_score"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/attempt_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />
 

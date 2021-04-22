@@ -21,9 +21,9 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -36,22 +36,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-/*import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;*/
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
@@ -73,6 +67,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private Button saveSong;
     private Button recordagain;
     FirebaseFirestore firebaseFirestore;
+    private long finalScore = 0;
 
     private long timeWhenStopped = 0;
 
@@ -89,6 +84,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     private String userId;
     private boolean isRecording;
 
+    private int songAttemptNumber = 1;
+
     final int[] progress = {0};
     
     Chronometer chronometer;
@@ -96,11 +93,16 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     YouTubePlayer player1;
     ProgressBar recordingProgressbar;
     DocumentReference ref;
-    private String currentEmail;
+    private TextView attemptView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState!=null) {
+            songAttemptNumber++;
+        }
+
         setContentView(R.layout.song_track_layout);
         Toolbar toolbar = findViewById(R.id.toolbar_song_track_view);
         setActionBar(toolbar);
@@ -116,8 +118,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getUid();
-        } else {
-            currentEmail = Helper.getEmail(this);
         }
 
         userName = Helper.getUsername(this);
@@ -135,6 +135,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recordingProgressbar = findViewById(R.id.recordProgressBar);
         recordingProgressbar.setProgress(0);
         recordingProgressbar.setMax(length);
+        attemptView = findViewById(R.id.attempt_score);
         createRecorder();
         createBackButton();
     }
@@ -147,6 +148,9 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recordagain = findViewById(R.id.record_again);
         recordagain.setOnClickListener(v-> {
             if (Build.VERSION.SDK_INT >= 11) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("attempt", songAttemptNumber);
+                onSaveInstanceState(bundle);
                 recreate();
             } else {
                 Intent intent = getIntent();
@@ -314,12 +318,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             player.setDataSource(fileName);
             player.prepare();
             player.start();
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    playButton.setImageResource(R.drawable.play);
-                }
-            });
+            player.setOnCompletionListener(mp -> playButton.setImageResource(R.drawable.play));
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
@@ -365,6 +364,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recorder.stop();
         recorder.release();
         recorder = null;
+        long finalTime = SystemClock.elapsedRealtime() - chronometer.getBase();
         chronometer.setBase(SystemClock.elapsedRealtime());
         timeWhenStopped = 0;
         chronometer.stop();
@@ -374,6 +374,16 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         mStartRecording = true;
         player1.pause();
         showPlayer();
+        setCurrentScore(finalTime);
+    }
+
+    private void setCurrentScore(long finalTime) {
+        finalScore = (long) (finalTime/100 + Math.pow(2,songAttemptNumber));
+        StringBuilder builder = new StringBuilder();
+        builder.append("You scored " + finalScore);
+        builder.append(". Sing again to improve");
+        attemptView.setText(builder.toString());
+
     }
 
     private void showPlayer() {
@@ -383,8 +393,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         playButton.setVisibility(View.VISIBLE);
         saveSong.setVisibility(View.VISIBLE);
         recordagain.setVisibility(View.VISIBLE);
+        attemptView.setVisibility(View.VISIBLE);
         recordingProgressbar.setProgress(0);
-
     }
 
     private void pauseRecording() {
@@ -490,6 +500,24 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                         song_entry.put("link", uri1.toString());
                         song_entry.put("username", userName);
                         ref.set(song_entry);
+                        Helper.db.collection("users")
+                                .document(userId).get().addOnSuccessListener(
+                                snapshot -> {
+                                    if (snapshot != null) {
+                                        Long score = (Long) snapshot.get("currentScore") == null ? 0L
+                                                : (Long) snapshot.get("currentScore") ;
+                                        Long level = (Long) snapshot.get("currentLevel") == null ? 0L
+                                                : (Long) snapshot.get("currentLevel") ;
+                                        score += finalScore;
+                                        snapshot.getReference().update("currentScore", score);
+                                        if (score > 500 + 200 * level) {
+                                            snapshot.getReference().update("currentLevel",
+                                                    level+1);
+                                        }
+
+                                    }
+                                });
+
                         sendPublishedItemNotification();
                     });
                     Snackbar.make(findViewById(android.R.id.content),
