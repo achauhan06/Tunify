@@ -34,6 +34,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="108dp"
             android:layout_marginBottom="20dp"
+            android:visibility="invisible"
             android:outlineAmbientShadowColor="@color/secondaryLightColor"
             android:text="Accept"
             android:textColor="@android:color/black"
@@ -52,6 +53,7 @@
             android:layout_marginBottom="20dp"
             android:textColor="@android:color/black"
             android:textSize="15sp"
+            android:visibility="invisible"
             android:textStyle="bold" />
     </RelativeLayout>
 
