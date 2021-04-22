@@ -71,12 +71,8 @@ public class FriendsActivity extends AppCompatActivity {
         }
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
-
-        getUserName();
-        // Toast.makeText(this, userName,Toast.LENGTH_SHORT).show();
-
-
-        // query for all current user's friendships
+        userName = Helper.getUsername(this);
+        //getUserName();
         Helper.db.collection("friendships")
                 .whereArrayContains("friends", userId)
                 .get()
@@ -84,6 +80,7 @@ public class FriendsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
+
                             for(DocumentSnapshot documentSnapshot : task.getResult()) {
                                 List<String> friendIds = (List<String>)documentSnapshot.get("friends");
                                 String name1 = documentSnapshot.get("name1").toString();
@@ -138,7 +135,7 @@ public class FriendsActivity extends AppCompatActivity {
 
     }
 
-    public void getUserName() {
+/*    public void getUserName() {
         DocumentReference userDocumentReference = fireStore.getInstance().collection("users").document(userId);
         userDocumentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -146,10 +143,14 @@ public class FriendsActivity extends AppCompatActivity {
                 String first_name = value.getString("First Name");
                 String last_name = value.getString("Last Name");
                 userName = first_name + " " + last_name;
+                if (value.getString("Username")!=null) {
+                    userName = value.getString("Username");
+                }
+                System.out.println(userName);
 
             }
         });
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

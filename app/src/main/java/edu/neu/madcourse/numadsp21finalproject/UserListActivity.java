@@ -49,11 +49,10 @@ public class UserListActivity extends AppCompatActivity {
     private ArrayList<UserItem> userItemList2;
     private Button profile;
     private User currentUser;
-    //FirebaseUser user;
-    //String userId;
+    FirebaseUser user;
+    String currentUserId;
     //String email;
     //private ProfileActivity profileActivity;
-    //FirebaseAuth firebaseAuth;
 
     private BroadcastReceiver myBroadcastReceiver = null;
 
@@ -84,8 +83,8 @@ public class UserListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //user = firebaseAuth.getCurrentUser();
-        //userId = user.getUid();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserId = user.getUid();
         //DocumentReference documentReference = db.collection("users").document(userId);
         //setProfile(documentReference);
         // userItemList = getIntent().getParcelableArrayListExtra("users");
@@ -97,14 +96,23 @@ public class UserListActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 String userName = d.getString("First Name") + " " + d.getString("Last Name");
+                                if (d.get("Username") != null) {
+                                    userName = d.getString("Username");
+                                }
                                 String email1 = d.getString("Email");
+                                if (d.get("Username") != null) {
+                                    userName = d.getString("Username");
+                                }
                                 UserItem user = new UserItem(userName, "", email1);
                                 //userItemList
                                 //UserItem users = d.toObject(UserItem.class);
                                 //if (!email.equals(profileActivity.getEmail().getText().toString()))
                                 //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
                                 //if (email != email1)
-                                userItemList.add(user);
+                                if (!currentUserId.equals(d.getId())) {
+                                    userItemList.add(user);
+                                }
+
                                 //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
 
                             }

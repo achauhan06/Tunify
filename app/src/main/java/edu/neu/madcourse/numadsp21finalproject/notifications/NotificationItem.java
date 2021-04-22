@@ -5,6 +5,7 @@ import android.content.Context;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
@@ -111,8 +112,32 @@ public class NotificationItem implements NotificationViewListener {
             }
         });
 
-        db.collection("friends").document(myId).update("friendsId", FieldValue.arrayUnion(friendId));
-        db.collection("friends").document(friendId).update("friendsId", FieldValue.arrayUnion(myId));
+        db.collection("friends").document(myId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    snapshot.getReference().update("friendsId", FieldValue.arrayUnion(friendId));
+                } else {
+                    Map entry = new HashMap();
+                    entry.put("friendsId", new ArrayList(){{add(friendId);}});
+                    snapshot.getReference().set(entry);
+                }
+
+            }
+        });
+
+        db.collection("friends").document(friendId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    snapshot.getReference().update("friendsId", FieldValue.arrayUnion(myId));
+                } else {
+                    Map entry = new HashMap();
+                    entry.put("friendsId", new ArrayList(){{add(myId);}});
+                    snapshot.getReference().set(entry);
+                }
+            }
+        });
     }
 
     @Override

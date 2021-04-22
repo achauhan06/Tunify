@@ -86,8 +86,12 @@ public class UserProfileActivity extends AppCompatActivity {
                         String email1 = d.getString("Email");
                         friendId = d.getId();
                         if (email.equals(email1)) {
-                            friendName = d.getString("First Name")+ " " +d.getString("Last Name");
-                            fullName.setText(friendName);
+                            friendName = d.getString("Username") != null ?
+                                    d.getString("Username") :
+                                    d.getString("First Name")+ " " +d.getString("Last Name");
+
+                            String name =  d.getString("First Name")+ " " +d.getString("Last Name");
+                            fullName.setText(name);
 
                             //first_name.setText(d.getString("First Name"));
                             //last_name.setText(d.getString("Last Name"));

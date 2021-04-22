@@ -171,6 +171,9 @@ public class JamActivity extends AppCompatActivity {
             String first_name = value.getString("First Name");
             String last_name = value.getString("Last Name");
             userName = first_name + " " + last_name;
+            if (value.get("Username") != null) {
+                userName = value.getString("Username");
+            }
 
             Helper.db.collection("friendships")
                     .whereArrayContains("friends", userId)
