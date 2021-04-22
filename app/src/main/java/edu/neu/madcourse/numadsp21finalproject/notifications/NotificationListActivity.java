@@ -4,22 +4,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryViewListener;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsAdapter;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
+
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class NotificationListActivity extends AppCompatActivity {
@@ -30,7 +31,8 @@ public class NotificationListActivity extends AppCompatActivity {
 
     private BroadcastReceiver myBroadcastReceiver = null;
 
-
+    private ArrayList<NotificationItem> notificationItemList;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,39 @@ public class NotificationListActivity extends AppCompatActivity {
         broadcastIntent();
 
         notificationItemArrayList = new ArrayList<>();
-        NotificationItem item = new NotificationItem();
+        NotificationItem item = new NotificationItem("test");
+
         notificationItemArrayList.add(item);
         notificationItemArrayList.add(item);
         createNotificationRecyclerView();
+
+        notificationItemList = new ArrayList<>();
+    }
+    private void createRecyclerView() {
+        rLayoutManger = new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.notifications_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        NotificationViewListener notificationViewListener = new NotificationViewListener() {
+            @Override
+            public void onItemClick(int position, Context context) {
+                notificationItemList.get(position).onItemClick(position,context);
+            }
+        };
+        notificationAdapter = new NotificationAdapter(notificationItemList, notificationViewListener, this);
+        recyclerView.setLayoutManager(rLayoutManger);
+        recyclerView.setAdapter(notificationAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void createNotificationRecyclerView() {
@@ -78,17 +109,7 @@ public class NotificationListActivity extends AppCompatActivity {
         recyclerView.setAdapter(notificationAdapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-    }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
     public void broadcastIntent() {
         registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }

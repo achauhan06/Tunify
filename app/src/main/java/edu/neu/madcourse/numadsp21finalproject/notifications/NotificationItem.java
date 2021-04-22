@@ -5,11 +5,20 @@ import android.content.Context;
 import java.sql.Time;
 import java.sql.Timestamp;
 
-public class NotificationItem implements NotificationViewListener{
+import android.content.Intent;
+import android.os.Parcelable;
+
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
+
+public class NotificationItem implements NotificationViewListener {
 
     private String notificationItem;
     private String notificationToken;
     private Timestamp timestamp;
+
+    public NotificationItem(String notificationItem) {
+        this.notificationItem = notificationItem;
+    }
 
     public String getNotificationItem() {
         return notificationItem;
@@ -33,6 +42,5 @@ public class NotificationItem implements NotificationViewListener{
 
     @Override
     public void onItemClick(int position, Context context) {
-
     }
 }
