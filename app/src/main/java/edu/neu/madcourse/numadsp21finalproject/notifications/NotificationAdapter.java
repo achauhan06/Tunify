@@ -11,10 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongHolder;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
-import edu.neu.madcourse.numadsp21finalproject.users.UserHolder;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder> {
 
