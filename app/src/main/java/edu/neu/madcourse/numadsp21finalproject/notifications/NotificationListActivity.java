@@ -29,7 +29,6 @@ import java.util.Comparator;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
 
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class NotificationListActivity extends AppCompatActivity {
@@ -37,10 +36,7 @@ public class NotificationListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private NotificationAdapter notificationAdapter;
-    private String projectName = "";
-    private String status = "";
-    private String title = "";
-    private String body = "";
+
 
     private BroadcastReceiver myBroadcastReceiver = null;
 
@@ -115,7 +111,7 @@ public class NotificationListActivity extends AppCompatActivity {
         NotificationViewListener notificationViewListener = new NotificationViewListener() {
             @Override
             public void onLibraryClick(int position) {
-                notificationItemArrayList.get(position).onAcceptClick(position);
+                notificationItemArrayList.get(position).onLibraryClick(position);
 
             }
 
@@ -126,7 +122,7 @@ public class NotificationListActivity extends AppCompatActivity {
 
             @Override
             public void onDeclineClick(int position) {
-                notificationItemArrayList.get(position).onAcceptClick(position);
+                notificationItemArrayList.get(position).onDeclineClick(position);
             }
         };
 

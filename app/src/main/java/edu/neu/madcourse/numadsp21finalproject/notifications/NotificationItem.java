@@ -137,8 +137,8 @@ public class NotificationItem implements NotificationViewListener {
     @Override
     public void onDeclineClick(int position) {
         this.status = "declined";
-        updateFriendRequest(contentId, "declined");
-        updateNotificationInfo(documentSnapshot.getReference().getId(),"declined");
+        updateFriendRequest(contentId, status);
+        updateNotificationInfo(documentSnapshot.getReference().getId(),status);
 
     }
 }
