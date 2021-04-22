@@ -3,6 +3,9 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -11,19 +14,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -44,8 +48,10 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
@@ -508,17 +514,52 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                                                 : (Long) snapshot.get("currentScore") ;
                                         Long level = (Long) snapshot.get("currentLevel") == null ? 0L
                                                 : (Long) snapshot.get("currentLevel") ;
+                                        String categories = (String) snapshot.get("Genres");
+                                        List<String> currentCategoryList = new ArrayList<>();
+                                        if (categories != null) {
+                                            currentCategoryList = Arrays.asList(categories.split(";"));
+                                        }
                                         score += finalScore;
                                         snapshot.getReference().update("currentScore", score);
                                         if (score > 500 + 200 * level) {
                                             snapshot.getReference().update("currentLevel",
                                                     level+1);
+                                            String newCategory = "";
+                                            for(String genre : Helper.CATEGORY_LIST) {
+                                                if (!currentCategoryList.contains(genre)) {
+                                                    newCategory = genre;
+                                                    break;
+                                                }
+                                            }
+
+                                            List<String> finalList = new ArrayList<>();
+                                            finalList.addAll(currentCategoryList);
+                                            finalList.add(newCategory);
+                                            snapshot.getReference()
+                                                    .update("Genres",
+                                                            String.join(";", finalList));
+                                            String categoryUnlockMessage =
+                                                    "Congratulations!!! You have gone to the next level. " +
+                                                            newCategory + " category has been unlocked for you. !";
+
+
+                                              Toast successToast = Toast.makeText(getApplicationContext(),
+                                                      categoryUnlockMessage
+                                                      , Toast.LENGTH_LONG);
+                                              View view = successToast.getView();
+                                              view.setBackgroundColor( getResources()
+                                                      .getColor(R.color.primaryTextColor));
+                                              successToast.setGravity(Gravity.CENTER, 0, 0);
+                                              TextView text = view.findViewById(android.R.id.message);
+
+                                              text.setShadowLayer(0, 0, 0, Color.TRANSPARENT);
+                                              text.setTextColor(Color.WHITE);
+                                              text.setTextSize(Integer.valueOf(15));
+                                              successToast.show();
                                         }
 
                                     }
                                 });
-
-                        sendPublishedItemNotification();
                     });
                     Snackbar.make(findViewById(android.R.id.content),
                             "Audio has been published successfully", Snackbar.LENGTH_SHORT)
@@ -532,9 +573,6 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                             })
                             .show();
                 });
-    }
-
-    private void sendPublishedItemNotification() {
     }
 
     private void openLibrary() {

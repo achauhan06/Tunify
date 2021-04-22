@@ -3,6 +3,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,10 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryAdapter;
@@ -47,26 +52,23 @@ public class CategoryListActivity extends AppCompatActivity {
 
 
 
-        Helper.db.collection("users").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
+        Helper.db.collection("users").whereEqualTo("Email",currentEmail)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException error) {
 
-            String[] genreArray;
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot d : list) {
-                        String email1 = d.getString("Email");
-                        if (currentEmail.equals(email1)) {
-                            String genresString = d.getString("Genres");
-                            genreArray = genresString.split(";");
-                            break;
+                        if (value != null) {
+                            DocumentSnapshot documentSnapshot = value.getDocuments().get(0);
+                            String genresString = documentSnapshot.getString("Genres") != null ?
+                                    documentSnapshot.getString("Genres") : "";
+                                    ;
+                            String[] genreArray = genresString.split(";");
+                            createCategoryListView(Arrays.asList(genreArray));
                         }
+
                     }
-                }
-                createCategoryListView(Arrays.asList(genreArray));
-            }
-        });
+                });
     }
 
     private void createCategoryListView(List<String> selectedCategories) {
@@ -86,6 +88,12 @@ public class CategoryListActivity extends AppCompatActivity {
                     !selectedCategories.contains(categoryName));
             categoryItemList.add(categoryItem);
         }
+
+        Collections.sort(categoryItemList, (o1, o2) -> {
+            if (o1.isLocked())
+                return 1;
+            else return 0;
+        });
 
 
 
