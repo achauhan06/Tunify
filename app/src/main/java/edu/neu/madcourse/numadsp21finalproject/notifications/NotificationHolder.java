@@ -28,14 +28,32 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
         accept.setOnClickListener(v -> {
             if (notificationViewListener != null) {
                 int position = getLayoutPosition();
-                notificationViewListener.onItemClick(position,context);
+                notificationViewListener.onAcceptClick(position);
             }
+            accept.setVisibility(View.INVISIBLE);
+            decline.setVisibility(View.INVISIBLE);
+            goToLibrary.setVisibility(View.INVISIBLE);
+            requestText.setVisibility(View.VISIBLE);
+            requestText.setText("You have accepted.");
         });
         decline.setOnClickListener(v -> {
+            if (notificationViewListener != null) {
+                int position = getLayoutPosition();
+                notificationViewListener.onDeclineClick(position);
+            }
+            accept.setVisibility(View.INVISIBLE);
+            decline.setVisibility(View.INVISIBLE);
+            goToLibrary.setVisibility(View.INVISIBLE);
+            requestText.setVisibility(View.VISIBLE);
+            requestText.setText("You have declined.");
 
         });
 
         goToLibrary.setOnClickListener(v -> {
+            if (notificationViewListener != null) {
+                int position = getLayoutPosition();
+                notificationViewListener.onLibraryClick(position);
+            }
 
         });
     }

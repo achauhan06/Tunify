@@ -61,7 +61,13 @@
             android:name=".notifications.NotificationListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"
-            android:title="" />
+            android:title="">
+            <intent-filter>
+                <action android:name="openNotification"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".UserProfileActivity"
             android:configChanges="orientation|screenSize"
@@ -83,10 +89,6 @@
             android:name=".bottomNavigation.LibraryActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar">
-            <intent-filter>
-                <action android:name="libraryNotification"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
 
         <activity

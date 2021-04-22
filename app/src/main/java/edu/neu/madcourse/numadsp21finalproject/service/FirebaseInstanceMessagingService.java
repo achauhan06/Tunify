@@ -265,7 +265,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
             // TODO: change to myNotification, change manifest too
             //citation : https://stackoverflow.com/a/43801355
-            jNotification.put("click_action","libraryNotification");
+            jNotification.put("click_action","openNotification");
 
             String senderName = Helper.getUsername(context);
             // String senderToken = Helper.getUserToken(context);

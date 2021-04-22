@@ -3,6 +3,9 @@ package edu.neu.madcourse.numadsp21finalproject.notifications;
 import android.content.Context;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Intent;
 import android.os.Parcelable;
@@ -11,12 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
+import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
 
 public class NotificationItem implements NotificationViewListener {
 
@@ -27,23 +36,16 @@ public class NotificationItem implements NotificationViewListener {
     private boolean isFriendRequest = false;
     private Timestamp timestamp;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentSnapshot documentSnapshot;
     private Context context;
 
-    public NotificationItem(DocumentSnapshot documentSnapshot ,Context context) {
+    public NotificationItem(DocumentSnapshot documentSnapshot, Context context) {
         this.contentId = documentSnapshot.get("contentId").toString();
         this.type = documentSnapshot.get("type").toString();
         String senderName = documentSnapshot.get("senderName").toString();
         this.timestamp = (Timestamp) documentSnapshot.get("time");
         String extraInfo = documentSnapshot.get("extraInfo").toString();
 
-        /*
-        this.status = status;
-        this.projectName = projectName;
-        this.type = type;
-        this.title = title;
-        this.body = body;
-
-         */
         if(this.type.equals("friendRequest")){
             this.isFriendRequest = true;
             this.title = "Friend Request";
@@ -59,7 +61,7 @@ public class NotificationItem implements NotificationViewListener {
             this.body = senderName + " liked your project " + projectName;
         }
 
-        // this.timestamp = timestamp;
+        this.documentSnapshot = documentSnapshot;
         this.context = context;
 
     }
@@ -82,46 +84,61 @@ public class NotificationItem implements NotificationViewListener {
         return timestamp;
     }
 
-    private void getFriendRequestStatus() {
-        db.collection("friendRequests").document(contentId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    status = task.getResult().get("status").toString();
-                    Toast.makeText(context,"status for " + contentId,Toast.LENGTH_SHORT).show();
-
-                }else {
-                    Toast.makeText(context,"failed to get friend request status",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private void getProjectName(){
-        db.collection("recordings").document(contentId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            projectName = task.getResult().get("name").toString();
-                            Toast.makeText(context,"name of " + contentId,Toast.LENGTH_SHORT).show();
-
-                        }else {
-                            Toast.makeText(context,"failed to get project name",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 
     private void updateFriendRequest(String requestId, String status) {
         FirebaseFirestore.getInstance().collection("friendRequests").document(requestId).update("status",status);
     }
+    private void updateNotificationInfo(String notificationId, String info) {
+        FirebaseFirestore.getInstance().collection("notifications").document(notificationId).update("extraInfo",info);
+    }
+
+    private void addFriend(String myId, String myName, String friendId, String friendName){
+        Map<String, Object> friendship = new HashMap<>();
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friendId);
+        friends.add(myId);
+        friendship.put("friends", friends);
+        friendship.put("name1", friendName);
+        friendship.put("name2", myName);
+        db.collection("friendships").add(friendship).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        db.collection("friends").document(myId).update("friendsId", FieldValue.arrayUnion(friendId));
+        db.collection("friends").document(friendId).update("friendsId", FieldValue.arrayUnion(myId));
+    }
+
+    @Override
+    public void onLibraryClick(int position) {
+        Intent intent = new Intent(context, LibraryActivity.class);
+        context.startActivity(intent);
+    }
 
 
     @Override
-    public void onItemClick(int position, Context context) {
+    public void onAcceptClick(int position) {
+        String friendId = documentSnapshot.get("senderId").toString();
+        String friendName = documentSnapshot.get("senderName").toString();
+        String myId = documentSnapshot.get("receiverId").toString();
+        String myName = documentSnapshot.get("receiverName").toString();
+        this.status = "accepted";
+        updateFriendRequest(contentId, status);
+        updateNotificationInfo(documentSnapshot.getReference().getId(),status);
+        addFriend(myId,myName,friendId,friendName);
+    }
+
+    @Override
+    public void onDeclineClick(int position) {
+        this.status = "declined";
+        updateFriendRequest(contentId, "declined");
+        updateNotificationInfo(documentSnapshot.getReference().getId(),"declined");
+
     }
 }

@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/notificationBody"
             android:layout_alignParentStart="true"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:text="you have accepted/declined"
             android:textColor="@android:color/black"
             android:layout_marginHorizontal="10dp"
@@ -88,10 +88,10 @@
             android:textStyle="bold" />
         <Button
             android:id="@+id/notification_library_button"
-            android:text="GO TO LIBRARY"
+            android:text="LIBRARY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_toEndOf="@id/accept_button"
             android:layout_below="@+id/notificationBody"
             android:textColor="@android:color/black"
             android:textSize="15sp"

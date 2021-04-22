@@ -73,7 +73,7 @@ public class NotificationListActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     for(DocumentSnapshot documentSnapshot : task.getResult()) {
 
-                        NotificationItem item = new NotificationItem(documentSnapshot,context);
+                        NotificationItem item = new NotificationItem(documentSnapshot, context);
                         notificationItemArrayList.add(item);
 
                     }
@@ -114,8 +114,19 @@ public class NotificationListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         NotificationViewListener notificationViewListener = new NotificationViewListener() {
             @Override
-            public void onItemClick(int position, Context context) {
-                notificationItemArrayList.get(position).onItemClick(position,context);
+            public void onLibraryClick(int position) {
+                notificationItemArrayList.get(position).onAcceptClick(position);
+
+            }
+
+            @Override
+            public void onAcceptClick(int position) {
+                notificationItemArrayList.get(position).onAcceptClick(position);
+            }
+
+            @Override
+            public void onDeclineClick(int position) {
+                notificationItemArrayList.get(position).onAcceptClick(position);
             }
         };
 
