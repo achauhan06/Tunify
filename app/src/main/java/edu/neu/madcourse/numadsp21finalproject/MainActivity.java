@@ -7,9 +7,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +35,7 @@ import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryItem;
 import edu.neu.madcourse.numadsp21finalproject.model.User;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     String microphonePermission = Manifest.permission.RECORD_AUDIO;
     String readExternalStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
     boolean openAppSettings = false;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
         if (permitted) {
             setLogin();
         }
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
     }
+
 
     private void setLogin() {
         fAuth = FirebaseAuth.getInstance();
@@ -306,6 +315,15 @@ public class MainActivity extends AppCompatActivity {
                         // Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
 }

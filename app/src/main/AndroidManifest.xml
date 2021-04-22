@@ -95,6 +95,14 @@
             android:name=".commentview.CommentActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar" />
+
+        <receiver android:name = ".utils.MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name = "android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name = "android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".service.FirebaseInstanceMessagingService"
             android:exported="false">
