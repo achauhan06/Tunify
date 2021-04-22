@@ -95,7 +95,6 @@
             android:name=".commentview.CommentActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar" />
-
         <receiver android:name = ".utils.MyBroadcastReceiver">
             <intent-filter>
                 <action android:name = "android.net.conn.CONNECTIVITY_CHANGE" />
