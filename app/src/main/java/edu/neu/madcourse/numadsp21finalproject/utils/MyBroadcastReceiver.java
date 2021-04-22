@@ -21,7 +21,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         String status = NetworkUtil.getConnectivityStatusString(context);
-        dialog = new Dialog(context,android.R.style.Theme_NoTitleBar_Fullscreen);
+        dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialog.setContentView(R.layout.no_internet);
         Button restartapp = (Button)dialog.findViewById(R.id.restart_btn);
         nettext =(TextView)dialog.findViewById(R.id.no_internet_text);
@@ -31,8 +31,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             public void onClick(View v) {
                 ((Activity) context).finish();
                 Log.d("clickedbutton","yes");
-                Intent i = new Intent(context, MainActivity.class);
-                context.startActivity(i);
+                // Intent i = new Intent(context, MainActivity.class);
+                // context.startActivity(i);
+                context.startActivity(intent);
+
             }
         });
         Log.d("network",status);

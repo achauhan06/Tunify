@@ -323,7 +323,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }
