@@ -206,17 +206,18 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
 
     }*/
-    public static void sendMessageToDevice(String receiverId,String receiverName, String title, String body,String contentId, Context context) {
+    public static void sendMessageToDevice(String receiverId,String receiverName, String title,
+                                           String body,String contentId,String extraInfo, Context context) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getTokenByUserId(receiverId,receiverName,title, body, contentId,context);
+                getTokenByUserId(receiverId,receiverName,title, body, contentId,extraInfo,context);
             }
         }).start();
     }
 
-    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, String contentId,Context context) {
+    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, String contentId,String extraInfo,Context context) {
 
         FirebaseFirestore.getInstance().collection("users").document(receiverId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -237,7 +238,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            sendMessageToDeviceService(token, receiverId,receiverName,title,body, contentId,context);
+                            sendMessageToDeviceService(token, receiverId,receiverName,title,body, contentId, extraInfo,context);
                         }
                     }).start();
                 }
@@ -249,7 +250,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     }
 
     private static void sendMessageToDeviceService(String targetToken,String receiverId,String receiverName,
-                                                   String title, String body, String contentId,Context context) {
+                                                   String title, String body, String contentId,String extraInfo,Context context) {
         // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
 
         JSONObject jPayload = new JSONObject();
@@ -320,7 +321,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        addNotification("like",senderName, senderId,receiverName,receiverId,contentId,timestamp,context);
+                        addNotification("like",senderName, senderId,receiverName,receiverId,contentId,timestamp,extraInfo,context);
 
                     }
                 }).start();
@@ -328,7 +329,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        addNotification("comment",senderName, senderId,receiverName,receiverId,contentId,timestamp,context);
+                        addNotification("comment",senderName, senderId,receiverName,
+                                receiverId,contentId,timestamp,extraInfo,context);
 
                     }
                 }).start();
@@ -371,7 +373,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(context, "friend request sent",Toast.LENGTH_SHORT).show();
                 String contentId = documentReference.getId();
-                addNotification("friendRequest",senderName,senderId,receiverName, receiverId,contentId,timestamp,context);
+                addNotification("friendRequest",senderName,senderId,receiverName, receiverId,contentId,timestamp,
+                        "pending",context);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -383,7 +386,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     }
 
         private static void addNotification(String type,String senderName, String senderId, String receiverName,
-                String receiverId, String contentId,Timestamp timestamp, Context context) {
+                String receiverId, String contentId,Timestamp timestamp,String extraInfo, Context context) {
             Map<String, Object> friendRequest = new HashMap<>();
             friendRequest.put("senderName", senderName);
             friendRequest.put("senderId", senderId);
@@ -392,6 +395,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             friendRequest.put("contentId", contentId);
             friendRequest.put("time", timestamp);
             friendRequest.put("type", type);
+            friendRequest.put("extraInfo", extraInfo);
+
 
 
             FirebaseFirestore.getInstance().collection("notifications")
@@ -410,34 +415,9 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
     }
 
-    private static void getNotificationHistory(String userId, Context context) {
-        FirebaseFirestore.getInstance().collection("notifications")
-                .whereEqualTo("receiverId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DocumentSnapshot documentSnapshot : task.getResult()) {
-                        // TODO: populate a notification item and add it to recycler view list
-                        String type = documentSnapshot.get("type").toString();
-                        if(type.equals("friendRequest")){
 
-                        }else if(type.equals("like")){
 
-                        }else if(type.equals("comment")){
 
-                        }
-                    }
-
-                }else {
-                    Toast.makeText(context, "failed to get notification history",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private static void updateFriendRequest(String requestId, String status) {
-        FirebaseFirestore.getInstance().collection("friendRequests").document(requestId).update("status",status);
-    }
 
 
 

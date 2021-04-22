@@ -37,7 +37,35 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
     @Override
     public void onBindViewHolder(@NonNull NotificationHolder holder, int position) {
         NotificationItem currentItem = notificationItems.get(position);
-        holder.notificationText.setText(currentItem.getNotificationItem());
+        holder.title.setText(currentItem.getTitle());
+        holder.body.setText(currentItem.getBody());
+        holder.time.setText(currentItem.getTimestamp().toDate().toString());
+        if(currentItem.isFriendRequest()) {
+            holder.goToLibrary.setVisibility(View.INVISIBLE);
+            if(currentItem.getStatus().equals("pending")){
+                holder.accept.setVisibility(View.VISIBLE);
+                holder.decline.setVisibility(View.VISIBLE);
+                holder.requestText.setVisibility(View.INVISIBLE);
+            }else if(currentItem.getStatus().equals("accepted")){
+                holder.accept.setVisibility(View.INVISIBLE);
+                holder.decline.setVisibility(View.INVISIBLE);
+                holder.requestText.setVisibility(View.VISIBLE);
+                holder.requestText.setText("You have accepted.");
+            }else if(currentItem.getStatus().equals("declined")){
+                holder.accept.setVisibility(View.INVISIBLE);
+                holder.decline.setVisibility(View.INVISIBLE);
+                holder.requestText.setVisibility(View.VISIBLE);
+                holder.requestText.setText("You have declined.");
+
+            }
+
+        }else {
+            holder.accept.setVisibility(View.INVISIBLE);
+            holder.decline.setVisibility(View.INVISIBLE);
+            holder.requestText.setVisibility(View.INVISIBLE);
+            holder.goToLibrary.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override

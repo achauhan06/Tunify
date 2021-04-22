@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="#E4DFEA"
     app:cardCornerRadius="5dp">
@@ -14,30 +14,48 @@
         android:layout_margin="5dp">
 
         <TextView
-            android:id="@+id/notificationName"
+            android:id="@+id/notificationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:text="title"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/notificationTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:layout_alignParentEnd="true"
+            android:textColor="@android:color/black"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:layout_marginVertical="5dp" />
+        <TextView
+            android:id="@+id/notificationBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="body"
+            android:layout_below="@+id/notificationTitle"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:layout_margin="10dp"
-            android:textStyle="bold" />
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="3dp" />
 
         <Button
             android:id="@+id/accept_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="108dp"
-            android:layout_marginBottom="20dp"
+            android:layout_below="@id/notificationBody"
+            android:layout_alignParentStart="true"
             android:visibility="invisible"
-            android:outlineAmbientShadowColor="@color/secondaryLightColor"
             android:text="Accept"
             android:textColor="@android:color/black"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="3dp"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -47,12 +65,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:outlineAmbientShadowColor="@color/secondaryLightColor"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_below="@+id/notificationBody"
             android:textColor="@android:color/black"
             android:textSize="15sp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="3dp"
+            android:visibility="invisible"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/notification_request_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notificationBody"
+            android:layout_alignParentStart="true"
+            android:visibility="visible"
+            android:text="you have accepted/declined"
+            android:textColor="@android:color/black"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/notification_library_button"
+            android:text="GO TO LIBRARY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/notificationBody"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="3dp"
             android:visibility="invisible"
             android:textStyle="bold" />
     </RelativeLayout>

@@ -102,7 +102,7 @@ public class CommentActivity extends AppCompatActivity {
                         if(userId != ownerId) {
                             ownerName = getIntent().getExtras().getString("ownerName");
                             firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
-                                    userName + " commented your project " + projectName, recordingId,CommentActivity.this);
+                                    userName + " commented your project " + projectName, recordingId,projectName,CommentActivity.this);
                         }
 
                     }

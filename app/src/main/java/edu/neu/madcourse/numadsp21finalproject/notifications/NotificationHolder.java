@@ -12,15 +12,19 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
 
 public class NotificationHolder extends RecyclerView.ViewHolder {
-    public TextView notificationText;
-    public Button accept;
-    public Button decline;
+    public TextView title, body, time, requestText;
+    public Button accept, decline, goToLibrary;
     public NotificationHolder(@NonNull View itemView, Context context,
                               final NotificationViewListener notificationViewListener) {
         super(itemView);
         accept = itemView.findViewById(R.id.accept_button);
         decline = itemView.findViewById(R.id.decline_button);
-        notificationText = itemView.findViewById(R.id.notificationName);
+        title = itemView.findViewById(R.id.notificationTitle);
+        body = itemView.findViewById(R.id.notificationBody);
+        time = itemView.findViewById(R.id.notificationTime);
+        goToLibrary = itemView.findViewById(R.id.notification_library_button);
+        requestText = itemView.findViewById(R.id.notification_request_text);
+
         accept.setOnClickListener(v -> {
             if (notificationViewListener != null) {
                 int position = getLayoutPosition();
@@ -28,6 +32,10 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
             }
         });
         decline.setOnClickListener(v -> {
+
+        });
+
+        goToLibrary.setOnClickListener(v -> {
 
         });
     }
