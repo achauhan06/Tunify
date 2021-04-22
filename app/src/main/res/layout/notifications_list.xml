@@ -25,9 +25,24 @@
             android:layout_margin="10dp"
             android:textStyle="bold" />
 
-        <!-- <Button
-            android:id="@+id/profile_button"
-            android:text="Visit Profile"
+        <Button
+            android:id="@+id/accept_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="108dp"
+            android:layout_marginBottom="20dp"
+            android:outlineAmbientShadowColor="@color/secondaryLightColor"
+            android:text="Accept"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/decline_button"
+            android:text="Decline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -37,7 +52,7 @@
             android:layout_marginBottom="20dp"
             android:textColor="@android:color/black"
             android:textSize="15sp"
-            android:textStyle="bold" /> -->
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
