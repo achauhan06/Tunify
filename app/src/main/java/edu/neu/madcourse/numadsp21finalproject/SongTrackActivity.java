@@ -1,13 +1,16 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +59,7 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class SongTrackActivity extends YouTubeBaseActivity {
 
@@ -100,6 +104,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     ProgressBar recordingProgressbar;
     DocumentReference ref;
     private TextView attemptView;
+    private BroadcastReceiver myBroadcastReceiver = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,9 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         if (savedInstanceState!=null) {
             songAttemptNumber++;
         }
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         setContentView(R.layout.song_track_layout);
         Toolbar toolbar = findViewById(R.id.toolbar_song_track_view);
@@ -580,5 +589,20 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         startActivity(intent);
         this.finish();
     }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

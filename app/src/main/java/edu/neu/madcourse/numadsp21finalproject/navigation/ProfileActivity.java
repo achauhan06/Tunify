@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject.navigation;
 
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -48,6 +51,7 @@ import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.model.User;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -65,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static final int PICK_IMAGE = 100;
     Uri imageUri;
     ImageView profilePicture;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
 
     @Override
@@ -76,7 +81,8 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         email = findViewById(R.id.profile_email);
         first_name = findViewById(R.id.profile_first_name);
@@ -290,4 +296,19 @@ public class ProfileActivity extends AppCompatActivity {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

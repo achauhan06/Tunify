@@ -3,8 +3,11 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +40,7 @@ import java.util.Map;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText dateEditText;
@@ -62,12 +66,17 @@ public class RegisterActivity extends AppCompatActivity {
     int count = 0;
     //String token = "";
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    private BroadcastReceiver myBroadcastReceiver = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         user = new UserItem();
         firebaseFirestore = FirebaseFirestore.getInstance();
         dateEditText = findViewById(R.id.register_dob);
@@ -426,6 +435,20 @@ public class RegisterActivity extends AppCompatActivity {
 
         builder.create();
         return builder;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }

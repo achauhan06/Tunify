@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -41,6 +44,7 @@ import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -53,6 +57,9 @@ public class FriendsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FriendsAdapter friendsAdapter;
 
+    private BroadcastReceiver myBroadcastReceiver = null;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +68,10 @@ public class FriendsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         friendsList = new ArrayList<FriendItem>();
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -156,5 +167,19 @@ public class FriendsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }

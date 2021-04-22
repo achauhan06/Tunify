@@ -1,6 +1,9 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class SongListActivity extends AppCompatActivity {
 
@@ -20,6 +24,7 @@ public class SongListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SongAdapter songAdapter;
     private ArrayList<SongItem> songItemList;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
 
     @Override
@@ -28,6 +33,10 @@ public class SongListActivity extends AppCompatActivity {
         setContentView(R.layout.song_main);
         Toolbar toolbar = findViewById(R.id.toolbar_song);
         setSupportActionBar(toolbar);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         songItemList = getIntent().getParcelableArrayListExtra("songs");
@@ -61,5 +70,20 @@ public class SongListActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

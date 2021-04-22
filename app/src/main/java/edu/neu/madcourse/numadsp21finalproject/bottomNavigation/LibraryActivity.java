@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -41,6 +44,7 @@ import java.util.Comparator;
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class LibraryActivity extends AppCompatActivity {
 
@@ -55,6 +59,9 @@ public class LibraryActivity extends AppCompatActivity {
     private int currentSelectedSong = -1;
     FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
+    private BroadcastReceiver myBroadcastReceiver = null;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +70,10 @@ public class LibraryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         libraryList = new ArrayList<>();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -181,6 +192,20 @@ public class LibraryActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 

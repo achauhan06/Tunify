@@ -1,6 +1,9 @@
 package edu.neu.madcourse.numadsp21finalproject.commentview;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +41,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class CommentActivity extends AppCompatActivity {
     EditText input;
@@ -46,6 +50,8 @@ public class CommentActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userId, userName, recordingId,ownerId,ownerName, projectName, prev;
     private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
+    private BroadcastReceiver myBroadcastReceiver = null;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +61,9 @@ public class CommentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         userId = getIntent().getExtras().getString("userId");
         userName = Helper.getUsername(this);
@@ -202,6 +211,20 @@ public class CommentActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }

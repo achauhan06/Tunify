@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,6 +47,7 @@ import edu.neu.madcourse.numadsp21finalproject.jamview.JamAdapter;
 import edu.neu.madcourse.numadsp21finalproject.jamview.JamItem;
 import edu.neu.madcourse.numadsp21finalproject.jamview.JamViewListener;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class JamActivity extends AppCompatActivity {
 
@@ -59,6 +63,8 @@ public class JamActivity extends AppCompatActivity {
     private ArrayList<JamItem> jamItemList;
     private RecyclerView.LayoutManager jamLayoutManger;
     private JamAdapter jamAdapter;
+    private BroadcastReceiver myBroadcastReceiver = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,9 @@ public class JamActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         createJamView();
 
@@ -284,5 +293,19 @@ public class JamActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -99,6 +99,7 @@
             <intent-filter>
                 <action android:name = "android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name = "android.net.wifi.WIFI_STATE_CHANGED" />
+                <category android:name="com.example.android" />
             </intent-filter>
         </receiver>
 

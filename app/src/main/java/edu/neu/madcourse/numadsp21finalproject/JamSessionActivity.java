@@ -1,8 +1,11 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +53,7 @@ import java.util.Set;
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionAdapter;
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class JamSessionActivity extends AppCompatActivity {
 
@@ -77,6 +81,7 @@ public class JamSessionActivity extends AppCompatActivity {
     private LinearLayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private JamSessionAdapter jamSessionAdapter;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
 
     @Override
@@ -87,6 +92,10 @@ public class JamSessionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         groupName = getIntent().getStringExtra("groupName");
         version = getIntent().getLongExtra("songVersion",0);
@@ -434,5 +443,19 @@ public class JamSessionActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }

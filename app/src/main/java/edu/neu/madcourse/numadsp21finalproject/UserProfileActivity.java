@@ -1,5 +1,8 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -41,6 +44,7 @@ import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -50,6 +54,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private String userToken = "";
     private FirebaseFirestore fireStore;
     private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,10 @@ public class UserProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         addFriend = findViewById(R.id.addfriend_btn);
         //first_name = findViewById(R.id.user_profile_first_name);
         //last_name = findViewById(R.id.user_profile_last_name);
@@ -269,5 +278,19 @@ public class UserProfileActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }

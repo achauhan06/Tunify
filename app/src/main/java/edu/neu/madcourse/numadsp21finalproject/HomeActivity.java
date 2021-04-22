@@ -1,9 +1,12 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -65,6 +68,7 @@ import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsViewListener;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.notifications.NotificationListActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -85,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
 
     private BottomNavigationView bottomNavigationView;
+    private BroadcastReceiver myBroadcastReceiver = null;
 
     private Dialog levelDialog;
 
@@ -103,6 +108,8 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             currentEmail = getIntent().getStringExtra("email");
         }
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         //meet = findViewById(R.id.meet_btn);
         /*meet.setOnClickListener(new View.OnClickListener() {
@@ -446,6 +453,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

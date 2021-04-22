@@ -1,7 +1,10 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,12 +35,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class FriendProfile extends AppCompatActivity {
     TextView heading, first_name, last_name, dob, genre, email;
     Button unfriendBtn;
     FirebaseFirestore fireStore;
     String userId, friendId, friendName;
+
+    private BroadcastReceiver myBroadcastReceiver = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,9 @@ public class FriendProfile extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
 
         heading = findViewById(R.id.profile_heading);
         email = findViewById(R.id.profile_email);
@@ -142,6 +151,21 @@ public class FriendProfile extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }
