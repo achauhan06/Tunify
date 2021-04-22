@@ -3,11 +3,8 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -27,41 +24,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
-//TODO delete
-public class LibraryActivity extends AppCompatActivity {
+
+public class FriendsPlaylistActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager rLayoutManger;
     private RecyclerView recyclerView;
-    private LibraryAdapter libraryAdapter;
-    private ArrayList<LibraryItem> libraryList;
+    private FriendsPlaylistAdapter playlistAdapter;
+    private ArrayList<FriendsPlaylistItem> friendsPlaylistItemsList;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     private String userId;
+    private String friendId;
+    private String friendName;
     FirebaseFirestore firebaseFirestore;
     private int currentSelectedSong = -1;
     FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     private BroadcastReceiver myBroadcastReceiver = null;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,75 +63,28 @@ public class LibraryActivity extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
-        libraryList = new ArrayList<>();
+        friendsPlaylistItemsList = new ArrayList<>();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
+        friendId = getIntent().getStringExtra("friendId");
+        friendName = getIntent().getStringExtra("friendName");
+        toolbar.setTitle(friendName + "'s Recordings");
         getLibraryItems();
-    }
-
-    private void createRecyclerView() {
-        if(libraryList.size() > 0) {
-            Collections.sort(libraryList, new Comparator<LibraryItem>() {
-                @Override
-                public int compare(LibraryItem o1, LibraryItem o2) {
-                    return o2.getTimestamp().compareTo(o1.getTimestamp());
-                }
-            });
-        }
-        rLayoutManger = new LinearLayoutManager(this);
-        recyclerView = findViewById(R.id.library_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        PlaylistListener libraryViewClickListener = new PlaylistListener() {
-            @Override
-            public void onItemClick(int position) {
-                currentSelectedSong = position;
-                libraryList.get(position).onItemClick(position);
-            }
-
-            @Override
-            public void onPauseClick(int position) {
-                currentSelectedSong = position;
-                libraryList.get(position).onPauseClick(position);
-            }
-
-            @Override
-            public void onStopClick(int position) {
-                currentSelectedSong = -1;
-                libraryList.get(position).onStopClick(position);
-            }
-            @Override
-            public void onCommentClick(int position) {
-                libraryList.get(position).onCommentClick(position);
-            }
-            @Override
-            public void onLikeClick(int position) {
-                libraryList.get(position).onLikeClick(position);
-                // String santoshToken = "dfDcGn0gT2yrKMGczlpidf:APA91bHT4spTXm33MgQ6ufTt_fiEY-Dy8Q4xM9dqE2OGdIhnJ7NLzcUpkxxNlAZgQvzKnPqrTR2LTC-vmhRDAhRWBpjUmPFq6wXBimVfoz3CZMadVOYdcJCmhTs_BG2RtNMIUOR-AA-i";
-                // firebaseInstanceMessagingService.test("Test", LibraryActivity.this);
-                // sendMessageToDeviceLib(userToken, "test");
-            }
-        };
-        libraryAdapter = new LibraryAdapter(libraryList, libraryViewClickListener, this);
-        ItemTouchHelper itemTouchHelper = new
-                ItemTouchHelper(new SwipeToDeleteLibrary(libraryAdapter));
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setLayoutManager(rLayoutManger);
-        recyclerView.setAdapter(libraryAdapter);
-
     }
 
     private void getLibraryItems() {
         firebaseFirestore.getInstance().collection("recordings")
-                .whereEqualTo("owner", userId)
+                .whereEqualTo("owner", friendId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                LibraryItem item = new LibraryItem(documentSnapshot, LibraryActivity.this, userId);
-                                libraryList.add(item);
+                                FriendsPlaylistItem friendsPlaylistItem = new FriendsPlaylistItem(documentSnapshot,
+                                        FriendsPlaylistActivity.this, userId);
+                                friendsPlaylistItemsList.add(friendsPlaylistItem);
                                 // Toast.makeText(LibraryActivity.this, projectName,Toast.LENGTH_SHORT).show();
 
                             }
@@ -156,6 +97,54 @@ public class LibraryActivity extends AppCompatActivity {
                 });
     }
 
+    private void createRecyclerView() {
+        if(friendsPlaylistItemsList.size() > 0) {
+            Collections.sort(friendsPlaylistItemsList, new Comparator<FriendsPlaylistItem>() {
+                @Override
+                public int compare(FriendsPlaylistItem o1, FriendsPlaylistItem o2) {
+                    return o2.getTimestamp().compareTo(o1.getTimestamp());
+                }
+            });
+        }
+        rLayoutManger = new LinearLayoutManager(this);
+        recyclerView = findViewById(R.id.library_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        PlaylistListener libraryViewClickListener = new PlaylistListener() {
+            @Override
+            public void onItemClick(int position) {
+                currentSelectedSong = position;
+                friendsPlaylistItemsList.get(position).onItemClick(position);
+            }
+
+            @Override
+            public void onPauseClick(int position) {
+                currentSelectedSong = position;
+                friendsPlaylistItemsList.get(position).onPauseClick(position);
+            }
+
+            @Override
+            public void onStopClick(int position) {
+                currentSelectedSong = -1;
+                friendsPlaylistItemsList.get(position).onStopClick(position);
+            }
+            @Override
+            public void onCommentClick(int position) {
+                friendsPlaylistItemsList.get(position).onCommentClick(position);
+            }
+            @Override
+            public void onLikeClick(int position) {
+                friendsPlaylistItemsList.get(position).onLikeClick(position);
+                // String santoshToken = "dfDcGn0gT2yrKMGczlpidf:APA91bHT4spTXm33MgQ6ufTt_fiEY-Dy8Q4xM9dqE2OGdIhnJ7NLzcUpkxxNlAZgQvzKnPqrTR2LTC-vmhRDAhRWBpjUmPFq6wXBimVfoz3CZMadVOYdcJCmhTs_BG2RtNMIUOR-AA-i";
+                // firebaseInstanceMessagingService.test("Test", LibraryActivity.this);
+                // sendMessageToDeviceLib(userToken, "test");
+            }
+        };
+        playlistAdapter = new FriendsPlaylistAdapter(friendsPlaylistItemsList, libraryViewClickListener, this);
+        recyclerView.setLayoutManager(rLayoutManger);
+        recyclerView.setAdapter(playlistAdapter);
+
+    }
+
     @Override
     public void onBackPressed() {
         createBackAlert();
@@ -165,20 +154,20 @@ public class LibraryActivity extends AppCompatActivity {
         if (currentSelectedSong == -1) {
             this.finish();
         } else {
-            libraryList.get(currentSelectedSong).getMediaPlayer().pause();
+            friendsPlaylistItemsList.get(currentSelectedSong).getMediaPlayer().pause();
             AlertDialog.Builder songCloseAlert = new AlertDialog
-                    .Builder(LibraryActivity.this);
+                    .Builder(FriendsPlaylistActivity.this);
             songCloseAlert.setMessage("Going back will stop playing the song. "
                     + "Are you sure you want to leave?");
             songCloseAlert.setTitle("Song paused");
             songCloseAlert.setCancelable(false);
             songCloseAlert.setPositiveButton("Yes", (dialog, which) -> {
-                libraryList.get(currentSelectedSong).getMediaPlayer().stop();
+                friendsPlaylistItemsList.get(currentSelectedSong).getMediaPlayer().stop();
                 this.finish();
             });
 
             songCloseAlert.setNegativeButton("No", (dialog, which) -> {
-                libraryList.get(currentSelectedSong).getMediaPlayer().start();
+                friendsPlaylistItemsList.get(currentSelectedSong).getMediaPlayer().start();
                 dialog.cancel();
             });
             AlertDialog alertDialog = songCloseAlert.create();
@@ -196,6 +185,7 @@ public class LibraryActivity extends AppCompatActivity {
     public void broadcastIntent() {
         registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -206,6 +196,5 @@ public class LibraryActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }

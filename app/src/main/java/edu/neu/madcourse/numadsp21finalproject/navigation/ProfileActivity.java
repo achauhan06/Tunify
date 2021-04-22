@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseFirestore fireStore;
     FirebaseUser user;
     String userId, oldUserName, newUserName;
-    public static final int PICK_IMAGE = 100;
+    public static final int PICK_IMAGE = 2;
     Uri imageUri;
     ImageView profilePicture;
     private BroadcastReceiver myBroadcastReceiver = null;
@@ -283,10 +283,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(ProfileActivity.this, "onActivityResult", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();
             profilePicture.setImageURI(imageUri);
+            uploadProfilePicture.setText("Change");
         }
     }
 

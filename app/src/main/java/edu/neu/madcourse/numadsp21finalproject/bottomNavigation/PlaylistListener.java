@@ -1,6 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
-public interface LibraryViewClickListener {
+public interface PlaylistListener {
     void onItemClick(int position);
     void onPauseClick(int position);
     void onStopClick(int position);

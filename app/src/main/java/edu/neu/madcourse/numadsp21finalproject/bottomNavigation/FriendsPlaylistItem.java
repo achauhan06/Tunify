@@ -3,14 +3,12 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.solver.state.State;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,13 +25,12 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
-public class LibraryItem implements PlaylistListener{
+public class FriendsPlaylistItem implements PlaylistListener {
+
     private final String projectName, path, genre, userId, recordingId, ownerId;
     private final Context context;
     private final Timestamp timestamp;
@@ -47,7 +44,7 @@ public class LibraryItem implements PlaylistListener{
     private DocumentReference documentReference;
     private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
-    public LibraryItem(QueryDocumentSnapshot documentSnapshot, Context context, String userId) {
+    public FriendsPlaylistItem(QueryDocumentSnapshot documentSnapshot, Context context, String userId) {
         this.projectName = documentSnapshot.get("name").toString();
         this.path = documentSnapshot.get("path").toString();
         this.genre = documentSnapshot.get("genre").toString();
@@ -62,18 +59,6 @@ public class LibraryItem implements PlaylistListener{
         this.recordingId = documentSnapshot.getId();
         this.documentReference = documentSnapshot.getReference();
     }
-    /*
-    public LibraryItem(String projectName, String path, String genre,  Context context, String userId, String recordingId) {
-        this.projectName = projectName;
-        this.path = path;
-        this.genre = genre;
-        this.context = context;
-        this.userId = userId;
-        this.recordingId = recordingId;
-        // prepareAudio();
-    }
-
-     */
 
     public String getProjectName() {
         return projectName;
@@ -214,6 +199,4 @@ public class LibraryItem implements PlaylistListener{
         });
 
     }
-
-
 }

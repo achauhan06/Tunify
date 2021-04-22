@@ -164,6 +164,10 @@ public class NotificationListActivity extends AppCompatActivity {
                 }
             });
         }
+<<<<<<< HEAD
+=======
+         */
+>>>>>>> f7b75dbfe17e2168b1d601826b3fe3d54f2b6cbb
 
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.notifications_recycler_view);

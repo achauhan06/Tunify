@@ -19,7 +19,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -90,16 +89,35 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".bottomNavigation.FriendsPlaylistActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar">
+            <intent-filter>
+                <action android:name="libraryNotification"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".NetworkActivity"
+            android:excludeFromRecents="true"
+            android:label="You are Offline"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert"
+            android:windowSoftInputMode="stateHidden" />
+
 
         <activity
             android:name=".commentview.CommentActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar" />
+
         <receiver android:name = ".utils.MyBroadcastReceiver">
             <intent-filter>
                 <action android:name = "android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name = "android.net.wifi.WIFI_STATE_CHANGED" />
-                <category android:name="com.example.android" />
+                <category android:name="com.android.internetConnectivityAction" />
             </intent-filter>
         </receiver>
 

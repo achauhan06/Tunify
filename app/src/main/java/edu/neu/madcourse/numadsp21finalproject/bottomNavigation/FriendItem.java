@@ -2,9 +2,6 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
-
-import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 
 public class FriendItem implements FriendViewClickListener{
     private Context context;
@@ -29,12 +26,21 @@ public class FriendItem implements FriendViewClickListener{
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(context, FriendProfile.class);
+        Intent intent = new Intent(this.context, FriendProfile.class);
         intent.putExtra("userId", userId);
         intent.putExtra("friendId", friendId);
         intent.putExtra("friendName", friendName);
-        context.startActivity(intent);
+        this.context.startActivity(intent);
         // Toast.makeText(context, friendId + " " + friendName,Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    public void onViewPlaylistClick(int position) {
+        Intent intent = new Intent(this.context, FriendsPlaylistActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", friendName);
+        this.context.startActivity(intent);
     }
 }
