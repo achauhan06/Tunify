@@ -91,7 +91,6 @@ public class NotificationListActivity extends AppCompatActivity {
                 }
             });
         }
-
          */
 
         rLayoutManger = new LinearLayoutManager(this);
