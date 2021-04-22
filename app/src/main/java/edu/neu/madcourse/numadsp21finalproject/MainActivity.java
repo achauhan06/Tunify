@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    logInService("bing4@test.com", "123456");
+                    logInService(email, password);
 
                 }
             }

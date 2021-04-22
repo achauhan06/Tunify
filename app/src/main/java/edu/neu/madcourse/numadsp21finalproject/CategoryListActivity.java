@@ -47,7 +47,8 @@ public class CategoryListActivity extends AppCompatActivity {
 
 
 
-        Helper.db.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
+        Helper.db.collection("users").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>(){
 
             String[] genreArray;
             @Override

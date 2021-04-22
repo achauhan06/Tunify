@@ -306,7 +306,7 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("currentScore", 0);
                             UserService registerUser = userToken -> {
                                 Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
-                                reg_entry.put("MobileToken", userToken.toString());
+                                reg_entry.put("MobileToken", userToken);
                                 //TODO update username
                                 Helper.setEmailPassword(RegisterActivity.this,
                                         email.getText().toString(), password.getText().toString(),

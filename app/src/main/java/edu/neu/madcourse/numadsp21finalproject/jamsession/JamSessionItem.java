@@ -39,7 +39,7 @@ public class JamSessionItem implements JamSessionListener {
         this.userId = userId;
         this.songName = songName;
         this.timeUpdated = timeUpdated;
-        this.songLink = songLink;
+        this.songLink = songLink.replace("%20", " ");
         this.context = context;
     }
 
