@@ -62,6 +62,10 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_NAME  = "CHANNEL_NAME";
     private static final String CHANNEL_DESCRIPTION  = "CHANNEL_DESCRIPTION";
 
+    public static void setMobilTokenConstant(String token) {
+        REFRESH_MOBILE_TOKEN = token;
+    }
+
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -237,10 +238,25 @@ public class MainActivity extends AppCompatActivity {
                                     if (mobileToken == null
                                             || mobileToken.isEmpty()
                                             || !mobileToken.equals(refreshToken)) {
-                                        documentSnapshot.getDocuments()
-                                                .get(0).getReference()
-                                                .update("MobileToken", refreshToken);
-                                        Helper.setUserToken(MainActivity.this, refreshToken);
+                                        FirebaseMessaging.getInstance().getToken()
+                                                .addOnCompleteListener(tokenItem -> {
+                                                    if (!tokenItem.isSuccessful()) {
+                                                        //Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                                        return;
+                                                    }
+                                                    FirebaseInstanceMessagingService
+                                                            .setMobilTokenConstant(tokenItem.getResult());
+                                                    documentSnapshot.getDocuments()
+                                                            .get(0).getReference()
+                                                            .update("MobileToken",
+                                                                    FirebaseInstanceMessagingService
+                                                                            .getMobileRefreshToken() );
+                                                    Helper.setUserToken(MainActivity.this,
+                                                            FirebaseInstanceMessagingService
+                                                                    .getMobileRefreshToken());
+
+                                                });
+
                                     }
                                     //NOT NEEDED
                                     /*UserService userService = new UserService() {
