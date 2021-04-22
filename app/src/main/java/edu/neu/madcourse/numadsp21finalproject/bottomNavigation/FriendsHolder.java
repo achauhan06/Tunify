@@ -27,14 +27,14 @@ public class FriendsHolder extends RecyclerView.ViewHolder {
         viewProfile.setOnClickListener(v -> {
             if (friendViewClickListener != null) {
                 int position = getLayoutPosition();
-                friendViewClickListener.onItemClick(position, context);
+                friendViewClickListener.onItemClick(position);
             }
         });
 
         viewPlaylist.setOnClickListener(v -> {
             if (friendViewClickListener != null) {
                 int position = getLayoutPosition();
-                friendViewClickListener.onViewPlaylistClick(position, context);
+                friendViewClickListener.onViewPlaylistClick(position);
             }
         });
     }

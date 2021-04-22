@@ -14,7 +14,7 @@ public class LibraryHolder extends RecyclerView.ViewHolder {
     TextView libraryItemName, libraryItemGenre, libraryCommentCount, libraryLikeCount, libraryItemTime;
     ImageView libraryplayBtn, librarypauseBtn, stopItemBtn, libraryCommentBtn, libraryLikeWhite, libraryLikeRed;
 
-    public LibraryHolder(@NonNull View itemView, Context context, LibraryViewClickListener libraryViewClickListener) {
+    public LibraryHolder(@NonNull View itemView, Context context, PlaylistListener libraryViewClickListener) {
         super(itemView);
         libraryItemName = itemView.findViewById(R.id.library_item_name);
         libraryItemGenre = itemView.findViewById(R.id.library_item_genre);

@@ -46,6 +46,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
+//TODO delete
 public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager rLayoutManger;
@@ -93,7 +94,7 @@ public class LibraryActivity extends AppCompatActivity {
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.library_recycler_view);
         recyclerView.setHasFixedSize(true);
-        LibraryViewClickListener libraryViewClickListener = new LibraryViewClickListener() {
+        PlaylistListener libraryViewClickListener = new PlaylistListener() {
             @Override
             public void onItemClick(int position) {
                 currentSelectedSong = position;

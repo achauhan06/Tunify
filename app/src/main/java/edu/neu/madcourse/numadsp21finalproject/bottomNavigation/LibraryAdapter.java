@@ -18,11 +18,11 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryHolder> {
     private ArrayList<LibraryItem> libraryItemArrayList;
-    private LibraryViewClickListener libraryViewClickListener;
+    private PlaylistListener libraryViewClickListener;
     private Context context;
 
     public LibraryAdapter(ArrayList<LibraryItem> libraryItemArrayList,
-                          LibraryViewClickListener libraryViewClickListener,
+                          PlaylistListener libraryViewClickListener,
                           Context context) {
         this.libraryItemArrayList = libraryItemArrayList;
         this.libraryViewClickListener = libraryViewClickListener;

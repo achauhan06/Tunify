@@ -33,7 +33,7 @@ import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
-public class LibraryItem implements LibraryViewClickListener{
+public class LibraryItem implements PlaylistListener{
     private final String projectName, path, genre, userId, recordingId, ownerId;
     private final Context context;
     private final Timestamp timestamp;
