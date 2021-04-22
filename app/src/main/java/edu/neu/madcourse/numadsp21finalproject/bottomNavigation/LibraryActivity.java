@@ -163,8 +163,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void createBackAlert() {
         if (currentSelectedSong == -1) {
-            Intent intent = new Intent(LibraryActivity.this, HomeActivity.class);
-            startActivity(intent);
             this.finish();
         } else {
             libraryList.get(currentSelectedSong).getMediaPlayer().pause();
