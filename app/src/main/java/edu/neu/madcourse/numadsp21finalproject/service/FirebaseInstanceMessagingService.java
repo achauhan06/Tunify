@@ -20,6 +20,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -231,7 +233,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                             Toast.makeText(context, "receiver token not found", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    return;
                 }else {
                     new Thread(new Runnable() {
                         @Override
@@ -407,6 +408,35 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 }
             });
 
+    }
+
+    private static void getNotificationHistory(String userId, Context context) {
+        FirebaseFirestore.getInstance().collection("notifications")
+                .whereEqualTo("receiverId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(DocumentSnapshot documentSnapshot : task.getResult()) {
+                        // TODO: populate a notification item and add it to recycler view list
+                        String type = documentSnapshot.get("type").toString();
+                        if(type.equals("friendRequest")){
+
+                        }else if(type.equals("like")){
+
+                        }else if(type.equals("comment")){
+
+                        }
+                    }
+
+                }else {
+                    Toast.makeText(context, "failed to get notification history",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private static void updateFriendRequest(String requestId, String status) {
+        FirebaseFirestore.getInstance().collection("friendRequests").document(requestId).update("status",status);
     }
 
 
