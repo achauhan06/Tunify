@@ -83,6 +83,64 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="3dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/secondaryLightColor"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username : "
+                    android:textSize="10pt"
+                    android:padding="5dp"
+                    android:textColor="@color/primaryTextColor"
+
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_profile_username"
+                    android:text=""
+                    android:inputType="date"
+                    android:textSize="10pt"
+                    android:padding="5dp"
+                    android:textColor="@color/primaryTextColor"
+
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="3dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@color/secondaryLightColor"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email : "
+                    android:textSize="10pt"
+                    android:padding="5dp"
+                    android:textColor="@color/primaryTextColor"
+
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_profile_email"
+                    android:text=""
+                    android:inputType="date"
+                    android:textSize="10pt"
+                    android:padding="5dp"
+                    android:textColor="@color/primaryTextColor"
+
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

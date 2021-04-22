@@ -37,6 +37,7 @@ import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
 import edu.neu.madcourse.numadsp21finalproject.users.UserAdapter;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.users.UserViewListener;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class UserListActivity extends AppCompatActivity {
@@ -44,11 +45,13 @@ public class UserListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManger;
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
-    private ArrayList<UserItem> userItemList;
+    private List<UserItem> userItemList;
+    private List<String> friendIdsList;
     private FirebaseFirestore db;
     private ArrayList<UserItem> userItemList2;
     private Button profile;
     private User currentUser;
+    private String userId;
     FirebaseUser user;
     String currentUserId;
     //String email;
@@ -66,8 +69,10 @@ public class UserListActivity extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
+        userId = FirebaseAuth.getInstance().getUid();
         profile = findViewById(R.id.profile_button);
         currentUser = new User();
+        friendIdsList = new ArrayList<>();
         //profileActivity = new ProfileActivity();
         userItemList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
@@ -88,40 +93,59 @@ public class UserListActivity extends AppCompatActivity {
         //DocumentReference documentReference = db.collection("users").document(userId);
         //setProfile(documentReference);
         // userItemList = getIntent().getParcelableArrayListExtra("users");
-        db.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        createUserListView();
+    }
 
+    private void createUserListView() {
+        Helper.db.collection("friends").document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value.exists()) {
+                    friendIdsList = (List<String>)value.get("friendsId");
+                }
+                buildUserListView();
+            }
+        });
+    }
+
+    private void buildUserListView() {
+        Helper.db.collection("users")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot d : list) {
-                                String userName = d.getString("First Name") + " " + d.getString("Last Name");
-                                if (d.get("Username") != null) {
-                                    userName = d.getString("Username");
-                                }
-                                String email1 = d.getString("Email");
-                                if (d.get("Username") != null) {
-                                    userName = d.getString("Username");
-                                }
-                                UserItem user = new UserItem(userName, "", email1);
-                                //userItemList
-                                //UserItem users = d.toObject(UserItem.class);
-                                //if (!email.equals(profileActivity.getEmail().getText().toString()))
-                                //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-                                //if (email != email1)
-                                if (!currentUserId.equals(d.getId())) {
-                                    userItemList.add(user);
-                                }
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException error) {
 
-                                //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
-
-                            }
-                        } else {
-                            Toast.makeText(UserListActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot d : list) {
+                        String userName = d.getString("First Name") + " " + d.getString("Last Name");
+                        if (d.get("Username") != null) {
+                            userName = d.getString("Username");
                         }
-                        createRecyclerView();
+                        String email1 = d.getString("Email");
+                        if (d.get("Username") != null) {
+                            userName = d.getString("Username");
+                        }
+                        UserItem user = new UserItem(userName, "", email1);
+                        String friendUserId = d.getId();
+                        //userItemList
+                        //UserItem users = d.toObject(UserItem.class);
+                        //if (!email.equals(profileActivity.getEmail().getText().toString()))
+                        //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+                        //if (email != email1)
+                        if (!currentUserId.equals(d.getId()) && !friendIdsList.contains(friendUserId)) {
+                            userItemList.add(user);
+                        }
+
+                        //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
 
                     }
+                } else {
+                    Toast.makeText(UserListActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                }
+                createRecyclerView();
+
+            }
         });
     }
 
