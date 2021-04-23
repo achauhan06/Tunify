@@ -1,7 +1,9 @@
 package edu.neu.madcourse.numadsp21finalproject.navigation;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -11,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -28,9 +31,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Lists;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,8 +43,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +75,18 @@ public class ProfileActivity extends AppCompatActivity {
     Button uploadProfilePicture;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fireStore;
+    FirebaseStorage storage;
+    private static String fileName = null;
+    private Uri imageUri;
+    DocumentReference ref;
     FirebaseUser user;
+    String imageName = "testabc";
     String userId, oldUserName, newUserName;
     public static final int PICK_IMAGE = 2;
-    Uri imageUri;
+    private Uri filePath;
+    StorageReference storageReference;
+
+    //Uri imageUri;
     ImageView profilePicture;
     private BroadcastReceiver myBroadcastReceiver = null;
 
@@ -83,6 +102,9 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+        fileName = getExternalCacheDir().getAbsolutePath();
+        fileName += "/";
+        fileName += imageName+".jpeg";
 
         userName = findViewById(R.id.user_profile_username);
         email = findViewById(R.id.profile_email);
@@ -101,6 +123,8 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
+        //storageReference = fireStore.getInstance().getReference();
+
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(userId);
@@ -110,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGallery();
+                //uploadImage();
             }
 
 
@@ -291,12 +316,65 @@ public class ProfileActivity extends AppCompatActivity {
             imageUri = data.getData();
             profilePicture.setImageURI(imageUri);
             uploadProfilePicture.setText("Change");
+            uploadImage();
         }
+    }
+
+    private void uploadImage() {
+        final ProgressDialog pd= new ProgressDialog(this);
+        pd.setMessage("Uploading...");
+        pd.show();
+        if (imageUri != null) {
+            StorageReference fileRef = FirebaseStorage.getInstance().getReference().child("images").child(userId);
+            fileRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String url = uri.toString();
+                            Log.d("DownloadURL", url);
+                            pd.dismiss();
+                            Toast.makeText(ProfileActivity.this, "Successful image upload", Toast.LENGTH_SHORT).show();
+                            buildImageData();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void buildImageData() {
+
+        ref = fireStore.getInstance().collection("images").document(userId);
+        userId = firebaseAuth.getCurrentUser().getUid();
+        Map<String, Object> image_entry = new HashMap<>();
+        image_entry.put("fileName", imageName + "_.jpeg");
+        image_entry.put("name", imageName);
+        image_entry.put("owner", userId);
+
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference mFilePath = mStorageRef.child("images").child(userId);
+
+        image_entry.put("path", mFilePath.toString());
+        ref.set(image_entry).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
     }
 
 
 
-    private void openGallery() {
+        private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
