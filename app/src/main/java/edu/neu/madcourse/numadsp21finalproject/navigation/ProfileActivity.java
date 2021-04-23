@@ -55,8 +55,8 @@ import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    EditText first_name, last_name, dob, genre;
-    TextView email;
+    EditText first_name, last_name, dob;
+    TextView email, genre, userName;
     Button updateBtn;
 
     User userItem;
@@ -84,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
+        userName = findViewById(R.id.user_profile_username);
         email = findViewById(R.id.profile_email);
         first_name = findViewById(R.id.profile_first_name);
         last_name = findViewById(R.id.profile_last_name);
@@ -104,6 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
         userId = user.getUid();
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(userId);
         setProfile(documentReference);
+        userName.setText(Helper.getUsername(this));
         uploadProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
