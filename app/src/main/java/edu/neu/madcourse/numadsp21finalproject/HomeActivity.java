@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -420,8 +421,8 @@ public class HomeActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 FeedsItem item = new FeedsItem(documentSnapshot, HomeActivity.this);
                                 feedsItemArrayList.add(item);
-                                // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
-
+                                String ownerId = item.getOwnerId();
+                                setOwnerPicture(ownerId, item);
                             }
 
                         } else {
@@ -432,6 +433,25 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
 
+
+    }
+
+    private void setOwnerPicture(String ownerId, FeedsItem item) {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(ownerId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            item.setProfileLink(picturePath[0]);
+            feedsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                item.setProfileLink(picturePath[0]);
+                feedsAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 

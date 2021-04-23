@@ -42,6 +42,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class FeedsItem implements FeedsViewListener{
     private final String projectName, path, genre, ownerName, recordingId, ownerId;
+    private String profileLink;
     private final Timestamp timestamp;
     private int commentsCount;
     private Context context;
@@ -72,7 +73,9 @@ public class FeedsItem implements FeedsViewListener{
         this.commentsCount = documentSnapshot.getLong("commentsCount").intValue();
     }
 
-
+    public String getOwnerId() {
+        return ownerId;
+    }
 
     class MediaRunnable implements Runnable {
         @Override
@@ -109,6 +112,14 @@ public class FeedsItem implements FeedsViewListener{
     }
     public int getCommentsCount() {
         return commentsCount;
+    }
+
+    public void setProfileLink(String profileLink) {
+        this.profileLink = profileLink;
+    }
+
+    public String getProfileLink() {
+        return profileLink;
     }
 
     private void prepareAudio() {

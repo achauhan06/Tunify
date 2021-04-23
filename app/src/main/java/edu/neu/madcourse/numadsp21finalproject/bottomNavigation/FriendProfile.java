@@ -4,11 +4,14 @@ import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.util.ArrayList;
@@ -37,10 +42,12 @@ import java.util.ArrayList;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class FriendProfile extends AppCompatActivity {
     TextView heading, first_name, last_name, dob, genre, email, userName;
+    ImageView profilePicture;
     Button unfriendBtn;
     FirebaseFirestore fireStore;
     String userId, friendId, friendName;
@@ -73,7 +80,7 @@ public class FriendProfile extends AppCompatActivity {
         dob = findViewById(R.id.profile_dob);
         genre = findViewById(R.id.profile_genre);
         unfriendBtn = findViewById(R.id.unfriend_btn);
-
+        profilePicture = findViewById(R.id.friendProfilePicture);
 
 
         friendName = getIntent().getExtras().getString("friendName");
@@ -83,6 +90,8 @@ public class FriendProfile extends AppCompatActivity {
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(friendId);
         setProfile(documentReference);
         Toast.makeText(FriendProfile.this, userId,Toast.LENGTH_SHORT).show();
+
+        loadProfilePicture();
 
 
         unfriendBtn.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +141,35 @@ public class FriendProfile extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadProfilePicture() {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(friendId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            setProfilePicture(picturePath[0]);
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                setProfilePicture(picturePath[0]);
+            }
+        });
+    }
+
+    private void setProfilePicture(String picturePath) {
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(picturePath);
+        final long FIVE_MEGABYTE = 5 * 1024 * 1024;
+        ref.getBytes(FIVE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap scaledImage = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+            profilePicture.setImageBitmap(scaledImage);
+            profilePicture.setVisibility(View.VISIBLE);
+
+        }).addOnFailureListener(exception -> Toast.makeText(FriendProfile.this,
+                exception.getMessage(),Toast.LENGTH_SHORT).show());
     }
 
 
