@@ -46,7 +46,6 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
-//TODO delete
 public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView.LayoutManager rLayoutManger;

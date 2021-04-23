@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -114,16 +115,18 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    //Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
-                    /*new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkingIfUsernameExists(userName.getText().toString());
+                    String newUserName = userName.getText().toString();
+                    if (newUserName.matches("[A-Za-z0-9_]+")) {
+                        checkingIfUsernameExists(newUserName);
+                    } else {
+                        CustomToast customToast = new CustomToast(RegisterActivity.this,
+                                "Username can only consist of alphabets, digits and " +
+                                        "underscore", Snackbar.LENGTH_SHORT);
+                        customToast.makeCustomToast();
+                        userName.setText("");
+                        userName.requestFocus();
                     }
-                }).start();*/
-                    checkingIfUsernameExists(userName.getText().toString());
-                    //mEditing = false;
-                    ///Do the thing
+
                 }
             }
         });
@@ -319,7 +322,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 //TODO update username
                                 Helper.setEmailPassword(RegisterActivity.this,
                                         email.getText().toString(), password.getText().toString(),
-                                        email.getText().toString());
+                                        userName.getText().toString());
                                 Helper.setUserToken(RegisterActivity.this, userToken);
                                 reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
                                     Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
@@ -352,7 +355,9 @@ public class RegisterActivity extends AppCompatActivity {
                     for (DocumentSnapshot ds : task.getResult()) {
                         String userNames = ds.getString("Username");
                         if (userNames.equals(usernameToCompare)) {
-                            Toast.makeText(RegisterActivity.this, "username already exists", Toast.LENGTH_SHORT).show();
+                            CustomToast customToast = new CustomToast(RegisterActivity.this,
+                                    "Username already exists", Snackbar.LENGTH_SHORT);
+                            customToast.makeCustomToast();
                             userName.setText("");
                             userName.requestFocus();
                         }
