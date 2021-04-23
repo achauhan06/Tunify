@@ -21,7 +21,6 @@
             android:scaleType="fitXY"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"
-            android:src="@drawable/baseline_send_black_24dp"
             android:adjustViewBounds="true"
             android:layout_toLeftOf="@+id/feeds_item_name"/>
         <RelativeLayout

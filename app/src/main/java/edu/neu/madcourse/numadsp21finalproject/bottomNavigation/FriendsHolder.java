@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 public class FriendsHolder extends RecyclerView.ViewHolder {
     public TextView friendName, friendsCategory;
     public ImageButton viewProfile,viewPlaylist, viewFriendBlog, chat;
+    public ImageView profilePicture;
 
     public FriendsHolder(@NonNull View itemView,
                       Context context,
@@ -25,6 +27,7 @@ public class FriendsHolder extends RecyclerView.ViewHolder {
         friendsCategory = itemView.findViewById(R.id.genres_liked);
         viewFriendBlog = itemView.findViewById(R.id.friend_blog_button);
         chat = itemView.findViewById(R.id.friend_chat_button);
+        profilePicture = itemView.findViewById(R.id.userProfilePicture);
 
         viewProfile.setOnClickListener(v -> {
             if (friendViewClickListener != null) {

@@ -14,6 +14,7 @@ public class FriendItem implements FriendViewClickListener{
     private final String friendId;
     private final String friendName;
     private String genres;
+    private String profileLink;
 
     public String getFriendName() {
         return friendName;
@@ -25,6 +26,14 @@ public class FriendItem implements FriendViewClickListener{
         this.friendId = friendId;
         this.friendName = friendName;
 
+    }
+
+    public void setProfileLink(String profileLink) {
+        this.profileLink = profileLink;
+    }
+
+    public String getProfileLink() {
+        return profileLink;
     }
 
 

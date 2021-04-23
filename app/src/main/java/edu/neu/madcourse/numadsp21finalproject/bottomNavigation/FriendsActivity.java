@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,7 @@ import java.util.List;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -110,6 +112,7 @@ public class FriendsActivity extends AppCompatActivity {
                                 FriendItem friend = new FriendItem( userId, friendId, friendName, FriendsActivity.this);
                                 setGenreForFriend(friendId, friend, pos++);
                                 friendsList.add(friend);
+                                setOwnerPicture(friendId, friend);
                                 // Toast.makeText(FriendsActivity.this, friendName,Toast.LENGTH_SHORT).show();
 
                             }
@@ -120,6 +123,25 @@ public class FriendsActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+    }
+
+    private void setOwnerPicture(String ownerId, FriendItem item) {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(ownerId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            item.setProfileLink(picturePath[0]);
+            friendsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                item.setProfileLink(picturePath[0]);
+                friendsAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
