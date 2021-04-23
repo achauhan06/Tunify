@@ -3,6 +3,8 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Lists;
@@ -29,6 +33,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +52,7 @@ import java.util.Scanner;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
@@ -53,7 +60,8 @@ import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    TextView dob, genre, fullName, userNameView, emailView ;
+    TextView dob, genre, fullName, userNameView, emailView;
+    ImageView profilePicture;
     private String email, friendId, friendName;
     private String userId;
     Button addFriend;
@@ -82,8 +90,7 @@ public class UserProfileActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getUid();
 
         addFriend = findViewById(R.id.addfriend_btn);
-        //first_name = findViewById(R.id.user_profile_first_name);
-        //last_name = findViewById(R.id.user_profile_last_name);
+        profilePicture = findViewById(R.id.userProfilePicture);
         dob = findViewById(R.id.user_profile_dob);
         genre = findViewById(R.id.user_profile_genre);
         userNameView = findViewById(R.id.user_profile_username);
@@ -121,6 +128,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             break;
                         }
                     }
+                    loadProfilePicture();
                 } else {
                     Toast.makeText(UserProfileActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
                 }
@@ -143,6 +151,35 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void loadProfilePicture() {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(friendId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            setProfilePicture(picturePath[0]);
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                setProfilePicture(picturePath[0]);
+            }
+        });
+    }
+
+    private void setProfilePicture(String picturePath) {
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(picturePath);
+        final long FIVE_MEGABYTE = 5 * 1024 * 1024;
+        ref.getBytes(FIVE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap scaledImage = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+            profilePicture.setImageBitmap(scaledImage);
+            profilePicture.setVisibility(View.VISIBLE);
+
+        }).addOnFailureListener(exception -> Toast.makeText(UserProfileActivity.this,
+                exception.getMessage(),Toast.LENGTH_SHORT).show());
     }
 
     private void createUserProfileView() {

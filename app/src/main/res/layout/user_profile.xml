@@ -22,7 +22,7 @@
 
 
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:overScrollMode="always"
         android:isScrollContainer="true"
@@ -73,15 +73,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="60dp"
-            >
+            android:gravity="center">
 
             <ImageView android:id="@+id/userProfilePicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true" />
         </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
