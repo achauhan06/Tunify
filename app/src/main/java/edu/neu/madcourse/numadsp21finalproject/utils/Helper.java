@@ -143,6 +143,4 @@ public class Helper {
         return getSharedPreferences(ctx.getApplicationContext()).getString(USER_NAME, "");
     }
 
-
-
 }

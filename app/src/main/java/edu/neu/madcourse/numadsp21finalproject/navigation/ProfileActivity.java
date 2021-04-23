@@ -209,7 +209,8 @@ public class ProfileActivity extends AppCompatActivity {
         final long FIVE_MEGABYTE = 5 * 1024 * 1024;
         ref.getBytes(FIVE_MEGABYTE).addOnSuccessListener(bytes -> {
             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            profilePicture.setImageBitmap(bmp);
+            Bitmap scaledImage = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+            profilePicture.setImageBitmap(scaledImage);
             profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(ProfileActivity.this,
