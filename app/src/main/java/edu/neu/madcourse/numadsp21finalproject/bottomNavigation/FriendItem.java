@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 
 public class FriendItem implements FriendViewClickListener{
+
     private Context context;
     private final String userId;
     private final String friendId;
     private final String friendName;
-
-
+    private String genres;
 
     public String getFriendName() {
         return friendName;
@@ -42,5 +42,13 @@ public class FriendItem implements FriendViewClickListener{
         intent.putExtra("friendId", friendId);
         intent.putExtra("friendName", friendName);
         this.context.startActivity(intent);
+    }
+
+    public String getGenres() {
+        return this.genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 }

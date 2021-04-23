@@ -1,7 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject.blogs;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +9,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.neu.madcourse.numadsp21finalproject.BlogActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 

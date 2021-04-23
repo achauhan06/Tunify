@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class FriendsHolder extends RecyclerView.ViewHolder {
-    public TextView friendName;
+    public TextView friendName, friendsCategory;
     public ImageButton viewProfile;
     public ImageButton viewPlaylist;
+
 
     public FriendsHolder(@NonNull View itemView,
                       Context context,
@@ -23,6 +24,7 @@ public class FriendsHolder extends RecyclerView.ViewHolder {
         friendName = itemView.findViewById(R.id.friend_name);
         viewProfile = itemView.findViewById(R.id.friend_profile_button);
         viewPlaylist = itemView.findViewById(R.id.friend_songs_button);
+        friendsCategory = itemView.findViewById(R.id.genres_liked);
 
         viewProfile.setOnClickListener(v -> {
             if (friendViewClickListener != null) {

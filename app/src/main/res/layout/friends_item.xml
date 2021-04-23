@@ -3,14 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="150dp"
     android:layout_margin="4dp"
+    android:background="#8B804468"
     app:cardCornerRadius="5dp">
 
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:gravity="left">
 
         <TextView
             android:id="@+id/friend_name"
@@ -23,10 +25,16 @@
             android:textSize="16sp"
             android:layout_margin="10dp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/genres_liked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/friend_name"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:layout_below="@+id/genres_liked"
             >
             <ImageButton
                 android:id="@+id/friend_chat_button"

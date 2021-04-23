@@ -38,6 +38,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsHolder> {
     public void onBindViewHolder(@NonNull FriendsHolder holder, int position) {
         FriendItem currentItem = friendItemArrayList.get(position);
         holder.friendName.setText(currentItem.getFriendName());
+        holder.friendsCategory.setText(currentItem.getGenres());
     }
 
     @Override

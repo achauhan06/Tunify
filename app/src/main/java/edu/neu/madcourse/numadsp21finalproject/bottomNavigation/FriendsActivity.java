@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -81,6 +82,7 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
 
+                            int pos = 0;
                             for(DocumentSnapshot documentSnapshot : task.getResult()) {
                                 List<String> friendIds = (List<String>)documentSnapshot.get("friends");
                                 String name1 = documentSnapshot.get("name1").toString();
@@ -100,6 +102,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                                 // add friend item to friend list
                                 FriendItem friend = new FriendItem( userId, friendId, friendName, FriendsActivity.this);
+                                setGenreForFriend(friendId, friend, pos++);
                                 friendsList.add(friend);
                                 // Toast.makeText(FriendsActivity.this, friendName,Toast.LENGTH_SHORT).show();
 
@@ -112,6 +115,22 @@ public class FriendsActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void setGenreForFriend(String friendId, FriendItem friendItem, int pos) {
+        Helper.db.collection("users").document(friendId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                String genres = snapshot.getString("Genres");
+                String[] genreArray = genres.split(";");
+                for(int i = 0; i < genreArray.length ; i++) {
+                    genreArray[i] =  "#"+genreArray[i];
+                }
+                friendItem.setGenres(String.join(" ", genreArray));
+                friendsAdapter.notifyItemChanged(pos);
+
+            }
+        });
     }
 
     private void createRecyclerView(){
