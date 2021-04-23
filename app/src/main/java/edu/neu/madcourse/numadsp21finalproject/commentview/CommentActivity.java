@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,7 +50,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class CommentActivity extends AppCompatActivity {
     EditText input;
-    Button post;
+    ImageButton post;
     private ArrayList<CommentItem> commentItemArrayList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userId, userName, recordingId,ownerId,ownerName, projectName, prev;
@@ -92,7 +93,11 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String inputStr = input.getText().toString();
-                Toast.makeText(CommentActivity.this, inputStr,Toast.LENGTH_SHORT).show();
+
+                if (inputStr.isEmpty()) {
+                    Toast.makeText(CommentActivity.this, "Message cannot be empty!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Timestamp timestamp = new Timestamp(new Date());
                 Map<String, Object> comment = new HashMap<>();
                 comment.put("commenterName", userName);
@@ -104,11 +109,11 @@ public class CommentActivity extends AppCompatActivity {
                         .add(comment).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(CommentActivity.this, inputStr,Toast.LENGTH_SHORT).show();
                         updateCommentCount();
                         CommentItem myComment = new CommentItem(userName, inputStr, timestamp);
                         commentItemArrayList.add(myComment);
                         createCommentRecyclerView();
+                        input.setText("");
                         if(userId != ownerId) {
                             ownerName = getIntent().getExtras().getString("ownerName");
                             firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
@@ -161,7 +166,7 @@ public class CommentActivity extends AppCompatActivity {
             Collections.sort(commentItemArrayList, new Comparator<CommentItem>() {
                 @Override
                 public int compare(CommentItem o1, CommentItem o2) {
-                    return o2.getTimestamp().compareTo(o1.getTimestamp());
+                    return o1.getTimestamp().compareTo(o2.getTimestamp());
                 }
             });
         }
@@ -172,6 +177,7 @@ public class CommentActivity extends AppCompatActivity {
         CommentAdapter commentAdapter = new CommentAdapter(commentItemArrayList, this);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(commentAdapter);
+        recyclerView.scrollToPosition(commentItemArrayList.size() - 1);
 
     }
 

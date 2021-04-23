@@ -72,7 +72,7 @@
             android:layout_height="44dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:background="@drawable/microphone_background"
+            android:background="@drawable/rectangle_click_effect_background"
             android:src="@drawable/jam_mic"
             android:adjustViewBounds="true"
             android:clickable="true" />
@@ -95,7 +95,7 @@
             android:layout_height="44dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:background="@drawable/microphone_background"
+            android:background="@drawable/rectangle_click_effect_background"
             android:src="@drawable/ic_play_pause"
             android:adjustViewBounds="true"
             android:clickable="true" />
@@ -107,7 +107,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
 
-            android:background="@drawable/microphone_background"
+            android:background="@drawable/rectangle_click_effect_background"
             android:src="@drawable/baseline_delete_black_24dp"
             android:clickable="true" />
 
@@ -118,7 +118,7 @@
             android:layout_height="44dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:background="@drawable/microphone_background"
+            android:background="@drawable/rectangle_click_effect_background"
             android:src="@drawable/baseline_send_black_24dp"
             android:clickable="true" />
     </LinearLayout>

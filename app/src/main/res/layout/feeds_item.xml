@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/secondaryDarkColor"
+    android:background="@color/feedsCardColor"
     android:outlineAmbientShadowColor="@color/cardview_shadow_start_color"
     android:layout_margin="4dp"
     app:cardCornerRadius="5dp">
@@ -70,7 +70,7 @@
 
         <ImageButton
             android:id="@+id/feeds_item_button"
-            android:background="@color/design_default_color_secondary"
+            android:background="@color/feedsCardColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -92,7 +92,7 @@
             />
         <ImageButton
             android:id="@+id/feeds_item_comment_btn"
-            android:background="@color/secondaryDarkColor"
+            android:background="@color/feedsCardColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/feeds_item_time"
@@ -100,10 +100,11 @@
             android:layout_marginVertical="5dp"
             android:layout_marginStart="20dp"
             android:src="@drawable/ic_comment"
+            android:foreground="@drawable/rectangle_click_effect_background"
              />
         <ImageButton
             android:id="@+id/feeds_item_like_white"
-            android:background="@color/secondaryDarkColor"
+            android:background="@color/feedsCardColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/feeds_item_time"
@@ -115,7 +116,7 @@
              />
         <ImageButton
             android:id="@+id/feeds_item_like_red"
-            android:background="@color/secondaryDarkColor"
+            android:background="@color/feedsCardColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/feeds_item_time"

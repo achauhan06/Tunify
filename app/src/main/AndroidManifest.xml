@@ -54,7 +54,7 @@
         <activity
             android:name=".UserListActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar"
+            android:theme="@style/Theme.Tunify.Meet"
             android:title="" />
         <activity
             android:name=".notifications.NotificationListActivity"
@@ -70,7 +70,7 @@
         <activity
             android:name=".UserProfileActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar"
+            android:theme="@style/Theme.Tunify.Meet"
             android:title="" />
         <activity
             android:name=".navigation.ProfileActivity"

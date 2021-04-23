@@ -12,7 +12,7 @@
     <color name="button2Color">#94BC6A</color>
     <color name="button3Color">#A0C8F8</color>
 
-    <!--Colors for practice section-->
+    <!-- Colors for practice section -->
     <color name="practicePrimaryColor">#af88ba</color>
     <color name="practicePrimaryLightColor">#e1b8ec</color>
     <color name="practicePrimaryDarkColor">#7f5b8a</color>
@@ -22,14 +22,27 @@
     <color name="practicePrimaryTextColor">#000000</color>
     <color name="practiceSecondaryTextColor">#000000</color>
 
-    <!--Colors for Jam section-->
-        <color name="jamPrimaryColor">#c8e6c9</color>
-        <color name="jamPrimaryLightColor">#fbfffc</color>
-        <color name="jamPrimaryDarkColor">#97b498</color>
-        <color name="jamSecondaryColor">#a5d6a7</color>
-        <color name="jamSecondaryLightColor">#d7ffd9</color>
-        <color name="jamSecondaryDarkColor">#75a478</color>
-        <color name="jamPrimaryTextColor">#000000</color>
-        <color name="jamSecondaryTextColor">#000000</color>
+    <!-- Colors for Jam section -->
+    <color name="jamPrimaryColor">#c8e6c9</color>
+    <color name="jamPrimaryLightColor">#fbfffc</color>
+    <color name="jamPrimaryDarkColor">#97b498</color>
+    <color name="jamSecondaryColor">#a5d6a7</color>
+    <color name="jamSecondaryLightColor">#d7ffd9</color>
+    <color name="jamSecondaryDarkColor">#75a478</color>
+    <color name="jamPrimaryTextColor">#000000</color>
+    <color name="jamSecondaryTextColor">#000000</color>
+
+    <!-- Colors for meet people session -->
+    <color name="meetPrimaryColor">#bbdefb</color>
+    <color name="meetPrimaryLightColor">#eeffff</color>
+    <color name="meetPrimaryDarkColor">#8aacc8</color>
+    <color name="meetSecondaryColor">#4fc3f7</color>
+    <color name="meetSecondaryLightColor">#8bf6ff</color>
+    <color name="meetSecondaryDarkColor">#0093c4</color>
+    <color name="meetPrimaryTextColor">#000000</color>
+    <color name="meetSecondaryTextColor">#000000</color>
+
+    <color name="feedsCardColor">#f8bbd0</color>
+
 
 </resources>

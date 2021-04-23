@@ -20,6 +20,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintVertical_weight=".9"
         android:overScrollMode="always"
         android:isScrollContainer="true"
         android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -46,33 +47,38 @@
     </ScrollView>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_weight="0.1"
         android:padding="5dp">
+
         <EditText
+            android:id="@+id/comment_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/comment_input"
-            android:hint="leave comment"
-            android:textSize="9pt"
-            android:layout_marginHorizontal="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp">
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginStart="10dp"
+            android:hint="leave comment"
+            android:textSize="9pt">
 
         </EditText>
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post"
             android:textSize="6pt"
-            android:backgroundTint="@color/button1Color"
+            android:backgroundTint="@android:color/transparent"
             android:id="@+id/comment_submit_btn"
             android:layout_marginHorizontal="5dp"
             android:layout_marginBottom="5dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true">
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:src="@drawable/baseline_send_black_24dp">
 
-        </Button>
+        </ImageButton>
 
     </RelativeLayout>
 

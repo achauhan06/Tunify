@@ -47,6 +47,23 @@
 
     </style>
 
+    <style name="Theme.Tunify.Meet" parent="Theme.MaterialComponents.Light">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/meetPrimaryColor</item>
+        <item name="colorPrimaryVariant">@color/meetPrimaryLightColor</item>
+        <item name="colorOnPrimary">@color/meetPrimaryTextColor</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/meetSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/meetSecondaryLightColor</item>
+        <item name="colorOnSecondary">@color/meetSecondaryTextColor</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
     <style name="Theme.Tunify.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
