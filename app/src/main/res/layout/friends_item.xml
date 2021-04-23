@@ -3,101 +3,98 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="120dp"
     android:layout_margin="4dp"
     android:background="#8B804468"
     app:cardCornerRadius="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/userProfilePicture"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="fitXY"
+            android:layout_gravity="center|center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/feeds_details"
             android:adjustViewBounds="true"
-            android:layout_toLeftOf="@+id/feeds_item_name"/>
+            android:scaleType="fitXY" />
+
         <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:foregroundGravity="center"
+            android:id="@+id/feeds_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:gravity="left">
-
-
+            >
             <TextView
                 android:id="@+id/friend_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
+                android:maxLength="100"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_marginBottom="20dp"
+                android:text="owner"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:layout_margin="10dp"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/genres_liked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/friend_name"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
-                android:textSize="15sp"
-                android:layout_below="@+id/friend_name"/>
+                android:layout_marginBottom="10dp"
+                android:text="genre"
+                android:textSize="15sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/genres_liked"
+                android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center">
-
+               >
                 <ImageButton
                     android:id="@+id/friend_chat_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_toLeftOf="@+id/friend_blog_button"
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/rectangle_click_effect_background"
                     android:outlineAmbientShadowColor="@color/secondaryLightColor"
-                    android:src="@drawable/baseline_chat_black_24dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-
-                    android:textStyle="bold" />
+                    android:src="@drawable/baseline_chat_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/friend_blog_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/friend_songs_button"
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/rectangle_click_effect_background"
                     android:outlineAmbientShadowColor="@color/secondaryLightColor"
-                    android:src="@drawable/baseline_insert_drive_file_black_24dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:src="@drawable/baseline_insert_drive_file_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/friend_songs_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_toLeftOf="@+id/friend_profile_button"
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/rectangle_click_effect_background"
                     android:outlineAmbientShadowColor="@color/secondaryLightColor"
-                    android:src="@drawable/baseline_playlist_play_black_24dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:src="@drawable/baseline_playlist_play_black_24dp" />
 
                 <ImageButton
                     android:id="@+id/friend_profile_button"
@@ -107,12 +104,20 @@
                     android:background="@android:color/transparent"
                     android:foreground="@drawable/rectangle_click_effect_background"
                     android:outlineAmbientShadowColor="@color/secondaryLightColor"
-                    android:src="@drawable/baseline_remove_red_eye_black_24dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
+                    android:src="@drawable/baseline_remove_red_eye_black_24dp" />
             </LinearLayout>
+
+            <!--<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/genres_liked"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center">
+
+
+
+            </LinearLayout>-->
         </RelativeLayout>
     </LinearLayout>
 

@@ -481,7 +481,7 @@ public class HomeActivity extends AppCompatActivity {
         aboutDialog.setContentView(R.layout.about);
         aboutDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        aboutDialog.setCancelable(true);
+        aboutDialog.setCancelable(false);
         TextView body = aboutDialog.findViewById(R.id.about_body);
         body.setText(R.string.about_body);
 
