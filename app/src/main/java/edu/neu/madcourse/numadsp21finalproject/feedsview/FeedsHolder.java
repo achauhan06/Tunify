@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
 
     TextView feedsItemName, feedsItemGenre, feedsItemOwner, feedsItemTime,
             feedsLikeCount, feedsCommentCount;
+
+    ImageView profilePicture;
 
     ImageButton feedsItemBtn, feedsItemLikeWhiteBtn, feedsItemLikeRedBtn, feedsItemCommentBtn;
 
@@ -34,7 +37,7 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
         feedsItemLikeRedBtn = itemView.findViewById(R.id.feeds_item_like_red);
         feedsItemCommentBtn = itemView.findViewById(R.id.feeds_item_comment_btn);
 
-
+        profilePicture = itemView.findViewById(R.id.userProfilePicture);
 
         feedsItemBtn.setOnClickListener(v -> {
             if (feedsViewListener != null) {
