@@ -17,11 +17,15 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogHolder> {
     private List<BlogItem> blogItemList;
     private Context context;
     private BlogViewListener blogViewListener;
+    private boolean isFriend;
 
-    public BlogAdapter(List<BlogItem> blogItemList, Context context, BlogViewListener blogViewListener) {
+    public BlogAdapter(List<BlogItem> blogItemList, Context context,
+                       boolean isFriend,
+                       BlogViewListener blogViewListener) {
         this.blogItemList = blogItemList;
         this.context = context;
         this.blogViewListener = blogViewListener;
+        this.isFriend = isFriend;
     }
 
     @NonNull
@@ -29,7 +33,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogHolder> {
     public BlogHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.blog_item, parent, false);
-        return new BlogHolder(view, context, blogViewListener);
+        return new BlogHolder(view, blogViewListener, isFriend);
     }
 
     @Override

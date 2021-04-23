@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public class BlogDialogActivity extends Activity {
     private String blogBody;
     private String blogTitle;
     private boolean canBeUpdated;
+    private boolean isFriend;
     private Button publishBlog;
     private Button closeBlog;
     private EditText title;
@@ -34,28 +36,48 @@ public class BlogDialogActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.blog_details_view);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        setFinishOnTouchOutside(false);
-
         blogId = getIntent().getStringExtra("blogId");
         blogBody = getIntent().getStringExtra("blogBody");
         blogTitle = getIntent().getStringExtra("blogTitle");
         canBeUpdated = getIntent().getBooleanExtra("canBeUpdated", false);
+        isFriend = getIntent().getBooleanExtra("isFriend", false);
+        int layout = isFriend ? R.layout.blog_details_view_friend : R.layout.blog_details_view ;
+        setContentView(layout);
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        setFinishOnTouchOutside(false);
 
-        publishBlog = findViewById(R.id.publish_blog_btn);
-        closeBlog = findViewById(R.id.close_blog);
-        title = findViewById(R.id.title_input);
-        title.setText(blogTitle);
-        body = findViewById(R.id.body_input);
-        body.setText(blogBody);
+        if (isFriend) {
+            showBlogView();
 
-        if (canBeUpdated) {
-            publishBlog.setText("Update");
+        } else {
+            publishBlog = findViewById(R.id.publish_blog_btn);
+            closeBlog = findViewById(R.id.close_blog);
+            title = findViewById(R.id.title_input);
+            title.setText(blogTitle);
+            body = findViewById(R.id.body_input);
+            body.setText(blogBody);
+
+            if (canBeUpdated) {
+                publishBlog.setText("Update");
+            }
+            createDialogListeners();
         }
 
-        createDialogListeners();
+    }
+
+    private void showBlogView() {
+        TextView titleView = findViewById(R.id.blog_title_frnd);
+        TextView bodyView = findViewById(R.id.blog_content_frnd);
+        closeBlog = findViewById(R.id.blog_view_close_button);
+        titleView.setText(blogTitle);
+        bodyView.setText(blogBody);
+        closeBlog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void createDialogListeners() {

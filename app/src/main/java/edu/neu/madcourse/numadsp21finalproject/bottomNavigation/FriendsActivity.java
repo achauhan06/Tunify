@@ -147,6 +147,11 @@ public class FriendsActivity extends AppCompatActivity {
             public void onViewPlaylistClick(int position) {
                 friendsList.get(position).onViewPlaylistClick(position);
             }
+
+            @Override
+            public void onViewBlogClick(int position) {
+                friendsList.get(position).onViewBlogClick(position);
+            }
         };
         friendsAdapter = new FriendsAdapter(friendsList, friendViewClickListener, this);
         recyclerView.setLayoutManager(rLayoutManger);

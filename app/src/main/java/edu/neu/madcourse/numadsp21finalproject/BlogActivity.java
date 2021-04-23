@@ -171,11 +171,11 @@ public class BlogActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         BlogViewListener blogViewListener = new BlogViewListener() {
             @Override
-            public void onViewClicked(int position) {
-              blogItemList.get(position).onViewClicked(position);
+            public void onViewClicked(int position, Boolean isFriend) {
+              blogItemList.get(position).onViewClicked(position, isFriend);
             }
         };
-        blogAdapter = new BlogAdapter(blogItemList, BlogActivity.this, blogViewListener);
+        blogAdapter = new BlogAdapter(blogItemList, BlogActivity.this, false, blogViewListener);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(blogAdapter);
     }

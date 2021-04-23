@@ -16,7 +16,8 @@ public class BlogHolder extends RecyclerView.ViewHolder {
     public ImageButton blogView;
 
 
-    public BlogHolder(@NonNull View itemView, Context context, BlogViewListener blogViewListener) {
+
+    public BlogHolder(@NonNull View itemView, BlogViewListener blogViewListener, boolean isFriend) {
         super(itemView);
 
         blogName = itemView.findViewById(R.id.blog_name);
@@ -27,7 +28,7 @@ public class BlogHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 if (blogViewListener != null) {
                     int position = getLayoutPosition();
-                    blogViewListener.onViewClicked(position);
+                    blogViewListener.onViewClicked(position, isFriend);
                 }
             }
         });

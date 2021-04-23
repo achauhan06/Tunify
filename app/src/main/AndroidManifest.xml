@@ -31,7 +31,6 @@
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".JamActivity"
-            android:label=""
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Jam"/>
         <activity
@@ -97,7 +96,13 @@
         </activity>
         <activity android:name=".blogs.BlogDialogActivity"
             android:excludeFromRecents="true"
+            android:label=""
             android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity
+            android:name=".FriendsBlogActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar">
         </activity>
 
         <activity

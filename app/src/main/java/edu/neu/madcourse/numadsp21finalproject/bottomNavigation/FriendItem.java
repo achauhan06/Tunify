@@ -3,6 +3,8 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.Context;
 import android.content.Intent;
 
+import edu.neu.madcourse.numadsp21finalproject.FriendsBlogActivity;
+
 public class FriendItem implements FriendViewClickListener{
 
     private Context context;
@@ -41,6 +43,13 @@ public class FriendItem implements FriendViewClickListener{
         intent.putExtra("userId", userId);
         intent.putExtra("friendId", friendId);
         intent.putExtra("friendName", friendName);
+        this.context.startActivity(intent);
+    }
+
+    @Override
+    public void onViewBlogClick(int position) {
+        Intent intent = new Intent(this.context, FriendsBlogActivity.class);
+        intent.putExtra("friendId", friendId);
         this.context.startActivity(intent);
     }
 

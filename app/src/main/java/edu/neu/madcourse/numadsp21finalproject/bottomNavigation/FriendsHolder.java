@@ -13,9 +13,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 
 public class FriendsHolder extends RecyclerView.ViewHolder {
     public TextView friendName, friendsCategory;
-    public ImageButton viewProfile;
-    public ImageButton viewPlaylist;
-
+    public ImageButton viewProfile,viewPlaylist, viewFriendBlog;
 
     public FriendsHolder(@NonNull View itemView,
                       Context context,
@@ -25,6 +23,7 @@ public class FriendsHolder extends RecyclerView.ViewHolder {
         viewProfile = itemView.findViewById(R.id.friend_profile_button);
         viewPlaylist = itemView.findViewById(R.id.friend_songs_button);
         friendsCategory = itemView.findViewById(R.id.genres_liked);
+        viewFriendBlog = itemView.findViewById(R.id.friend_blog_button);
 
         viewProfile.setOnClickListener(v -> {
             if (friendViewClickListener != null) {
@@ -37,6 +36,13 @@ public class FriendsHolder extends RecyclerView.ViewHolder {
             if (friendViewClickListener != null) {
                 int position = getLayoutPosition();
                 friendViewClickListener.onViewPlaylistClick(position);
+            }
+        });
+
+        viewFriendBlog.setOnClickListener(v -> {
+            if (friendViewClickListener != null) {
+                int position = getLayoutPosition();
+                friendViewClickListener.onViewBlogClick(position);
             }
         });
     }

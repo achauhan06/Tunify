@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class BlogItem implements BlogViewListener{
 
@@ -42,12 +41,13 @@ public class BlogItem implements BlogViewListener{
     }
 
     @Override
-    public void onViewClicked(int position) {
+    public void onViewClicked(int position, Boolean isFriend) {
         Intent intent = new Intent(context, BlogDialogActivity.class);
         intent.putExtra("blogId", blogId);
         intent.putExtra("blogTitle", blogTitle);
         intent.putExtra("blogBody", blogBody);
-        intent.putExtra("canBeUpdated", true);
+        intent.putExtra("canBeUpdated", !isFriend);
+        intent.putExtra("isFriend", isFriend);
         context.startActivity(intent);
     }
 }
