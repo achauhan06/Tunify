@@ -2,14 +2,18 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -36,6 +40,12 @@ public class SongListActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(SongListActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

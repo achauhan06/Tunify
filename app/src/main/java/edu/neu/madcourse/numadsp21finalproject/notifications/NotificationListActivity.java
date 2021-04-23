@@ -2,6 +2,7 @@ package edu.neu.madcourse.numadsp21finalproject.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.content.Context;
@@ -27,6 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
+import edu.neu.madcourse.numadsp21finalproject.CategoryListActivity;
+import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
@@ -52,6 +55,12 @@ public class NotificationListActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(NotificationListActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         notificationItemArrayList = new ArrayList<>();
         getNotificationHistory(FirebaseAuth.getInstance().getCurrentUser().getUid(), NotificationListActivity.this);

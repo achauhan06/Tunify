@@ -1,7 +1,12 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -26,6 +32,7 @@ import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryItem;
 import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryViewListener;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class CategoryListActivity extends AppCompatActivity {
 
@@ -34,6 +41,8 @@ public class CategoryListActivity extends AppCompatActivity {
     private CategoryAdapter categoryAdapter;
     private List<CategoryItem> categoryItemList;
     private String currentEmail;
+
+    private BroadcastReceiver myBroadcastReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,13 @@ public class CategoryListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(CategoryListActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
         currentEmail = getIntent().getExtras().getString("currentEmail");
         createRecyclerView();
     }
@@ -121,6 +137,20 @@ public class CategoryListActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -37,9 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
+import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsPlaylistActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
@@ -65,6 +68,12 @@ public class CommentActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(CommentActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         userId = getIntent().getExtras().getString("userId");
         userName = Helper.getUsername(this);

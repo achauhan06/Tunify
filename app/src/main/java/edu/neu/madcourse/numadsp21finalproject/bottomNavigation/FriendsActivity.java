@@ -33,6 +33,7 @@ import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -61,6 +62,11 @@ public class FriendsActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(FriendsActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         friendsList = new ArrayList<FriendItem>();
 

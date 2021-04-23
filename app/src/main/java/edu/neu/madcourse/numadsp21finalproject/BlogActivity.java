@@ -2,6 +2,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import java.util.Map;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogAdapter;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogItem;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogViewListener;
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -63,6 +65,11 @@ public class BlogActivity extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(BlogActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         floatingActionButton = findViewById(R.id.new_blog_button);
         blogItemList = new ArrayList<>();

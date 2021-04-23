@@ -2,10 +2,12 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -26,6 +29,7 @@ import java.util.List;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogAdapter;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogItem;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogViewListener;
+import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -37,7 +41,6 @@ public class FriendsBlogActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BlogAdapter blogAdapter;
     private List<BlogItem> blogItemList;
-    private Dialog dialog;
     private String friendId;
 
     @Override
@@ -51,6 +54,12 @@ public class FriendsBlogActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(FriendsBlogActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
 
         floatingActionButton = findViewById(R.id.new_blog_button);

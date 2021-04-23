@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
         boolean permitted = getPermissionsForApp();
         if (permitted) {
             setLogin();
         }
-
-        myBroadcastReceiver = new MyBroadcastReceiver();
-        broadcastIntent();
     }
 
 

@@ -76,7 +76,6 @@ public class HomeActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private ImageButton searchButton;
     private EditText searchTextBox;
-    private Button meet;
     private String currentEmail;
     private FirebaseUser user;
     private String userId;
@@ -101,24 +100,19 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        userId = user.getUid();
-        if (user != null) {
-            currentEmail = user.getEmail();
-        } else {
-            currentEmail = getIntent().getStringExtra("email");
-        }
+
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
-        //meet = findViewById(R.id.meet_btn);
-        /*meet.setOnClickListener(new View.OnClickListener() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(HomeActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+        userId = user.getUid();
 
-            @Override
-            public void onClick(View v) {
-                startMeetActivity();
-            }
-        });*/
+        currentEmail = user.getEmail();
         feedsItemArrayList = new ArrayList<>();
         friendsList = new ArrayList<>();
 

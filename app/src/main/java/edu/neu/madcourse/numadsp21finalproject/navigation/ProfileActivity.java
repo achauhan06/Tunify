@@ -58,6 +58,7 @@ import java.util.Map;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.UserListActivity;
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.model.User;
@@ -96,12 +97,20 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         Toolbar toolbar = findViewById(R.id.toolbar_profile);
-        userItem =  new User();
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(ProfileActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+
+        userItem =  new User();
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
         fileName += imageName+".jpeg";

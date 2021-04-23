@@ -1,6 +1,7 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -70,10 +71,15 @@ public class UserProfileActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userId = FirebaseAuth.getInstance().getUid();
-
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(UserProfileActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+        userId = FirebaseAuth.getInstance().getUid();
 
         addFriend = findViewById(R.id.addfriend_btn);
         //first_name = findViewById(R.id.user_profile_first_name);

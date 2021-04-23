@@ -111,12 +111,18 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(SongTrackActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+
         if (savedInstanceState!=null) {
             songAttemptNumber++;
         }
-
-        myBroadcastReceiver = new MyBroadcastReceiver();
-        broadcastIntent();
 
         setContentView(R.layout.song_track_layout);
         Toolbar toolbar = findViewById(R.id.toolbar_song_track_view);

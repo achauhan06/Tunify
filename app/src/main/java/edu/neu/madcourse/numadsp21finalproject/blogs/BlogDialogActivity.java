@@ -1,6 +1,9 @@
 package edu.neu.madcourse.numadsp21finalproject.blogs;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
+import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class BlogDialogActivity extends Activity {
 
@@ -33,9 +37,13 @@ public class BlogDialogActivity extends Activity {
     private EditText title;
     private EditText body;
 
+    private BroadcastReceiver myBroadcastReceiver = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        broadcastIntent();
         blogId = getIntent().getStringExtra("blogId");
         blogBody = getIntent().getStringExtra("blogBody");
         blogTitle = getIntent().getStringExtra("blogTitle");
@@ -116,5 +124,19 @@ public class BlogDialogActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    public void broadcastIntent() {
+        registerReceiver(myBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            //Register or UnRegister your broadcast receiver here
+            unregisterReceiver(myBroadcastReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }

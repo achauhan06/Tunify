@@ -2,6 +2,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -95,6 +97,11 @@ public class JamSessionActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(JamSessionActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         groupName = getIntent().getStringExtra("groupName");

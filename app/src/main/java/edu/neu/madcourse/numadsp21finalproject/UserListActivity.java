@@ -54,8 +54,6 @@ public class UserListActivity extends AppCompatActivity {
     private String userId;
     FirebaseUser user;
     String currentUserId;
-    //String email;
-    //private ProfileActivity profileActivity;
 
     private BroadcastReceiver myBroadcastReceiver = null;
 
@@ -68,6 +66,12 @@ public class UserListActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(UserListActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
 
         userId = FirebaseAuth.getInstance().getUid();
         profile = findViewById(R.id.profile_button);

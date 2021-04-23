@@ -3,6 +3,7 @@ package edu.neu.madcourse.numadsp21finalproject;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -77,11 +78,16 @@ public class JamActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
 
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(JamActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         createJamView();
 
         createNewGroupDialogView();
