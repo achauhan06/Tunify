@@ -275,7 +275,8 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "My Settings",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.blogs_title:
-                    Toast.makeText(HomeActivity.this, "My Blogs",Toast.LENGTH_SHORT).show();
+                    Intent blogIntent = new Intent(this, BlogActivity.class);
+                    startActivity(blogIntent);
                     break;
                 case R.id.about_title:
                     Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();

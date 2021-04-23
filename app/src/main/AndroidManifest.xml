@@ -90,6 +90,11 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar">
         </activity>
+        <activity
+            android:name=".BlogActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.Tunify.NoActionBar">
+        </activity>
 
         <activity
             android:name=".bottomNavigation.FriendsPlaylistActivity"

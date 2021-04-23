@@ -57,8 +57,6 @@ public class LibraryActivity extends AppCompatActivity {
     private String userId;
     FirebaseFirestore firebaseFirestore;
     private int currentSelectedSong = -1;
-    FirebaseInstanceMessagingService firebaseInstanceMessagingService;
-
     private BroadcastReceiver myBroadcastReceiver = null;
 
 
