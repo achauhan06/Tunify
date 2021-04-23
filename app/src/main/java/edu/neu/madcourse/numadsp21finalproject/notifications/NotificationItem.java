@@ -25,8 +25,12 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class NotificationItem implements NotificationViewListener {
 
@@ -55,11 +59,17 @@ public class NotificationItem implements NotificationViewListener {
         }else if(this.type.equals("like")){
             this.projectName = extraInfo;
             this.title = "New Like";
-            this.body = senderName + " liked your project " + projectName;
+            this.body = senderName + " liked your project " + projectName + ".";
         }else if(this.type.equals("comment")){
             this.projectName = extraInfo;
             this.title = "New Comment";
-            this.body = senderName + " liked your project " + projectName;
+            this.body = senderName + " liked your project " + projectName + ".";
+        } else if(this.type.equals("acceptedRequest") || this.type.equals("declinedRequest")) {
+            String actionDone = this.type.equals("acceptedRequest") ? "accepted" : "declined";
+            this.isFriendRequest = true;
+            this.title = "Friend Request";
+            this.body = senderName + " " + actionDone + " your friend request.";
+            this.status = extraInfo;
         }
 
         this.documentSnapshot = documentSnapshot;
@@ -138,6 +148,11 @@ public class NotificationItem implements NotificationViewListener {
                 }
             }
         });
+
+        String msg = myName + " accepted your friend request.";
+        FirebaseInstanceMessagingService.sendMessageToDevice(friendId,
+                friendName, title,  msg, contentId, "acceptedRequest", context);
+
     }
 
     @Override
@@ -164,6 +179,36 @@ public class NotificationItem implements NotificationViewListener {
         this.status = "declined";
         updateFriendRequest(contentId, status);
         updateNotificationInfo(documentSnapshot.getReference().getId(),status);
+        String friendId = documentSnapshot.get("senderId").toString();
+        String friendName = documentSnapshot.get("senderName").toString();
+        String myName = documentSnapshot.get("receiverName").toString();
+        String msg = myName + " declined your friend request.";
+        FirebaseInstanceMessagingService.sendMessageToDevice(friendId,
+                friendName, title,  msg, contentId, "declinedRequest", context);
 
+
+    }
+
+    @Override
+    public void onProfileClick(int position) {
+        String friendId = documentSnapshot.get("senderId").toString();
+        String friendName = documentSnapshot.get("senderName").toString();
+        String myId = documentSnapshot.get("receiverId").toString();
+        if (this.status.equals("acceptedRequest")) {
+            Intent intent = new Intent(context, FriendProfile.class);
+            intent.putExtra("userId", myId);
+            intent.putExtra("friendId", friendId);
+            intent.putExtra("friendName", friendName);
+            context.startActivity(intent);
+        } else if(this.status.equals("declinedRequest")) {
+            Helper.db.collection("users")
+                    .document(friendId).get().addOnSuccessListener(snapshot -> {
+                        String email = snapshot.getString("Email");
+                        Intent intent = new Intent(context, UserProfileActivity.class);
+                        intent.putExtra("email", email);
+                        context.startActivity(intent);
+                    });
+
+        }
     }
 }

@@ -1,5 +1,4 @@
 package edu.neu.madcourse.numadsp21finalproject.notifications;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
@@ -9,11 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
 
 public class NotificationHolder extends RecyclerView.ViewHolder {
     public TextView title, body, time, requestText;
-    public Button accept, decline, goToLibrary;
+    public Button accept, decline, goToLibrary, viewProfile ;
+
     public NotificationHolder(@NonNull View itemView, Context context,
                               final NotificationViewListener notificationViewListener) {
         super(itemView);
@@ -24,6 +23,7 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
         time = itemView.findViewById(R.id.notificationTime);
         goToLibrary = itemView.findViewById(R.id.notification_library_button);
         requestText = itemView.findViewById(R.id.notification_request_text);
+        viewProfile = itemView.findViewById(R.id.view_profile_button);
 
         accept.setOnClickListener(v -> {
             if (notificationViewListener != null) {
@@ -55,6 +55,13 @@ public class NotificationHolder extends RecyclerView.ViewHolder {
                 notificationViewListener.onLibraryClick(position);
             }
 
+        });
+
+        viewProfile.setOnClickListener(v -> {
+            if (notificationViewListener != null) {
+                int position = getLayoutPosition();
+                notificationViewListener.onProfileClick(position);
+            }
         });
     }
 }

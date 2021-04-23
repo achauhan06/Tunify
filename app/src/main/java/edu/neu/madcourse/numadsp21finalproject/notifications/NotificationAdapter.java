@@ -45,18 +45,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
             if(currentItem.getStatus().equals("pending")){
                 holder.accept.setVisibility(View.VISIBLE);
                 holder.decline.setVisibility(View.VISIBLE);
+                holder.viewProfile.setVisibility(View.INVISIBLE);
                 holder.requestText.setVisibility(View.INVISIBLE);
             }else if(currentItem.getStatus().equals("accepted")){
                 holder.accept.setVisibility(View.INVISIBLE);
                 holder.decline.setVisibility(View.INVISIBLE);
+                holder.viewProfile.setVisibility(View.INVISIBLE);
                 holder.requestText.setVisibility(View.VISIBLE);
                 holder.requestText.setText("You have accepted.");
             }else if(currentItem.getStatus().equals("declined")){
                 holder.accept.setVisibility(View.INVISIBLE);
                 holder.decline.setVisibility(View.INVISIBLE);
                 holder.requestText.setVisibility(View.VISIBLE);
+                holder.viewProfile.setVisibility(View.INVISIBLE);
                 holder.requestText.setText("You have declined.");
-
+            } else if(currentItem.getStatus().equals("acceptedRequest")
+                    || currentItem.getStatus().equals("declinedRequest")) {
+                holder.accept.setVisibility(View.INVISIBLE);
+                holder.decline.setVisibility(View.INVISIBLE);
+                holder.viewProfile.setVisibility(View.VISIBLE);
             }
 
         }else {
@@ -64,6 +71,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
             holder.decline.setVisibility(View.INVISIBLE);
             holder.requestText.setVisibility(View.INVISIBLE);
             holder.goToLibrary.setVisibility(View.VISIBLE);
+            holder.viewProfile.setVisibility(View.INVISIBLE);
 
         }
     }

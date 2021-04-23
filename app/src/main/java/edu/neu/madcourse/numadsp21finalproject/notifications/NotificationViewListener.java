@@ -6,5 +6,5 @@ public interface NotificationViewListener {
     void onLibraryClick(int position);
     void onAcceptClick(int position);
     void onDeclineClick(int position);
-
+    void onProfileClick(int position);
 }

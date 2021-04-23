@@ -217,7 +217,9 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         }).start();
     }
 
-    private static void getTokenByUserId(String receiverId,String receiverName,String title,String body, String contentId,String extraInfo,Context context) {
+    private static void getTokenByUserId(String receiverId,String receiverName,
+                                         String title,String body, String contentId,
+                                         String extraInfo,Context context) {
 
         FirebaseFirestore.getInstance().collection("users").document(receiverId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -238,7 +240,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            sendMessageToDeviceService(token, receiverId,receiverName,title,body, contentId, extraInfo,context);
+                            sendMessageToDeviceService(token, receiverId,receiverName,title,body,
+                                    contentId, extraInfo,context);
                         }
                     }).start();
                 }
@@ -249,8 +252,10 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
     }
 
-    private static void sendMessageToDeviceService(String targetToken,String receiverId,String receiverName,
-                                                   String title, String body, String contentId,String extraInfo,Context context) {
+    private static void sendMessageToDeviceService(String targetToken,
+                                                   String receiverId,String receiverName,
+                                                   String title, String body, String contentId,
+                                                   String extraInfo,Context context) {
         // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
 
         JSONObject jPayload = new JSONObject();
@@ -313,7 +318,13 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        addFriendRequest(senderName, senderId,receiverName,receiverId,timestamp,context);
+                        if (extraInfo.equals("acceptedRequest")) {
+                            addNotification("acceptedRequest",senderName, senderId,receiverName,receiverId,contentId,timestamp,extraInfo,context);
+                        } else if (extraInfo.equals("declinedRequest")) {
+                            addNotification("declinedRequest",senderName, senderId,receiverName,receiverId,contentId,timestamp,extraInfo,context);
+                        } else {
+                            addFriendRequest(senderName, senderId,receiverName,receiverId,timestamp,context);
+                        }
 
                     }
                 }).start();
@@ -373,8 +384,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(context, "friend request sent",Toast.LENGTH_SHORT).show();
                 String contentId = documentReference.getId();
-                addNotification("friendRequest",senderName,senderId,receiverName, receiverId,contentId,timestamp,
-                        "pending",context);
+                addNotification("friendRequest",senderName,senderId,receiverName, receiverId,
+                        contentId,timestamp, "pending",context);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -414,11 +425,5 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             });
 
     }
-
-
-
-
-
-
 
 }

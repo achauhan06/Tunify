@@ -124,6 +124,11 @@ public class NotificationListActivity extends AppCompatActivity {
             public void onDeclineClick(int position) {
                 notificationItemArrayList.get(position).onDeclineClick(position);
             }
+
+            @Override
+            public void onProfileClick(int position) {
+                notificationItemArrayList.get(position).onProfileClick(position);
+            }
         };
 
         notificationAdapter = new NotificationAdapter(notificationItemArrayList, notificationViewListener, this);
