@@ -85,14 +85,26 @@
 
 
             <ImageButton
-                android:id="@+id/feeds_item_button"
+                android:id="@+id/feeds_item_play_button"
                 android:background="@color/feedsCardColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
                 android:layout_margin="20dp"
-                android:src="@drawable/ic_play_pause"
+                android:visibility="visible"
+                android:src="@drawable/ic_baseline_play_circle_24"
+                />
+            <ImageButton
+                android:id="@+id/feeds_item_pause_button"
+                android:background="@color/feedsCardColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="5dp"
+                android:layout_margin="20dp"
+                android:visibility="invisible"
+                android:src="@drawable/ic_baseline_pause_circle_24"
                 />
             <TextView
                 android:id="@+id/feeds_item_comment_count"
