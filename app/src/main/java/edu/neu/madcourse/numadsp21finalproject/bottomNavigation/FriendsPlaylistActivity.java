@@ -139,7 +139,9 @@ public class FriendsPlaylistActivity extends AppCompatActivity {
                 // sendMessageToDeviceLib(userToken, "test");
             }
         };
-        playlistAdapter = new FriendsPlaylistAdapter(friendsPlaylistItemsList, libraryViewClickListener, this);
+        playlistAdapter = new FriendsPlaylistAdapter(friendsPlaylistItemsList,
+                libraryViewClickListener,
+                this);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(playlistAdapter);
 

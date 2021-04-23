@@ -31,7 +31,7 @@ import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class FriendsPlaylistItem implements PlaylistListener {
 
-    private final String projectName, path, genre, userId, recordingId, ownerId;
+    private final String projectName, path, genre, userId, recordingId, ownerId, ownerName;
     private final Context context;
     private final Timestamp timestamp;
     private ArrayList<String> likesList = new ArrayList<>();
@@ -49,6 +49,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
         this.path = documentSnapshot.get("path").toString();
         this.genre = documentSnapshot.get("genre").toString();
         this.ownerId = documentSnapshot.get("owner").toString();
+        this.ownerName = documentSnapshot.get("username").toString();
         this.timestamp = (Timestamp) documentSnapshot.get("time");
         this.commentCount = documentSnapshot.getLong("commentsCount").intValue();
         this.likesList = (ArrayList<String>) documentSnapshot.get("likes");
@@ -156,7 +157,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
         intent.putExtra("ownerId", ownerId);
         intent.putExtra("ownerName", Helper.getUsername(context));
         intent.putExtra("projectName", projectName);
-        intent.putExtra("prev","library");
+        intent.putExtra("prev","friendsPlaylist");
 
         context.startActivity(intent);
 
@@ -173,6 +174,8 @@ public class FriendsPlaylistItem implements PlaylistListener {
             this.likedByMe = true;
             this.likeCount += 1;
             likesList.add(userId);
+            firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Like",
+                    Helper.getUsername(context) + " liked your project " + projectName,recordingId,projectName, context);
             // firebaseInstanceMessagingService.sendMessageToDevice(userId, Helper.getUsername(context) + " liked your project " + projectName);
 
         }

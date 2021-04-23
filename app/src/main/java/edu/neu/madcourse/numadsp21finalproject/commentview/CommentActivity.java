@@ -38,6 +38,7 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsPlaylistActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
@@ -193,14 +194,17 @@ public class CommentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if(prev.equals("home")){
+        /*if(prev.equals("home")){
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
             startActivity(intent);
 
         }else if(prev.equals("library")){
             Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
             startActivity(intent);
-        }
+        }else if(prev.equals("friendsPlaylist")){
+            Intent intent = new Intent(getApplicationContext(), FriendsPlaylistActivity.class);
+            startActivity(intent);
+        }*/
 
 
         this.finish();
