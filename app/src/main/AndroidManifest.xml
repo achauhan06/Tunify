@@ -25,7 +25,8 @@
         <activity
             android:name=".HomeActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar" />
+            android:theme="@style/Theme.Tunify.NoActionBar"
+            />
         <activity
             android:name=".RegisterActivity"
             android:configChanges="orientation|screenSize" />
