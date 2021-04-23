@@ -6,4 +6,6 @@ public interface FriendViewClickListener {
     void onViewPlaylistClick(int position);
 
     void onViewBlogClick(int position);
+
+    void onChatClick(int position);
 }

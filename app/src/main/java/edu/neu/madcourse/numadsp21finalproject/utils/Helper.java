@@ -39,6 +39,8 @@ public class Helper {
     private final static String USER_TOKEN = "userToken";
     private final static String FIRST_NAME = "first_name";
     private final static String LAST_NAME = "last_name";
+    private final static String USER_NAME = "userName";
+
 
 
     //citation: https://stackoverflow.com/a/51070246
@@ -132,5 +134,15 @@ public class Helper {
     public static String getUserToken(Context ctx) {
         return getSharedPreferences(ctx.getApplicationContext()).getString(USER_TOKEN, "");
     }
+    public static Boolean getLoggedIn(Context ctx)
+    {
+        return getSharedPreferences(ctx.getApplicationContext()).getBoolean(LOGGED_IN, false);
+    }
+    public static String getUserName(Context ctx)
+    {
+        return getSharedPreferences(ctx.getApplicationContext()).getString(USER_NAME, "");
+    }
+
+
 
 }

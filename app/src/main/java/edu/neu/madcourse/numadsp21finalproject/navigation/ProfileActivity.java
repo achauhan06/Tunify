@@ -220,6 +220,7 @@ public class ProfileActivity extends AppCompatActivity {
             documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    //if (value.getString("path")) profilePicture.setImageURI();
                     email.setText(value.getString("Email"));
                     userItem.setEmail(value.getString("Email"));
                     String first_name_str = value.getString("First Name");

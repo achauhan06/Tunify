@@ -2,7 +2,9 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import edu.neu.madcourse.numadsp21finalproject.ChatActivity;
 import edu.neu.madcourse.numadsp21finalproject.FriendsBlogActivity;
 
 public class FriendItem implements FriendViewClickListener{
@@ -50,6 +52,14 @@ public class FriendItem implements FriendViewClickListener{
     public void onViewBlogClick(int position) {
         Intent intent = new Intent(this.context, FriendsBlogActivity.class);
         intent.putExtra("friendId", friendId);
+        this.context.startActivity(intent);
+    }
+
+    @Override
+    public void onChatClick(int position) {
+        Toast.makeText(context, "Entering chat",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this.context, ChatActivity.class);
+        //intent.putExtra("friendId", friendId);
         this.context.startActivity(intent);
     }
 
