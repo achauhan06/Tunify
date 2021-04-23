@@ -38,7 +38,7 @@ import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class FriendProfile extends AppCompatActivity {
-    TextView heading, first_name, last_name, dob, genre, email;
+    TextView heading, first_name, last_name, dob, genre, email, userName;
     Button unfriendBtn;
     FirebaseFirestore fireStore;
     String userId, friendId, friendName;
@@ -58,12 +58,14 @@ public class FriendProfile extends AppCompatActivity {
         broadcastIntent();
 
         heading = findViewById(R.id.profile_heading);
+        userName = findViewById(R.id.profile_userName);
         email = findViewById(R.id.profile_email);
         first_name = findViewById(R.id.profile_first_name);
         last_name = findViewById(R.id.profile_last_name);
         dob = findViewById(R.id.profile_dob);
         genre = findViewById(R.id.profile_genre);
         unfriendBtn = findViewById(R.id.unfriend_btn);
+
 
 
         friendName = getIntent().getExtras().getString("friendName");
@@ -135,6 +137,13 @@ public class FriendProfile extends AppCompatActivity {
                 String last_name_str = value.getString("Last Name");
                 last_name.setText(last_name_str);
                 dob.setText(value.getString("Date of Birth"));
+                if (value.getString("Username") == null) {
+                    userName.setText(first_name + " " + last_name);
+                } else {
+                    userName.setText(value.getString("Username"));
+                }
+
+
 
             }
         });
