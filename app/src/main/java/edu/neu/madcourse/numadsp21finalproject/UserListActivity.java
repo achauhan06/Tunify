@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.model.User;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
@@ -130,8 +133,9 @@ public class UserListActivity extends AppCompatActivity {
                         if (d.get("Username") != null) {
                             userName = d.getString("Username");
                         }
-                        UserItem user = new UserItem(userName, "", email1);
+                        UserItem user = new UserItem(userName, email1);
                         String friendUserId = d.getId();
+
                         String genres = d.getString("Genres");
                         if (genres != null) {
                             String[] genreArray = genres.split(";");
@@ -141,13 +145,9 @@ public class UserListActivity extends AppCompatActivity {
                             user.setGenre(String.join(" ", genreArray));
                         }
 
-                        //userItemList
-                        //UserItem users = d.toObject(UserItem.class);
-                        //if (!email.equals(profileActivity.getEmail().getText().toString()))
-                        //Toast.makeText(UserListActivity.this, "Hi " +currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-                        //if (email != email1)
                         if (!currentUserId.equals(d.getId()) && !friendIdsList.contains(friendUserId)) {
                             userItemList.add(user);
+                            setOwnerPicture(friendUserId, user);
                         }
 
                         //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
@@ -160,6 +160,25 @@ public class UserListActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setOwnerPicture(String ownerId, UserItem item) {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(ownerId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            item.setProfileLink(picturePath[0]);
+            userAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                item.setProfileLink(picturePath[0]);
+                userAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     private void createRecyclerView() {

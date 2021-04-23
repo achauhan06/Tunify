@@ -31,9 +31,8 @@ public class UserItem implements Parcelable, UserViewListener{
 
     }
 
-    public UserItem(String userName, String profileLink, String email) {
+    public UserItem(String userName, String email) {
         this.userName =  userName;
-        this.profileLink = profileLink;
         this.email = email;
     }
 
