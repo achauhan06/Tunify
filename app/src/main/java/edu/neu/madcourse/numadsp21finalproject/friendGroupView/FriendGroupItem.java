@@ -25,8 +25,8 @@ public class FriendGroupItem implements FriendGroupListener {
     }
 
     @Override
-    public void onItemClicked(int position) {
-        isChecked = !isChecked;
+    public void onItemClicked(int position, boolean isChecked) {
+        this.isChecked = isChecked;
     }
 
     public void setChecked() {

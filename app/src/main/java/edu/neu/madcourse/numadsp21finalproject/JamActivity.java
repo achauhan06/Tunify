@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,12 +41,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.SwipeToDeleteLibrary;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupAdapter;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupItem;
 import edu.neu.madcourse.numadsp21finalproject.friendGroupView.FriendGroupListener;
 import edu.neu.madcourse.numadsp21finalproject.jamview.JamAdapter;
 import edu.neu.madcourse.numadsp21finalproject.jamview.JamItem;
 import edu.neu.madcourse.numadsp21finalproject.jamview.JamViewListener;
+import edu.neu.madcourse.numadsp21finalproject.jamview.SwipeToDeleteJamGroup;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -118,10 +121,10 @@ public class JamActivity extends AppCompatActivity {
                                         @Nullable FirebaseFirestoreException error) {
                         List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                         int pos = 0;
-                        jamItemList = new ArrayList<>();
                         jamAdapter = new JamAdapter(jamItemList, jamViewListener,
                                 JamActivity.this);
                         jamRecyclerView.setAdapter(jamAdapter);
+                        jamItemList.clear();
                         for(DocumentSnapshot documentSnapshot : documents) {
                             String groupName = documentSnapshot.getId();
                             Map<String, Object> fieldMap = documentSnapshot.getData();
@@ -132,10 +135,13 @@ public class JamActivity extends AppCompatActivity {
                                 Long songVersion = (Long) fieldMap.get("songVersion");
                                 jamItemList.add(new JamItem(groupName, friendMap,
                                         songVersion));
-                                jamAdapter.notifyItemInserted(pos);
+//                                jamAdapter.notifyItemInserted(pos);
                                 pos++;
                             }
                         }
+                        ItemTouchHelper itemTouchHelper = new
+                                ItemTouchHelper(new SwipeToDeleteJamGroup(jamAdapter));
+                        itemTouchHelper.attachToRecyclerView(jamRecyclerView);
                     }
                 });
     }
@@ -144,11 +150,13 @@ public class JamActivity extends AppCompatActivity {
         rLayoutManger = new LinearLayoutManager(this);
         dialogRecyclerView = dialog.findViewById(R.id.friend_list_view);
         dialogRecyclerView.setHasFixedSize(true);
-        FriendGroupListener friendGroupListener = position ->
-                friendsList.get(position).onItemClicked(position);
+        FriendGroupListener friendGroupListener =( position, isChecked) -> {
+            friendsList.get(position).onItemClicked(position, isChecked);
+        };
         dialogRecyclerView.setLayoutManager(rLayoutManger);
         friendGroupAdapter = new FriendGroupAdapter(friendsList, friendGroupListener);
         dialogRecyclerView.setAdapter(friendGroupAdapter);
+
 
     }
 

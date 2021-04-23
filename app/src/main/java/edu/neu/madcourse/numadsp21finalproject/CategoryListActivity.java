@@ -90,8 +90,8 @@ public class CategoryListActivity extends AppCompatActivity {
         }
 
         Collections.sort(categoryItemList, (o1, o2) -> {
-            if (o1.isLocked())
-                return 1;
+            if (!o1.isLocked())
+                return -1;
             else return 0;
         });
 

@@ -21,7 +21,7 @@ public class FriendGroupHolder extends RecyclerView.ViewHolder {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (friendGroupListener != null) {
                     int position = getLayoutPosition();
-                    friendGroupListener.onItemClicked(position);
+                    friendGroupListener.onItemClicked(position, isChecked);
                 }
             }
         });

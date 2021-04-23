@@ -1,16 +1,16 @@
-package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
+package edu.neu.madcourse.numadsp21finalproject.jamview;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SwipeToDeleteLibrary extends ItemTouchHelper.SimpleCallback {
+public class SwipeToDeleteJamGroup extends ItemTouchHelper.SimpleCallback  {
 
-    private LibraryAdapter libraryAdapter;
+    private JamAdapter jamAdapter;
 
-    public SwipeToDeleteLibrary(LibraryAdapter libraryAdapter) {
+    public SwipeToDeleteJamGroup(JamAdapter jamAdapter) {
         super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        this.libraryAdapter = libraryAdapter;
+        this.jamAdapter = jamAdapter;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class SwipeToDeleteLibrary extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
-        libraryAdapter.deleteItem(position);
+        jamAdapter.deleteItem(position);
     }
 }

@@ -75,6 +75,10 @@ public class LibraryItem implements PlaylistListener{
 
      */
 
+    public String getRecordingId() {
+        return recordingId;
+    }
+
     public String getProjectName() {
         return projectName;
     }
