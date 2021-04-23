@@ -16,12 +16,14 @@ public class UserHolder extends RecyclerView.ViewHolder {
 
     public TextView userName;
     public Button visitProfile;
+    public TextView userGenre;
 
     public UserHolder(@NonNull View itemView,
                       Context context,
                       final UserViewListener userViewListener) {
         super(itemView);
         userName = itemView.findViewById(R.id.userName);
+        userGenre = itemView.findViewById(R.id.category_list);
         visitProfile = itemView.findViewById(R.id.profile_button);
 
         visitProfile.setOnClickListener(v -> {

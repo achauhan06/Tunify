@@ -16,6 +16,7 @@ public class UserItem implements Parcelable, UserViewListener{
     private String userName;
     private String profileLink;
     private String token;
+    private String genre;
 
     public String getEmail() {
         return email;
@@ -98,4 +99,10 @@ public class UserItem implements Parcelable, UserViewListener{
     }
 
 
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+    public String getGenre() {
+        return genre;
+    }
 }

@@ -128,6 +128,15 @@ public class UserListActivity extends AppCompatActivity {
                         }
                         UserItem user = new UserItem(userName, "", email1);
                         String friendUserId = d.getId();
+                        String genres = d.getString("Genres");
+                        if (genres != null) {
+                            String[] genreArray = genres.split(";");
+                            for(int i = 0; i < genreArray.length ; i++) {
+                                genreArray[i] =  "#"+genreArray[i];
+                            }
+                            user.setGenre(String.join(" ", genreArray));
+                        }
+
                         //userItemList
                         //UserItem users = d.toObject(UserItem.class);
                         //if (!email.equals(profileActivity.getEmail().getText().toString()))
