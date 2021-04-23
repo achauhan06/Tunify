@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private BroadcastReceiver myBroadcastReceiver = null;
+    private Dialog aboutDialog;
 
     private Dialog levelDialog;
 
@@ -131,6 +132,7 @@ public class HomeActivity extends AppCompatActivity {
         FeedsRunnable feedsRunnable = new FeedsRunnable();
         new Thread(feedsRunnable).start();
         createLevelDialog();
+        createDialogForAbout();
     }
 
     private void createLevelDialog() {
@@ -214,13 +216,15 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-
+    /*
     private void startMeetActivity() {
         Toast.makeText(HomeActivity.this, "Meeting",Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, UserListActivity.class);
         startActivity(intent);
     }
+
+     */
 
     private void setBottomNavigationListener() {
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -273,7 +277,10 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(blogIntent);
                     break;
                 case R.id.about_title:
-                    Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();
+                    // Intent aboutIntent = new Intent(this, AboutActivity.class);
+                    // startActivity(aboutIntent);
+                    aboutDialog.show();
                     break;
                 case R.id.logout_title:
                     Helper.clearLoggedInName(this);
@@ -411,19 +418,6 @@ public class HomeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                /*
-                                String path = documentSnapshot.get("path").toString();
-                                String projectName = documentSnapshot.get("name").toString();
-                                String genre = documentSnapshot.get("genre").toString();
-                                String ownerName = documentSnapshot.get("username").toString();
-                                Timestamp timestamp= (Timestamp) documentSnapshot.get("time");
-                                // String time =  timestamp.toDate().toString();
-                                ArrayList<String> likeList = (ArrayList<String>) documentSnapshot.get("likes");
-                                FeedsItem item = new FeedsItem(projectName, path, genre, ownerName,
-                                        timestamp,likeList, HomeActivity.this,
-                                        documentSnapshot.getReference(), documentSnapshot.getId());
-
-                                 */
                                 FeedsItem item = new FeedsItem(documentSnapshot, HomeActivity.this);
                                 feedsItemArrayList.add(item);
                                 // Toast.makeText(HomeActivity.this, time ,Toast.LENGTH_SHORT).show();
@@ -460,6 +454,25 @@ public class HomeActivity extends AppCompatActivity {
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createDialogForAbout() {
+        aboutDialog = new Dialog(HomeActivity.this);
+        aboutDialog.setContentView(R.layout.about);
+        aboutDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        aboutDialog.setCancelable(true);
+        TextView body = aboutDialog.findViewById(R.id.about_body);
+        body.setText(R.string.about_body);
+
+        Button closeButton = aboutDialog.findViewById(R.id.about_close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aboutDialog.dismiss();
+            }
+        });
+
     }
 
 

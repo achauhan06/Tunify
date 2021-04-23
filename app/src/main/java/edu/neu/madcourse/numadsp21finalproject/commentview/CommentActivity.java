@@ -119,6 +119,7 @@ public class CommentActivity extends AppCompatActivity {
                             firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
                                     userName + " commented your project " + projectName, recordingId,projectName,CommentActivity.this);
                         }
+                        input.setText("");
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
