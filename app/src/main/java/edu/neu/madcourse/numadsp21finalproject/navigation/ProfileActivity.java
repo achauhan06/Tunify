@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
     User userItem;
 
     Button uploadProfilePicture;
+    TextView profileHeading;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fireStore;
     FirebaseStorage storage;
@@ -110,11 +113,13 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         }
 
+        firebaseAuth = FirebaseAuth.getInstance();
         userItem =  new User();
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
         fileName += imageName+".jpeg";
 
+        profileHeading = findViewById(R.id.profile_heading);
         userName = findViewById(R.id.user_profile_username);
         email = findViewById(R.id.profile_email);
         first_name = findViewById(R.id.profile_first_name);
@@ -123,19 +128,11 @@ public class ProfileActivity extends AppCompatActivity {
         genre = findViewById(R.id.profile_genre);
         updateBtn = findViewById(R.id.profile_update);
         uploadProfilePicture = findViewById(R.id.uploadProfilePicture);
-        profilePicture = (ImageView)findViewById(R.id.yourProfilePicture);
-
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() == null) {
-            Toast.makeText(ProfileActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
-        //storageReference = fireStore.getInstance().getReference();
-
+        profilePicture = findViewById(R.id.yourProfilePicture);
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
+        loadProfilePicture();
+
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(userId);
         setProfile(documentReference);
         userName.setText(Helper.getUsername(this));
@@ -176,12 +173,6 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please enter your First Name", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                /*
-                else if (email.getText().toString().length() == 0) {
-                    Toast.makeText(ProfileActivity.this, "Please type an email id", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                */
                 else if (dob.getText().toString().equals("")) {
                     Toast.makeText(ProfileActivity.this, "Please enter a DOB", Toast.LENGTH_SHORT).show();
                     return;
@@ -189,7 +180,6 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-
                     updateProfile(documentReference);
                 }
 
@@ -198,8 +188,35 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    private void loadProfilePicture() {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(userId).get().addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        picturePath[0] = snapshot.getString("path");
+                    }
+                    setProfilePicture(picturePath[0]);
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        setProfilePicture(picturePath[0]);
+                    }
+                });
+    }
 
-        public void setProfile(DocumentReference documentReference) {
+    private void setProfilePicture(String picturePath) {
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(picturePath);
+        final long FIVE_MEGABYTE = 5 * 1024 * 1024;
+        ref.getBytes(FIVE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            profilePicture.setImageBitmap(bmp);
+            profilePicture.setVisibility(View.VISIBLE);
+
+        }).addOnFailureListener(exception -> Toast.makeText(ProfileActivity.this,
+                exception.getMessage(),Toast.LENGTH_SHORT).show());
+    }
+
+    public void setProfile(DocumentReference documentReference) {
             documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -209,6 +226,7 @@ public class ProfileActivity extends AppCompatActivity {
                     first_name.setText(first_name_str);
                     String last_name_str = value.getString("Last Name");
                     last_name.setText(last_name_str);
+                    profileHeading.setText(first_name_str + " " + last_name_str);
                     dob.setText(value.getString("Date of Birth"));
                     oldUserName = first_name_str + " " + last_name_str;
                     String[] arr = value.getString("Genres").split(";");
@@ -230,18 +248,19 @@ public class ProfileActivity extends AppCompatActivity {
                     transaction.update(documentReference, "First Name", first_name.getText().toString());
                     transaction.update(documentReference, "Last Name", last_name.getText().toString());
                     transaction.update(documentReference, "Date of Birth", dob.getText().toString());
-
                     return null;
                 }
             }).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     newUserName = first_name.getText().toString() + " " + last_name.getText().toString();
+                    profileHeading.setText(newUserName);
                     updateFriendShips();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(ProfileActivity.this, "Unable to update your profile", Toast.LENGTH_SHORT).show();
 
                 }
@@ -383,7 +402,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 
-        private void openGallery() {
+    private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }

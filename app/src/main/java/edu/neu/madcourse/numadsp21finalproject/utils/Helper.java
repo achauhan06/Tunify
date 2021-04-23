@@ -26,6 +26,7 @@ public class Helper {
     public static String YOUTUBE_API_KEY = "AIzaSyBDzjjH-ILn5GSzmBpG3tEa5KJjOqS4KO8";
     public static String[] CATEGORY_LIST = {"Rock", "Pop", "Hip Hop", "Blues", "Jazz", "Reggae", "Folk", "Country", "Classical",
             "Soul", "R&B", "Heavy Metal"};
+    public static String DEFAULT_PICTURE_PATH = "gs://tunify-7fda5.appspot.com/images/default/default.jpg";
 
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
