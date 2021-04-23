@@ -1,6 +1,7 @@
 package edu.neu.madcourse.numadsp21finalproject.blogs;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,6 +43,11 @@ public class BlogItem implements BlogViewListener{
 
     @Override
     public void onViewClicked(int position) {
-
+        Intent intent = new Intent(context, BlogDialogActivity.class);
+        intent.putExtra("blogId", blogId);
+        intent.putExtra("blogTitle", blogTitle);
+        intent.putExtra("blogBody", blogBody);
+        intent.putExtra("canBeUpdated", true);
+        context.startActivity(intent);
     }
 }
