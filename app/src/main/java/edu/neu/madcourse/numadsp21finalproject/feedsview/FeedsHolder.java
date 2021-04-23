@@ -20,7 +20,7 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
 
     ImageView profilePicture;
 
-    ImageButton feedsItemBtn, feedsItemLikeWhiteBtn, feedsItemLikeRedBtn, feedsItemCommentBtn;
+    ImageButton feedsItemPlayBtn, feedsItemPauseBtn, feedsItemLikeWhiteBtn, feedsItemLikeRedBtn, feedsItemCommentBtn;
 
     public FeedsHolder(@NonNull View itemView, Context context, FeedsViewListener feedsViewListener) {
         super(itemView);
@@ -32,17 +32,33 @@ public class FeedsHolder extends RecyclerView.ViewHolder {
         feedsLikeCount = itemView.findViewById(R.id.feeds_item_like_count);
         feedsCommentCount = itemView.findViewById(R.id.feeds_item_comment_count);
 
-        feedsItemBtn = itemView.findViewById(R.id.feeds_item_button);
+        feedsItemPlayBtn = itemView.findViewById(R.id.feeds_item_play_button);
+        feedsItemPauseBtn = itemView.findViewById(R.id.feeds_item_pause_button);
         feedsItemLikeWhiteBtn = itemView.findViewById(R.id.feeds_item_like_white);
         feedsItemLikeRedBtn = itemView.findViewById(R.id.feeds_item_like_red);
         feedsItemCommentBtn = itemView.findViewById(R.id.feeds_item_comment_btn);
 
         profilePicture = itemView.findViewById(R.id.userProfilePicture);
 
-        feedsItemBtn.setOnClickListener(v -> {
+        feedsItemPlayBtn.setOnClickListener(v -> {
             if (feedsViewListener != null) {
                 int position = getLayoutPosition();
                 feedsViewListener.onPlayPauseClick(position);
+            }
+            if(feedsItemPlayBtn.getVisibility()== View.VISIBLE) {
+                feedsItemPlayBtn.setVisibility(View.INVISIBLE);
+                feedsItemPauseBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
+        feedsItemPauseBtn.setOnClickListener(v -> {
+            if (feedsViewListener != null) {
+                int position = getLayoutPosition();
+                feedsViewListener.onPlayPauseClick(position);
+            }
+            if(feedsItemPauseBtn.getVisibility()== View.VISIBLE) {
+                feedsItemPauseBtn.setVisibility(View.INVISIBLE);
+                feedsItemPlayBtn.setVisibility(View.VISIBLE);
             }
         });
         feedsItemLikeWhiteBtn.setOnClickListener(v -> {
