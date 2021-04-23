@@ -4,10 +4,6 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/account_title"
-            android:icon="@drawable/account"
-            android:title="@string/account_title" />
-        <item
             android:id="@+id/profile_title"
             android:icon="@drawable/profile"
             android:title="@string/profile_title" />
@@ -15,10 +11,6 @@
             android:id="@+id/blogs_title"
             android:icon="@drawable/blog"
             android:title="@string/blogs_title" />
-        <item
-            android:id="@+id/settings_title"
-            android:icon="@drawable/settings"
-            android:title="@string/settings_title" />
         <item
             android:id="@+id/about_title"
             android:icon="@drawable/about"
