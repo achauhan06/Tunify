@@ -1,10 +1,8 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -16,12 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,7 +25,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,10 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
     boolean answer = false;
 
     FirebaseInstanceMessagingService firebaseInstanceMessagingService;
-    int counttracker = 0;
     int count = 0;
-    //String token = "";
-    private static final String TAG = RegisterActivity.class.getSimpleName();
     private BroadcastReceiver myBroadcastReceiver = null;
 
 
@@ -97,61 +88,53 @@ public class RegisterActivity extends AppCompatActivity {
         passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
         genres = findViewById(R.id.selectedItemPreview);
         auth = FirebaseAuth.getInstance();
-        userName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String newUserName = userName.getText().toString();
-                    if (newUserName.matches("[A-Za-z0-9_]+")) {
-                        checkingIfUsernameExists(newUserName);
-                    } else {
-                        CustomToast customToast = new CustomToast(RegisterActivity.this,
-                                "Username can only consist of alphabets, digits and " +
-                                        "underscore", Snackbar.LENGTH_SHORT);
-                        customToast.makeCustomToast();
-                        userName.setText("");
-                        userName.requestFocus();
-                    }
-
+        userName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String newUserName = userName.getText().toString();
+                if (newUserName.matches("[A-Za-z0-9_]+")) {
+                    checkingIfUsernameExists(newUserName);
+                } else {
+                    CustomToast customToast = new CustomToast(RegisterActivity.this,
+                            "Username can only consist of alphabets, digits and " +
+                                    "underscore", Snackbar.LENGTH_SHORT);
+                    customToast.makeCustomToast();
+                    userName.setText("");
+                    userName.requestFocus();
                 }
+
             }
         });
-        dateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog.OnDateSetListener dpd = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month,
-                                          int day) {
+        dateEditText.setOnClickListener(v -> {
+            DatePickerDialog.OnDateSetListener dpd = new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month,
+                                      int day) {
 
 
-                        String dateFormat = day+ "/" + (month + 1) +"/" +year;
-                        dateEditText.setText("" + dateFormat);
-                    }
-                };
-                final Calendar newCalendar = Calendar.getInstance();
-                int[] dateArray = new int[]{newCalendar.get(Calendar.YEAR),
-                        newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH)};
-                if(!dateEditText.getText().toString().isEmpty()) {
-                    String[] dateInStringArray =
-                            dateEditText.getText().toString().split("/");
-                    dateArray = new int[]{Integer.parseInt(dateInStringArray[2]),
-                            Integer.parseInt(dateInStringArray[1])-1,
-                            Integer.parseInt(dateInStringArray[0])};
+                    String dateFormat = day+ "/" + (month + 1) +"/" +year;
+                    dateEditText.setText("" + dateFormat);
                 }
-
-                DatePickerDialog d = new DatePickerDialog(RegisterActivity.this, dpd,
-                        dateArray[0], dateArray[1], dateArray[2]);
-                d.show();
+            };
+            final Calendar newCalendar = Calendar.getInstance();
+            int[] dateArray = new int[]{newCalendar.get(Calendar.YEAR),
+                    newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH)};
+            if(!dateEditText.getText().toString().isEmpty()) {
+                String[] dateInStringArray =
+                        dateEditText.getText().toString().split("/");
+                dateArray = new int[]{Integer.parseInt(dateInStringArray[2]),
+                        Integer.parseInt(dateInStringArray[1])-1,
+                        Integer.parseInt(dateInStringArray[0])};
             }
+
+            DatePickerDialog d = new DatePickerDialog(RegisterActivity.this, dpd,
+                    dateArray[0], dateArray[1], dateArray[2]);
+            d.show();
         });
 
 
 
         EditText bOpenAlertDialog = findViewById(R.id.openAlertDialogButton);
         tvSelectedItemsPreview = (TextView) findViewById(R.id.selectedItemPreview);
-        //tvSelectedItemsPreview.setOnClickListener(this);
         if (count == 0) tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
 
 
@@ -160,167 +143,138 @@ public class RegisterActivity extends AppCompatActivity {
 
         final List<String> selectedItems = Arrays.asList(listItems);
 
-        bOpenAlertDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        bOpenAlertDialog.setOnClickListener(v -> {
 
+            AlertDialog alertDialog = createCategoryDialog(listItems, checkedItems,
+                    selectedItems, bOpenAlertDialog).create();
+            alertDialog.show();
+        });
+
+        bOpenAlertDialog.setOnFocusChangeListener((view, hasFocus) -> {
+
+            tvSelectedItemsPreview.setText(null);
+            if (hasFocus) {
                 AlertDialog alertDialog = createCategoryDialog(listItems, checkedItems,
                         selectedItems, bOpenAlertDialog).create();
                 alertDialog.show();
             }
+
+
         });
 
-        bOpenAlertDialog.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        tvSelectedItemsPreview.setOnClickListener(view -> {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(RegisterActivity.this);
 
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
+            builder1.setTitle("Choose any 3 genres:");
 
-                tvSelectedItemsPreview.setText(null);
-                if (hasFocus) {
-                    AlertDialog alertDialog = createCategoryDialog(listItems, checkedItems,
-                            selectedItems, bOpenAlertDialog).create();
-                    alertDialog.show();
+            builder1.setMultiChoiceItems(listItems, checkedItems, (dialog, which, isChecked) -> {
+                if (isChecked && count < 3) {
+                    count++;
+                    checkedItems[which] = isChecked;
                 }
-
-
-            }
-        });
-
-        tvSelectedItemsPreview.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(RegisterActivity.this);
-
-                builder1.setTitle("Choose any 3 genres:");
-
-                builder1.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-
-
-                    //tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked && count < 3) {
-                            count++;
-                            checkedItems[which] = isChecked;
-                            String currentItem = selectedItems.get(which);
-                        }
-                        else {
-                            ((AlertDialog) dialog).getListView().setItemChecked(which, false);
-                            checkedItems[which]=false;
-                        }
-                        if (!isChecked) {
-                            count--;
-                            if (count == 0) {
-                                tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
-                                bOpenAlertDialog.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                });
-
-                builder1.setCancelable(false);
-
-                builder1.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        selectedGenres = new ArrayList<>();
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            if (checkedItems[i]) {
-                                selectedGenres.add(selectedItems.get(i));
-                                bOpenAlertDialog.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                        tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
-                    }
-                });
-
-                builder1.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                builder1.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < checkedItems.length; i++) {
-                            checkedItems[i] = false;
-                        }
-                    }
-                });
-                builder1.create();
-
-                AlertDialog alertDialog = builder1.create();
-                alertDialog.show();
-            }
-        });
-        reg_registration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (userName.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
-
-                } else if (firstName.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please enter your First Name", Toast.LENGTH_SHORT).show();
-
-                } else if (email.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please type an email id", Toast.LENGTH_SHORT).show();
-
-                } else if (dob.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please enter a DOB", Toast.LENGTH_SHORT).show();
-
-                } else if (genres.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please select at least 1 genre", Toast.LENGTH_SHORT).show();
-
-                } else if (lastName.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
-
-                } else if (password.getText().toString().equals("")){
-                    Toast.makeText(RegisterActivity.this, "Please type a password", Toast.LENGTH_SHORT).show();
-
-                } else if (!passwordConfirmation.getText().toString().equals(password.getText().toString())){
-                    Toast.makeText(RegisterActivity.this, "Password mismatch", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    auth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim()).addOnCompleteListener((task) -> {
-                        if (task.isSuccessful()) {
-                            userId = auth.getCurrentUser().getUid();
-                            DocumentReference reference1 = firebaseFirestore.collection("users").document(userId);
-                            Map<String, Object> reg_entry = new HashMap<>();
-                            reg_entry.put("Username", userName.getText().toString());
-                            reg_entry.put("First Name", firstName.getText().toString());
-                            reg_entry.put("Last Name", lastName.getText().toString());
-                            reg_entry.put("Email", email.getText().toString());
-                            reg_entry.put("Genres", String.join(";",selectedGenres));
-                            reg_entry.put("Password", password.getText().toString());
-                            reg_entry.put("Date of Birth", dob.getText().toString());
-                            reg_entry.put("currentLevel", 0);
-                            reg_entry.put("currentScore", 0);
-                            UserService registerUser = userToken -> {
-                                reg_entry.put("MobileToken", userToken);
-                                //TODO update username
-                                Helper.setEmailPassword(RegisterActivity.this,
-                                        email.getText().toString(), password.getText().toString(),
-                                        userName.getText().toString());
-                                Helper.setUserToken(RegisterActivity.this, userToken);
-                                reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                });
-                            };
-                            firebaseInstanceMessagingService.register(registerUser);
-
-                        }
-                        else {
-                            Toast.makeText(RegisterActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                else {
+                    Toast.makeText(RegisterActivity.this,
+                            "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
+                            .show();
+                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                    checkedItems[which]=false;
                 }
+                if (!isChecked) {
+                    count--;
+                    if (count == 0) {
+                        tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
+                        bOpenAlertDialog.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            builder1.setCancelable(false);
+
+            builder1.setPositiveButton("Done", (dialog, which) -> {
+                selectedGenres = new ArrayList<>();
+                for (int i = 0; i < checkedItems.length; i++) {
+                    if (checkedItems[i]) {
+                        selectedGenres.add(selectedItems.get(i));
+                        bOpenAlertDialog.setVisibility(View.INVISIBLE);
+                    }
+                }
+                tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+            });
+
+            builder1.setNegativeButton("CANCEL", (dialog, which) -> {
+
+            });
+
+            builder1.setNeutralButton("CLEAR ALL", (dialog, which) -> {
+                for (int i = 0; i < checkedItems.length; i++) {
+                    checkedItems[i] = false;
+                }
+            });
+            builder1.create();
+
+            AlertDialog alertDialog = builder1.create();
+            alertDialog.show();
+        });
+        reg_registration.setOnClickListener(view -> {
+
+            if (userName.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
+
+            } else if (firstName.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please enter your First Name", Toast.LENGTH_SHORT).show();
+
+            } else if (email.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please type an email id", Toast.LENGTH_SHORT).show();
+
+            } else if (dob.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please enter a DOB", Toast.LENGTH_SHORT).show();
+
+            } else if (genres.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please select at least 1 genre", Toast.LENGTH_SHORT).show();
+
+            } else if (lastName.getText().toString().equals("")) {
+                Toast.makeText(RegisterActivity.this, "Please type a last name", Toast.LENGTH_SHORT).show();
+
+            } else if (password.getText().toString().equals("")){
+                Toast.makeText(RegisterActivity.this, "Please type a password", Toast.LENGTH_SHORT).show();
+
+            } else if (!passwordConfirmation.getText().toString().equals(password.getText().toString())){
+                Toast.makeText(RegisterActivity.this, "Password mismatch", Toast.LENGTH_SHORT).show();
+
+            } else {
+                auth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim()).addOnCompleteListener((task) -> {
+                    if (task.isSuccessful()) {
+                        userId = auth.getCurrentUser().getUid();
+                        DocumentReference reference1 = firebaseFirestore.collection("users").document(userId);
+                        Map<String, Object> reg_entry = new HashMap<>();
+                        reg_entry.put("Username", userName.getText().toString());
+                        reg_entry.put("First Name", firstName.getText().toString());
+                        reg_entry.put("Last Name", lastName.getText().toString());
+                        reg_entry.put("Email", email.getText().toString());
+                        reg_entry.put("Genres", String.join(";",selectedGenres));
+                        reg_entry.put("Password", password.getText().toString());
+                        reg_entry.put("Date of Birth", dob.getText().toString());
+                        reg_entry.put("currentLevel", 0);
+                        reg_entry.put("currentScore", 0);
+                        UserService registerUser = userToken -> {
+                            reg_entry.put("MobileToken", userToken);
+                            Helper.setEmailPassword(RegisterActivity.this,
+                                    email.getText().toString(), password.getText().toString(),
+                                    userName.getText().toString());
+                            Helper.setUserToken(RegisterActivity.this, userToken);
+                            reference1.set(reg_entry).addOnSuccessListener(aVoid -> {
+                                Toast.makeText(RegisterActivity.this, "User Successfully registered!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            });
+                        };
+                        firebaseInstanceMessagingService.register(registerUser);
+
+                    }
+                    else {
+                        Toast.makeText(RegisterActivity.this, "Registration Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -330,27 +284,24 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean checkingIfUsernameExists(String usernameToCompare) {
         CollectionReference collectionReference = firebaseFirestore.collection("users");
         Query mQuery = collectionReference.whereEqualTo("Username", usernameToCompare);
-        mQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        mQuery.get().addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot ds : task.getResult()) {
-                        String userNames = ds.getString("Username");
-                        if (userNames.equals(usernameToCompare)) {
-                            CustomToast customToast = new CustomToast(RegisterActivity.this,
-                                    "Username already exists", Snackbar.LENGTH_SHORT);
-                            customToast.makeCustomToast();
-                            userName.setText("");
-                            userName.requestFocus();
-                        }
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot ds : task.getResult()) {
+                    String userNames = ds.getString("Username");
+                    if (userNames.equals(usernameToCompare)) {
+                        CustomToast customToast = new CustomToast(RegisterActivity.this,
+                                "Username already exists", Snackbar.LENGTH_SHORT);
+                        customToast.makeCustomToast();
+                        userName.setText("");
+                        userName.requestFocus();
                     }
                 }
-                if (task.getResult().size() == 0) {
-                    try {
-                        answer = true;
-                    } catch (NullPointerException e) {
-                    }
+            }
+            if (task.getResult().size() == 0) {
+                try {
+                    answer = true;
+                } catch (NullPointerException e) {
                 }
             }
         });
@@ -362,63 +313,49 @@ public class RegisterActivity extends AppCompatActivity {
 
         builder.setTitle("Choose any 3 genres:");
 
-
-        builder.setMultiChoiceItems(listItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-            //int count = 0;
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if (isChecked && count < 3) {
-                    count++;
-                    checkedItems[which] = isChecked;
-                    String currentItem = selectedItems.get(which);
-                }
-                else {
-                    Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
-                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
-                    checkedItems[which]=false;
-                }
-                if (!isChecked) count--;
+        builder.setMultiChoiceItems(listItems, checkedItems, (dialog, which, isChecked) -> {
+            if (isChecked && count < 3) {
+                count++;
+                checkedItems[which] = isChecked;
             }
+            else {
+                Toast.makeText(RegisterActivity.this,
+                        "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
+                        .show();
+                ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                checkedItems[which]=false;
+            }
+            if (!isChecked) count--;
         });
 
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                selectedGenres = new ArrayList<>();
-                for (int i = 0; i < checkedItems.length; i++) {
-                    if (checkedItems[i]) {
-                        selectedGenres.add(selectedItems.get(i));
-                        bOpenAlertDialog.setVisibility(View.INVISIBLE);
-                    }
+        builder.setPositiveButton("Done", (dialog, which) -> {
+            selectedGenres = new ArrayList<>();
+            for (int i = 0; i < checkedItems.length; i++) {
+                if (checkedItems[i]) {
+                    selectedGenres.add(selectedItems.get(i));
+                    bOpenAlertDialog.setVisibility(View.INVISIBLE);
                 }
-                if (selectedGenres.size() > 0) {
-                    tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
-                    tvSelectedItemsPreview.setVisibility(View.VISIBLE);
-                }
+            }
+            if (selectedGenres.size() > 0) {
+                tvSelectedItemsPreview.setText(String.join(", ",selectedGenres));
+                tvSelectedItemsPreview.setVisibility(View.VISIBLE);
             }
         });
 
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < checkedItems.length; i++) {
-                    checkedItems[i] = false;
-                }
-                count = 0;
+        builder.setNegativeButton("CANCEL", (dialog, which) -> {
+            for (int i = 0; i < checkedItems.length; i++) {
+                checkedItems[i] = false;
             }
+            count = 0;
         });
 
-        builder.setNeutralButton("CLEAR ALL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < checkedItems.length; i++) {
-                    checkedItems[i] = false;
-                }
-                count = 0;
+        builder.setNeutralButton("CLEAR ALL", (dialog, which) -> {
+            for (int i = 0; i < checkedItems.length; i++) {
+                checkedItems[i] = false;
             }
+            count = 0;
         });
 
         builder.create();
