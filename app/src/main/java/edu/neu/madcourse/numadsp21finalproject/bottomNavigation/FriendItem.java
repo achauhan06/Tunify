@@ -68,7 +68,8 @@ public class FriendItem implements FriendViewClickListener{
     public void onChatClick(int position) {
         Toast.makeText(context, "Entering chat",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this.context, ChatActivity.class);
-        //intent.putExtra("friendId", friendId);
+        intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", friendName);
         this.context.startActivity(intent);
     }
 
