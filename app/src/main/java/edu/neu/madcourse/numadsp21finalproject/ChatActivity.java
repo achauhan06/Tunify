@@ -1,7 +1,6 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -37,7 +35,6 @@ import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatItem;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatAdapter;
-import edu.neu.madcourse.numadsp21finalproject.chat.ChatViewListener;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
@@ -48,7 +45,6 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManger;
     private ImageButton sendButton;
     private String userName;
-    private String userToken;
     private String friendId;
     private String friendName;
     private Snackbar snackbar;
@@ -80,7 +76,6 @@ public class ChatActivity extends AppCompatActivity {
         userId = auth.getCurrentUser().getUid();
 
         userName = Helper.getUserName(this);
-        userToken = Helper.getUserToken(this);
         friendId = getIntent().getExtras().getString("friendId");
         friendName = getIntent().getExtras().getString("friendName");
 

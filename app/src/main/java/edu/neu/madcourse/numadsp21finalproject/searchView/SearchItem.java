@@ -73,9 +73,9 @@ public class SearchItem implements SearchViewListener{
 
     @Override
     public void onChatClick(int position) {
-        Toast.makeText(context, "Entering chat",Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this.context, ChatActivity.class);
-        //intent.putExtra("friendId", friendId);
+        intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", searchName);
         this.context.startActivity(intent);
     }
 

@@ -17,6 +17,7 @@ public class ChatHolder extends RecyclerView.ViewHolder {
         super(view);
         chat = view.findViewById(R.id.show_message);
         name = view.findViewById(R.id.show_name);
+        name.setVisibility(View.INVISIBLE);
         messageTime = view.findViewById(R.id.message_time);
     }
 }

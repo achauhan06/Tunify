@@ -318,7 +318,7 @@ public class JamSessionActivity extends AppCompatActivity {
 
                         documentBatch.commit().addOnSuccessListener(aVoid -> {
                             version = version+1;
-                            songName = groupName + "_" + userId + "_" + version + ".mp3";
+                            songName = groupName + "_" + userName + "_" + version + ".mp3";
                             sendPublishedItemNotification();
                             Snackbar.make(findViewById(android.R.id.content)
                                     , "Audio posted successfully",

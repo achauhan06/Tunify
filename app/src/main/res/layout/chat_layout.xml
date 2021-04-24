@@ -22,7 +22,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="TextView"
         android:textSize="16sp"
-        android:textColorLink="#494C48"
+        android:textColorLink="@color/primaryTextColor"
         app:layout_constraintBottom_toTopOf="@+id/chat_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
