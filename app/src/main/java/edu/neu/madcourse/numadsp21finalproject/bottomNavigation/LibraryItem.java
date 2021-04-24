@@ -136,6 +136,7 @@ public class LibraryItem implements PlaylistListener{
             mediaPlayer.setDataSource(String.valueOf(uri));
             mediaPlayer.prepare(); // might take long! (for buffering, etc)
             mediaPlayer.start();
+
         } catch (IOException e) {
             Toast.makeText(context , "Unable to load player at this time.",Toast.LENGTH_SHORT).show();
         }
@@ -163,7 +164,7 @@ public class LibraryItem implements PlaylistListener{
     @Override
     public void onStopClick(int position) {
         mediaPlayer.stop();
-        createMediaPlayer(currentUri);
+        // createMediaPlayer(currentUri);
     }
 
     @Override
@@ -192,7 +193,6 @@ public class LibraryItem implements PlaylistListener{
             this.likedByMe = true;
             this.likeCount += 1;
             likesList.add(userId);
-            // firebaseInstanceMessagingService.sendMessageToDevice(userId, Helper.getUsername(context) + " liked your project " + projectName);
 
         }
         firebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {

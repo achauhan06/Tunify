@@ -38,6 +38,7 @@
         <activity
             android:name=".JamActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Jam"
             android:theme="@style/Theme.Tunify.Jam"/>
         <activity
             android:name=".JamSessionActivity"
@@ -47,10 +48,12 @@
         <activity
             android:name=".CategoryListActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Categories"
             android:theme="@style/Theme.Tunify.Practice" />
         <activity
             android:name=".SongListActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Practice"
             android:theme="@style/Theme.Tunify.Practice" />
         <activity
             android:name=".SongTrackActivity"
@@ -61,7 +64,7 @@
             android:name=".UserListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Meet"
-            android:title="" />
+            android:title="Meet" />
         <activity
             android:name=".notifications.NotificationListActivity"
             android:configChanges="orientation|screenSize"
@@ -77,10 +80,12 @@
             android:name=".UserProfileActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.Meet"
+            android:label="Profile"
             android:title="" />
         <activity
             android:name=".navigation.ProfileActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Profile"
             android:theme="@style/Theme.Tunify.NoActionBar" />
         <activity
             android:name=".bottomNavigation.FriendsActivity"
@@ -90,6 +95,7 @@
         <activity
             android:name=".bottomNavigation.FriendProfile"
             android:configChanges="orientation|screenSize"
+            android:label="Profile"
             android:theme="@style/Theme.Tunify.NoActionBar" />
         <activity
             android:name=".bottomNavigation.LibraryActivity"
@@ -129,12 +135,14 @@
             android:name=".SearchResultActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"
+            android:label="Search"
             >
         </activity>
 
         <activity
             android:name=".bottomNavigation.FriendsPlaylistActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Friend's Play List"
             android:theme="@style/Theme.Tunify.NoActionBar">
             <intent-filter>
                 <action android:name="libraryNotification"/>

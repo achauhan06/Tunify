@@ -114,7 +114,7 @@ public class CommentActivity extends AppCompatActivity {
                         commentItemArrayList.add(myComment);
                         createCommentRecyclerView();
                         input.setText("");
-                        if(userId != ownerId) {
+                        if(!userId.equals(ownerId)) {
                             ownerName = getIntent().getExtras().getString("ownerName");
                             firebaseInstanceMessagingService.sendMessageToDevice(ownerId, ownerName,"New Comment",
                                     userName + " commented your project " + projectName, recordingId,projectName,CommentActivity.this);
