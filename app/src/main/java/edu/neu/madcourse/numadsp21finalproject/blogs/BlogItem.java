@@ -33,7 +33,7 @@ public class BlogItem implements BlogViewListener{
     }
 
     public String getBlogTimestamp() {
-        return blogTimestamp.toDate().toString();
+        return blogTimestamp.toDate().toString().substring(0,20).trim();
     }
 
     public Timestamp getBlogTimeInTimeFormat() {

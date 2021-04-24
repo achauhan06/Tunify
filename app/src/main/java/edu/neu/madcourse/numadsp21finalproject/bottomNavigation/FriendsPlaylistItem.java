@@ -74,7 +74,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
     }
 
     public String getTimeString() {
-        return timestamp.toDate().toString();
+        return timestamp.toDate().toString().substring(0,20).trim();
     }
 
     public int getLikeCount() {

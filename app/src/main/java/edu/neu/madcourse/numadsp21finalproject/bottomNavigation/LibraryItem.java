@@ -3,14 +3,12 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.solver.state.State;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,9 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import edu.neu.madcourse.numadsp21finalproject.R;
 import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
@@ -92,7 +88,7 @@ public class LibraryItem implements PlaylistListener{
     }
 
     public String getTimeString() {
-        return timestamp.toDate().toString();
+        return timestamp.toDate().toString().substring(0,20).trim();
     }
 
     public int getLikeCount() {

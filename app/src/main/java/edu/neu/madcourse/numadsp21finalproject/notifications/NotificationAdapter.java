@@ -39,7 +39,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder
         NotificationItem currentItem = notificationItems.get(position);
         holder.title.setText(currentItem.getTitle());
         holder.body.setText(currentItem.getBody());
-        holder.time.setText(currentItem.getTimestamp().toDate().toString());
+        holder.time.setText(currentItem.getTimestamp().toDate().toString().substring(0,20).trim());
         if(currentItem.isFriendRequest()) {
             holder.goToLibrary.setVisibility(View.INVISIBLE);
             if(currentItem.getStatus().equals("pending")){

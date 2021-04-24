@@ -1,6 +1,5 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
-import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -181,6 +180,7 @@ public class FriendProfile extends AppCompatActivity {
                 String last_name_str = value.getString("Last Name");
                 last_name.setText(last_name_str);
                 dob.setText(value.getString("Date of Birth"));
+                genre.setText(value.getString("Genres").replace(";", ", "));
                 if (value.getString("Username") == null) {
                     userName.setText(first_name + " " + last_name);
                 } else {

@@ -99,7 +99,7 @@ public class FeedsItem implements FeedsViewListener{
         return timestamp;
     }
     public String getTimeString() {
-        return timestamp.toDate().toString();
+        return timestamp.toDate().toString().substring(0,20).trim();
     }
     public String getGenre() {
         return genre;
