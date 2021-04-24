@@ -396,9 +396,9 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                     .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
+                    Log.d("Notification", "Successful add notification");
                 }
             }).addOnFailureListener(new OnFailureListener() {
-                Log.d("Notification", "Successful add notification");
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("Notification", "failed to add notification");
