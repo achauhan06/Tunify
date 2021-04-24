@@ -20,14 +20,17 @@ public class JamSessionAdapter extends RecyclerView.Adapter<JamSessionHolder> {
     private JamSessionListener jamSessionlistener;
 
 
-    public JamSessionAdapter(List<JamSessionItem> jamSessionItemList, String userName) {
+    public JamSessionAdapter(List<JamSessionItem> jamSessionItemList,
+                             String userName, JamSessionListener listener) {
         this.userName = userName;
         this.jamSessionItemList = jamSessionItemList;
+        this.jamSessionlistener = listener;
     }
 
     @NonNull
     @Override
-    public JamSessionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public JamSessionHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                               int viewType) {
         View view;
         if (viewType == DISPLAY_LEFT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.jam_session_left,
@@ -38,11 +41,7 @@ public class JamSessionAdapter extends RecyclerView.Adapter<JamSessionHolder> {
                     parent, false);
 
         }
-        return new JamSessionHolder(view);
-    }
-
-    public void setListener(JamSessionListener listener) {
-        this.jamSessionlistener = listener;
+        return new JamSessionHolder(view, this.jamSessionlistener);
     }
 
     @Override
@@ -52,14 +51,6 @@ public class JamSessionAdapter extends RecyclerView.Adapter<JamSessionHolder> {
         holder.friendName.setText(jamSessionItem.getUserName());
         holder.songName.setText(jamSessionItem.getSongName());
         holder.messageTime.setText(jamSessionItem.getTimeUpdated());
-        holder.playPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (jamSessionlistener != null) {
-                    jamSessionlistener.onButtonClick(position);
-                }
-            }
-        });
     }
 
     @Override

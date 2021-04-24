@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +55,7 @@ import java.util.Set;
 
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionAdapter;
 import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionItem;
+import edu.neu.madcourse.numadsp21finalproject.jamsession.JamSessionListener;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -84,6 +86,7 @@ public class JamSessionActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private JamSessionAdapter jamSessionAdapter;
     private BroadcastReceiver myBroadcastReceiver = null;
+    private JamSessionItem itemRemoved = null;
 
 
     @Override
@@ -165,6 +168,10 @@ public class JamSessionActivity extends AppCompatActivity {
                                             @Override
                                             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                                                 final List<DocumentSnapshot> songList = queryDocumentSnapshots.getDocuments();
+                                                if (tempJamSet.contains(itemRemoved)) {
+                                                    tempJamSet.remove(itemRemoved);
+                                                    itemRemoved = null;
+                                                }
                                                 for (DocumentSnapshot songSnapShot : songList) {
                                                     String songName = songSnapShot.getId();
                                                     Timestamp time = (Timestamp) songSnapShot.get("time");
@@ -190,11 +197,51 @@ public class JamSessionActivity extends AppCompatActivity {
     private void showDataInJamChat() {
         jamSessionItemList = Arrays.asList(tempJamSet.toArray(new JamSessionItem[]{}));
         Collections.sort(jamSessionItemList, (o1, o2) -> o1.getTimeUpdated().compareTo(o2.getTimeUpdated()));
+        JamSessionListener jamSessionListener = new JamSessionListener() {
+            @Override
+            public void onButtonClick(int pos) {
+                jamSessionItemList.get(pos).onButtonClick(pos);
+            }
 
-        jamSessionAdapter = new JamSessionAdapter(jamSessionItemList, userName);
-        jamSessionAdapter.setListener(pos -> jamSessionItemList.get(pos).onButtonClick(pos));
+            @Override
+            public void onDeleteItem(int pos) {
+                //jamSessionItemList.get(pos).onDeleteItem(pos);
+                if (jamSessionItemList.get(pos).getUserId().equals(userId)) {
+                    deleteRecording(jamSessionItemList.get(pos), jamSessionItemList.get(pos).getSongName());
+                } else {
+                    Toast.makeText(JamSessionActivity.this, "You cannot delete your friend's" +
+                            " creations.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        };
+        jamSessionAdapter = new JamSessionAdapter(jamSessionItemList, userName, jamSessionListener);
         recyclerView.setAdapter(jamSessionAdapter);
         recyclerView.scrollToPosition(jamSessionItemList.size()-1);
+
+    }
+
+    private void deleteRecording(JamSessionItem item, String recordingName) {
+        WriteBatch batch = Helper.db.batch();
+        itemRemoved = item;
+        for (String friendId : friendsMap.keySet()) {
+            DocumentReference documentReference =
+                    Helper.db.collection("jamGroups")
+                            .document(friendId).collection("groups")
+                            .document(groupName).collection("recordings")
+                            .document(userId).collection("songList")
+                            .document(recordingName);
+            batch.delete(documentReference);
+        }
+
+        batch.commit().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(JamSessionActivity.this, "Some error occurred. Could not " +
+                        "delete at this time.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 

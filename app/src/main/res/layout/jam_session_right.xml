@@ -43,8 +43,34 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_play_pause"
+
         />
 
-
+    <LinearLayout
+        android:id="@+id/delete_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:visibility="invisible">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel_delete_jam_item"
+            android:src="@drawable/baseline_cancel_black_24dp"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:layout_margin="3dp"/>
+        <ImageButton
+            android:id="@+id/delete_jam_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_delete_black_24dp"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:layout_margin="3dp"
+            />
+    </LinearLayout>
 
 </RelativeLayout>

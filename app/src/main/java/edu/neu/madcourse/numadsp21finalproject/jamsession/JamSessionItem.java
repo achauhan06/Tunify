@@ -25,6 +25,7 @@ public class JamSessionItem implements JamSessionListener {
     private String songName;
     private Timestamp timeUpdated;
     private String songLink;
+    private String recordingId;
     private MediaPlayer mediaPlayer;
     private final boolean isLoaded = false;
     private Uri currentUri;
@@ -66,6 +67,11 @@ public class JamSessionItem implements JamSessionListener {
         }else {
             mediaPlayer.start();
         }
+    }
+
+    @Override
+    public void onDeleteItem(int position) {
+
     }
 
     private void prepareAudio() {
