@@ -168,23 +168,24 @@ public class RegisterActivity extends AppCompatActivity {
             builder1.setTitle("Choose any 3 genres:");
 
             builder1.setMultiChoiceItems(listItems, checkedItems, (dialog, which, isChecked) -> {
-                if (isChecked && count < 3) {
-                    count++;
-                    checkedItems[which] = isChecked;
-                }
-                else {
-                    Toast.makeText(RegisterActivity.this,
-                            "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
-                            .show();
-                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
-                    checkedItems[which]=false;
-                }
                 if (!isChecked) {
                     count--;
                     if (count == 0) {
                         tvSelectedItemsPreview.setVisibility(View.INVISIBLE);
                         bOpenAlertDialog.setVisibility(View.VISIBLE);
                     }
+                }
+                if (isChecked && count < 3) {
+                    count++;
+                    checkedItems[which] = isChecked;
+                }
+                else {
+                    if (count == 3) { Toast.makeText(RegisterActivity.this,
+                            "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                    ((AlertDialog) dialog).getListView().setItemChecked(which, false);
+                    checkedItems[which]=false;
                 }
             });
 
@@ -310,6 +311,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private  AlertDialog.Builder createCategoryDialog(String[] listItems, boolean[] checkedItems, List<String> selectedItems, EditText bOpenAlertDialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+        Toast.makeText(RegisterActivity.this,
+                "Entered selector", Toast.LENGTH_SHORT)
+                .show();
 
         builder.setTitle("Choose any 3 genres:");
 
