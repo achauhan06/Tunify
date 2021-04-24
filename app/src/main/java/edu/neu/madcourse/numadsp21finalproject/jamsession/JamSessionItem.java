@@ -40,7 +40,7 @@ public class JamSessionItem implements JamSessionListener {
         this.userId = userId;
         this.songName = songName;
         this.timeUpdated = timeUpdated;
-        this.songLink = songLink.replace("%20", " ");
+        this.songLink = songLink.replace("%20", " ").replace("%2C", ",");;
         this.context = context;
     }
 
@@ -75,6 +75,7 @@ public class JamSessionItem implements JamSessionListener {
     }
 
     private void prepareAudio() {
+        this.songLink.replace("%2C", ",");
         StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(this.songLink);
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override

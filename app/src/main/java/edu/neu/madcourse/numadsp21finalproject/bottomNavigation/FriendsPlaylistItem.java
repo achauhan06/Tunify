@@ -46,7 +46,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
 
     public FriendsPlaylistItem(QueryDocumentSnapshot documentSnapshot, Context context, String userId) {
         this.projectName = documentSnapshot.get("name").toString();
-        this.path = documentSnapshot.get("path").toString();
+        this.path = documentSnapshot.get("path").toString().replace("%20", " ").replace("%2C", ",");;
         this.genre = documentSnapshot.get("genre").toString();
         this.ownerId = documentSnapshot.get("owner").toString();
         this.ownerName = documentSnapshot.get("username").toString();
@@ -90,6 +90,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
     }
 
     private void prepareAudio() {
+        this.path.replace("%2C", ",");
         StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(this.path);
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override

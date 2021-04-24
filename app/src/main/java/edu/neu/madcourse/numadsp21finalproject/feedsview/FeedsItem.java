@@ -58,7 +58,8 @@ public class FeedsItem implements FeedsViewListener{
     private FirebaseInstanceMessagingService firebaseInstanceMessagingService;
 
     public FeedsItem(DocumentSnapshot documentSnapshot, Context context) {
-        this.path = documentSnapshot.get("path").toString();
+        this.path = documentSnapshot.get("path").toString()
+                .replace("%20", " ").replace("%2C", ",");
         this.projectName = documentSnapshot.get("name").toString();
         this.genre = documentSnapshot.get("genre").toString();
         this.ownerName = documentSnapshot.get("username").toString();
@@ -123,7 +124,8 @@ public class FeedsItem implements FeedsViewListener{
     }
 
     private void prepareAudio() {
-        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(this.path);
+        StorageReference ref = FirebaseStorage.getInstance()
+                .getReferenceFromUrl(this.path);
 
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
