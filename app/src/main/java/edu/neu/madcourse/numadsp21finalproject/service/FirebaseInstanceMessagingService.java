@@ -9,27 +9,19 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
-import java.net.URLEncoder;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -220,7 +212,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                         h.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, "receiver token not found", Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }else {
@@ -372,7 +364,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(context, "friend request sent",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Friend request sent.",Toast.LENGTH_SHORT).show();
                 String contentId = documentReference.getId();
                 addNotification("friendRequest",senderName,senderId,receiverName, receiverId,
                         contentId,timestamp, "pending",context);
@@ -380,7 +372,7 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "failed to send friend request",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Some error occurred. Failed to send friend request at this time.",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -404,12 +396,12 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                     .add(friendRequest).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
-                    Toast.makeText(context, "notification added",Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
+                Log.d("Notification", "Successful add notification");
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(context, "failed to add notification",Toast.LENGTH_SHORT).show();
+                    Log.d("Notification", "failed to add notification");
 
                 }
             });

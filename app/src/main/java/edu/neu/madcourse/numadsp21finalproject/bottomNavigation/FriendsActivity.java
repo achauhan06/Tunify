@@ -113,7 +113,6 @@ public class FriendsActivity extends AppCompatActivity {
                                 setGenreForFriend(friendId, friend, pos++);
                                 friendsList.add(friend);
                                 setOwnerPicture(friendId, friend);
-                                // Toast.makeText(FriendsActivity.this, friendName,Toast.LENGTH_SHORT).show();
 
                             }
                             createRecyclerView();

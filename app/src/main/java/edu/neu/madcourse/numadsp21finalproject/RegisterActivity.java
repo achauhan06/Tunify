@@ -97,25 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
         passwordConfirmation = findViewById(R.id.register_passwordconfirmation);
         genres = findViewById(R.id.selectedItemPreview);
         auth = FirebaseAuth.getInstance();
-        /*userName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        Toast.makeText(RegisterActivity.this, userName.getText().toString(), Toast.LENGTH_SHORT).show();
-                        checkingIfUsernameExists(userName.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
-            }});*/
         userName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -209,7 +190,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                //Toast.makeText(RegisterActivity.this, "Opening", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(RegisterActivity.this);
 
                 builder1.setTitle("Choose any 3 genres:");
@@ -226,7 +206,6 @@ public class RegisterActivity extends AppCompatActivity {
                             String currentItem = selectedItems.get(which);
                         }
                         else {
-                            //Toast.makeText(RegisterActivity.this, "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT).show();
                             ((AlertDialog) dialog).getListView().setItemChecked(which, false);
                             checkedItems[which]=false;
                         }
@@ -237,7 +216,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 bOpenAlertDialog.setVisibility(View.VISIBLE);
                             }
                         }
-                        Toast.makeText(RegisterActivity.this, String.valueOf(count), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -323,7 +301,6 @@ public class RegisterActivity extends AppCompatActivity {
                             reg_entry.put("currentLevel", 0);
                             reg_entry.put("currentScore", 0);
                             UserService registerUser = userToken -> {
-                                Toast.makeText(RegisterActivity.this, userToken, Toast.LENGTH_SHORT).show();
                                 reg_entry.put("MobileToken", userToken);
                                 //TODO update username
                                 Helper.setEmailPassword(RegisterActivity.this,

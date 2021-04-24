@@ -210,7 +210,7 @@ public class ChatActivity extends AppCompatActivity {
             profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(ChatActivity.this,
-                exception.getMessage(),Toast.LENGTH_SHORT).show());
+                "Unable to load image as it is more than 5MB in size",Toast.LENGTH_SHORT).show());
     }
 
     private void createRecyclerView() {

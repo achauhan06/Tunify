@@ -226,18 +226,6 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-
-
-    /*
-    private void startMeetActivity() {
-        Toast.makeText(HomeActivity.this, "Meeting",Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(this, UserListActivity.class);
-        startActivity(intent);
-    }
-
-     */
-
     private void setBottomNavigationListener() {
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
@@ -257,7 +245,6 @@ public class HomeActivity extends AppCompatActivity {
                case R.id.navigation_notifications:
                    Intent notificationsIntent = new Intent(this, NotificationListActivity.class);
                    startActivity(notificationsIntent);
-                   Toast.makeText(this, "My Notifications",Toast.LENGTH_SHORT).show();
                    break;
                default:
                    return true;
@@ -397,7 +384,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void getFeed() {
         if(friendsList.size() == 0) {
-            Toast.makeText(HomeActivity.this, "you have no friend" ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomeActivity.this, "Add friends to get latest feed!" ,Toast.LENGTH_SHORT).show();
             return;
         }
         firebaseFirestore.getInstance().collection("recordings")

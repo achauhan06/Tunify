@@ -77,6 +77,6 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsHolder> {
             holder.profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(context,
-                exception.getMessage(),Toast.LENGTH_SHORT).show());
+                "Unable to load image as its is more than 5MB in size.",Toast.LENGTH_SHORT).show());
     }
 }

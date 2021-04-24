@@ -142,14 +142,14 @@ public class FeedsItem implements FeedsViewListener{
                     mediaPlayer.start();
                     loaded = true;
                 } catch (IOException e) {
-                    Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context , "Unable to load player at this time.",Toast.LENGTH_SHORT).show();
                 }
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(context , exception.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context , "Unable to load player at this time.",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -194,13 +194,11 @@ public class FeedsItem implements FeedsViewListener{
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Toast.makeText(context , "you liked " + projectName,Toast.LENGTH_SHORT).show();
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "Unable to unlike", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Some Error Occurred. Unable to unlike", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -217,13 +215,8 @@ public class FeedsItem implements FeedsViewListener{
         intent.putExtra("ownerId", ownerId);
         intent.putExtra("ownerName", ownerName);
         intent.putExtra("projectName", projectName);
-
         intent.putExtra("prev","home");
-
-
         context.startActivity(intent);
-        // Toast.makeText(context , "commented " + position,Toast.LENGTH_SHORT).show();
-
     }
 
 }

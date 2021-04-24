@@ -221,7 +221,7 @@ public class ProfileActivity extends AppCompatActivity {
             profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(ProfileActivity.this,
-                exception.getMessage(),Toast.LENGTH_SHORT).show());
+                "Unable to load image as it is more than 5MB in size.",Toast.LENGTH_SHORT).show());
     }
 
     public void setProfile(DocumentReference documentReference) {
@@ -241,7 +241,6 @@ public class ProfileActivity extends AppCompatActivity {
                     String[] arr = value.getString("Genres").split(";");
                     List<String> list = Lists.newArrayList(arr);
                     genre.setText(list.toString().replace("[", "").replace("]", ""));
-                    Toast.makeText(ProfileActivity.this, email.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -270,7 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(ProfileActivity.this, "Unable to update your profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "Some error occurred. Unable to update your profile at this time.", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -298,7 +297,6 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
 
                             } else {
-                                Toast.makeText(ProfileActivity.this, "Error updating friendship name", Toast.LENGTH_SHORT).show();
                                 Log.d("firebase", "Error updating friendship name", task.getException());
                             }
                         }
@@ -324,7 +322,7 @@ public class ProfileActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(ProfileActivity.this, "Unable to update your name on friends list", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "Some error occurred. Unable to update your name on friends list", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -347,7 +345,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(ProfileActivity.this, "onActivityResult", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
             imageUri = data.getData();

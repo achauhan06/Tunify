@@ -66,6 +66,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsHolder> {
             holder.profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(context,
-                exception.getMessage(),Toast.LENGTH_SHORT).show());
+                "Unable to load Image as it is more that 5MB",Toast.LENGTH_SHORT).show());
     }
 }

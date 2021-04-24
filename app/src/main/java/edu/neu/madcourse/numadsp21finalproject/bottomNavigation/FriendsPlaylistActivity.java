@@ -94,8 +94,6 @@ public class FriendsPlaylistActivity extends AppCompatActivity {
                                 FriendsPlaylistItem friendsPlaylistItem = new FriendsPlaylistItem(documentSnapshot,
                                         FriendsPlaylistActivity.this, userId);
                                 friendsPlaylistItemsList.add(friendsPlaylistItem);
-                                // Toast.makeText(LibraryActivity.this, projectName,Toast.LENGTH_SHORT).show();
-
                             }
                             createRecyclerView();
 

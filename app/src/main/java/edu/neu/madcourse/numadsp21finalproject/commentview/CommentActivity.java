@@ -125,7 +125,7 @@ public class CommentActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(CommentActivity.this, "failed to post comment",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentActivity.this, "Some Error Occurred. Failed to post comment",Toast.LENGTH_SHORT).show();
 
                             }
                         });
@@ -148,13 +148,13 @@ public class CommentActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Toast.makeText(CommentActivity.this , "comments count updated",Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(CommentActivity.this, "Unable to update comment count", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CommentActivity.this, "Some error occurred. " +
+                        "Unable to update comment count", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -195,11 +195,10 @@ public class CommentActivity extends AppCompatActivity {
                                 Timestamp timestamp = (Timestamp) documentSnapshot.get("time");
                                 CommentItem item = new CommentItem(commenterName, content, timestamp);
                                 commentItemArrayList.add(item);
-                                // Toast.makeText(CommentActivity.this, content,Toast.LENGTH_SHORT).show();
                             }
 
                         }else {
-                            Toast.makeText(CommentActivity.this, "unable to get comments",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentActivity.this, "Some error occurred. Unable to load comments.",Toast.LENGTH_SHORT).show();
 
                         }
                         createCommentRecyclerView();

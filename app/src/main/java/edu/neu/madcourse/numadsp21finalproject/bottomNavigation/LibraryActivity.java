@@ -150,8 +150,6 @@ public class LibraryActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 LibraryItem item = new LibraryItem(documentSnapshot, LibraryActivity.this, userId);
                                 libraryList.add(item);
-                                // Toast.makeText(LibraryActivity.this, projectName,Toast.LENGTH_SHORT).show();
-
                             }
                             createRecyclerView();
 

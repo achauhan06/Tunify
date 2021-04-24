@@ -101,7 +101,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(context , exception.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context , "Unable to load player at this time",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -119,7 +119,7 @@ public class FriendsPlaylistItem implements PlaylistListener {
             mediaPlayer.prepare(); // might take long! (for buffering, etc)
             mediaPlayer.start();
         } catch (IOException e) {
-            Toast.makeText(context , e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(context , "Unable to load player at this time.",Toast.LENGTH_SHORT).show();
         }
     }
 

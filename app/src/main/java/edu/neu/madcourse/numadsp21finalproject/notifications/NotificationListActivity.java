@@ -84,7 +84,7 @@ public class NotificationListActivity extends AppCompatActivity {
                     }
 
                 }else {
-                    Toast.makeText(context, "failed to get notification history",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Some error occurred. Failed to get notification history",Toast.LENGTH_SHORT).show();
                 }
                 createNotificationRecyclerView();
 

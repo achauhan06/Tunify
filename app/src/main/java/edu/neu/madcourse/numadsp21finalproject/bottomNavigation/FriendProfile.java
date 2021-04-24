@@ -89,8 +89,6 @@ public class FriendProfile extends AppCompatActivity {
         friendId = getIntent().getExtras().getString("friendId");
         DocumentReference documentReference = fireStore.getInstance().collection("users").document(friendId);
         setProfile(documentReference);
-        Toast.makeText(FriendProfile.this, userId,Toast.LENGTH_SHORT).show();
-
         loadProfilePicture();
 
 
@@ -113,13 +111,13 @@ public class FriendProfile extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(FriendProfile.this, "You have unfriended " + friendName,Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(FriendProfile.this, "You have Unfriended " + friendName,Toast.LENGTH_SHORT).show();
 
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(FriendProfile.this, "unable to unfriend" + friendName,Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FriendProfile.this, "Unable to Unfriend" + friendName,Toast.LENGTH_SHORT).show();
 
                                                 }
                                             });
@@ -169,7 +167,7 @@ public class FriendProfile extends AppCompatActivity {
             profilePicture.setVisibility(View.VISIBLE);
 
         }).addOnFailureListener(exception -> Toast.makeText(FriendProfile.this,
-                exception.getMessage(),Toast.LENGTH_SHORT).show());
+                "Unable to load image as it is more than 5MB in size",Toast.LENGTH_SHORT).show());
     }
 
 
