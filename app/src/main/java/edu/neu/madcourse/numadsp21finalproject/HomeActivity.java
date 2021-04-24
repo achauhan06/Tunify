@@ -203,20 +203,30 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void setSearchComponent() {
-        searchButton = findViewById(R.id.search_icon);
-        searchButton.setOnClickListener(v ->
-                Toast.makeText(HomeActivity.this,"search clicked", Toast.LENGTH_SHORT)
-                        .show());
-        searchTextBox = findViewById(R.id.search_box);
-   /*     searchTextBox.setOnFocusChangeListener((v, hasFocus) -> {
-            if(!hasFocus){
-                searchTextBox.setCursorVisible(false);
-            }
-        });*/
 
 
-    }
+        private void setSearchComponent() {
+            searchButton = findViewById(R.id.search_icon);
+            searchTextBox = findViewById(R.id.search_box);
+            searchButton.setOnClickListener(v -> {
+                if (!searchTextBox.getText().toString().isEmpty()) {
+                    String searchValue = searchTextBox.getText().toString();
+                    Intent intent = new Intent(this, SearchResultActivity.class);
+                    intent.putExtra("searchValue", searchValue);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(HomeActivity.this,"Please enter some item to search",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+            });
+
+
+        }
+
+
+
     /*
     private void startMeetActivity() {
         Toast.makeText(HomeActivity.this, "Meeting",Toast.LENGTH_SHORT).show();
