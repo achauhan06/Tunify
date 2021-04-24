@@ -207,11 +207,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             });
 
-            builder1.setNeutralButton("CLEAR ALL", (dialog, which) -> {
-                for (int i = 0; i < checkedItems.length; i++) {
-                    checkedItems[i] = false;
-                }
-            });
             builder1.create();
 
             AlertDialog alertDialog = builder1.create();
@@ -311,9 +306,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private  AlertDialog.Builder createCategoryDialog(String[] listItems, boolean[] checkedItems, List<String> selectedItems, EditText bOpenAlertDialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-        Toast.makeText(RegisterActivity.this,
-                "Entered selector", Toast.LENGTH_SHORT)
-                .show();
 
         builder.setTitle("Choose any 3 genres:");
 
@@ -360,12 +352,6 @@ public class RegisterActivity extends AppCompatActivity {
             count = 0;
         });
 
-        builder.setNeutralButton("CLEAR ALL", (dialog, which) -> {
-            for (int i = 0; i < checkedItems.length; i++) {
-                checkedItems[i] = false;
-            }
-            count = 0;
-        });
 
         builder.create();
         return builder;
