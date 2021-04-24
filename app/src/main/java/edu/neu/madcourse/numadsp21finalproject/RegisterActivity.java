@@ -99,7 +99,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     "underscore", Snackbar.LENGTH_SHORT);
                     customToast.makeCustomToast();
                     userName.setText("");
-                    userName.requestFocus();
                 }
 
             }
@@ -294,7 +293,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 "Username already exists", Snackbar.LENGTH_SHORT);
                         customToast.makeCustomToast();
                         userName.setText("");
-                        userName.requestFocus();
                     }
                 }
             }
