@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -97,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                     CustomToast customToast = new CustomToast(RegisterActivity.this,
                             "Username can only consist of alphabets, digits and " +
                                     "underscore", Snackbar.LENGTH_SHORT);
-                    customToast.makeCustomToast();
+                    customToast.makeCustomToast(Gravity.TOP);
                     userName.setText("");
                 }
 
@@ -292,7 +294,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (userNames.equals(usernameToCompare)) {
                         CustomToast customToast = new CustomToast(RegisterActivity.this,
                                 "Username already exists", Snackbar.LENGTH_SHORT);
-                        customToast.makeCustomToast();
+                        customToast.makeCustomToast(Gravity.TOP);
                         userName.setText("");
                     }
                 }

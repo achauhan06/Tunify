@@ -1,11 +1,11 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -29,7 +30,7 @@ import java.util.List;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogAdapter;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogItem;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogViewListener;
-import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -85,6 +86,11 @@ public class FriendsBlogActivity extends AppCompatActivity {
                                     friendId);
                             blogItemList.add(blogItem);
                             createRecyclerView();
+                        }
+                        if (blogItemList.isEmpty()) {
+                            CustomToast toast = new CustomToast(FriendsBlogActivity.this,
+                                    "There are no blogs published yet!", Snackbar.LENGTH_SHORT);
+                            toast.makeCustomToast(Gravity.CENTER);
                         }
                     }
                 });

@@ -1,12 +1,11 @@
 package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,29 +15,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsActivity;
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsAdapter;
 import edu.neu.madcourse.numadsp21finalproject.searchView.SearchAdapter;
 import edu.neu.madcourse.numadsp21finalproject.searchView.SearchItem;
 import edu.neu.madcourse.numadsp21finalproject.searchView.SearchViewListener;
-import edu.neu.madcourse.numadsp21finalproject.users.UserAdapter;
-import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
-import edu.neu.madcourse.numadsp21finalproject.users.UserViewListener;
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -85,7 +77,6 @@ public class SearchResultActivity extends AppCompatActivity {
 
 
     private void  getSearchResults(String searchValue) {
-        Toast.makeText(SearchResultActivity.this, searchValue, Toast.LENGTH_SHORT).show();
 
         Helper.db.collection("friends").document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -167,6 +158,11 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView() {
+        if (searchItems.size() == 0) {
+            CustomToast toast = new CustomToast(SearchResultActivity.this,
+                    "No results found!", Snackbar.LENGTH_SHORT);
+            toast.makeCustomToast(Gravity.CENTER);
+        }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.search_recycler_view);
         recyclerView.setHasFixedSize(true);

@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.Gravity;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,15 +30,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
 import edu.neu.madcourse.numadsp21finalproject.model.User;
-import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongAdapter;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
-import edu.neu.madcourse.numadsp21finalproject.songview.SongViewListener;
 import edu.neu.madcourse.numadsp21finalproject.users.UserAdapter;
 import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.users.UserViewListener;
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -52,7 +47,7 @@ public class UserListActivity extends AppCompatActivity {
     private List<String> friendIdsList;
     private FirebaseFirestore db;
     private ArrayList<UserItem> userItemList2;
-    private Button profile;
+    private ImageButton profile;
     private User currentUser;
     private String userId;
     FirebaseUser user;
@@ -182,6 +177,11 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView() {
+        if(userItemList.isEmpty()) {
+            CustomToast toast = new CustomToast(UserListActivity.this,
+                    "There are no other people!", Snackbar.LENGTH_SHORT);
+            toast.makeCustomToast(Gravity.CENTER);
+        }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.user_recycler_view);
         recyclerView.setHasFixedSize(true);

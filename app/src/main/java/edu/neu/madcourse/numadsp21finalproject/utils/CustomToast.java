@@ -1,4 +1,4 @@
-package edu.neu.madcourse.numadsp21finalproject;
+package edu.neu.madcourse.numadsp21finalproject.utils;
 
 import android.app.Activity;
 import android.app.Application;
@@ -25,13 +25,13 @@ public class CustomToast {
         this.context = context;
     }
 
-    public void makeCustomToast() {
+    public void makeCustomToast(int gravity) {
 
         Snackbar snack = Snackbar.make(((Activity)context).findViewById(android.R.id.content),
                 message, duration);
         View view = snack.getView();
         FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
-        params.gravity = Gravity.TOP;
+        params.gravity = gravity;
         view.setLayoutParams(params);
         snack.show();
     }

@@ -3,12 +3,10 @@ package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,24 +28,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 
-import edu.neu.madcourse.numadsp21finalproject.HomeActivity;
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
-import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
 public class LibraryActivity extends AppCompatActivity {
@@ -96,6 +85,10 @@ public class LibraryActivity extends AppCompatActivity {
                     return o2.getTimestamp().compareTo(o1.getTimestamp());
                 }
             });
+        } else {
+            CustomToast toast = new CustomToast(LibraryActivity.this,
+                    "You do not have any recordings!", Snackbar.LENGTH_SHORT);
+            toast.makeCustomToast(Gravity.CENTER);
         }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.library_recycler_view);

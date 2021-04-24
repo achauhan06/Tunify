@@ -1,16 +1,15 @@
 package edu.neu.madcourse.numadsp21finalproject.bottomNavigation;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,22 +19,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.neu.madcourse.numadsp21finalproject.utils.CustomToast;
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
-import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
-import edu.neu.madcourse.numadsp21finalproject.feedsview.FeedsItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -158,6 +154,12 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView(){
+
+        if (friendsList.size() == 0) {
+            CustomToast toast = new CustomToast(FriendsActivity.this,
+                    "You do not have any friends!", Snackbar.LENGTH_SHORT);
+            toast.makeCustomToast(Gravity.CENTER);
+        }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.friends_recycler_view);
         recyclerView.setHasFixedSize(true);
