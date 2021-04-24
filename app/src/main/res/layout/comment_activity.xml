@@ -69,7 +69,6 @@
             android:layout_height="wrap_content"
             android:text="Post"
             android:textSize="6pt"
-            android:backgroundTint="@android:color/transparent"
             android:id="@+id/comment_submit_btn"
             android:layout_marginHorizontal="5dp"
             android:layout_marginBottom="5dp"
@@ -77,7 +76,8 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:foreground="@drawable/rectangle_click_effect_background"
-            android:src="@drawable/baseline_send_black_24dp">
+            android:src="@drawable/baseline_send_black_24dp"
+            android:backgroundTint="@android:color/transparent">
 
         </ImageButton>
 

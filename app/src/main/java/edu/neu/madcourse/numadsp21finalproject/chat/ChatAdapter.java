@@ -13,14 +13,14 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatHolder>{
 
-    private List<Chat> listData;
+    private List<ChatItem> listData;
     private String userName;
     public static final int DISPLAY_LEFT = 0;
     public static final int DISPLAY_RIGHT = 1;
 
 
 
-    public ChatAdapter(List<Chat> listData, String userName) {
+    public ChatAdapter(List<ChatItem> listData, String userName) {
         this.userName = userName;
         this.listData = listData;
     }
@@ -29,22 +29,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatHolder>{
     @Override
     public ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        View view;
         if (viewType == DISPLAY_LEFT) {
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_left,parent,false);
-            return new ChatHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.chat_item_left, parent,
+                    false);
 
         } else {
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_right,parent,false);
-            return new ChatHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_right,
+                    parent, false);
 
         }
+        return new ChatHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatHolder holder, int position) {
-        Chat chat = listData.get(position);
-        holder.chat.setText(chat.getSticker());
-        holder.name.setText(chat.getSender());
+        ChatItem chat = listData.get(position);
+        holder.chat.setText(chat.getMessage());
+        holder.name.setText(chat.getSenderName());
+        holder.messageTime.setText(chat.getTimeAsString());
 
     }
 
@@ -55,7 +59,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(listData.get(position).getSender().equals(userName)) {
+        if(listData.get(position).getSenderName().equals(userName)) {
             return DISPLAY_RIGHT;
         }
         return DISPLAY_LEFT;
