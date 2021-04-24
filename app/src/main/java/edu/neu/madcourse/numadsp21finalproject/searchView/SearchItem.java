@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import edu.neu.madcourse.numadsp21finalproject.ChatActivity;
 import edu.neu.madcourse.numadsp21finalproject.FriendsBlogActivity;
+import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendProfile;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendsPlaylistActivity;
 
@@ -17,16 +18,18 @@ public class SearchItem implements SearchViewListener{
     private String genres;
     private String profileLink;
     private boolean isFriend;
+    private String email;
 
     public String getSearchName() {
         return searchName;
     }
 
-    public SearchItem(String userId, String friendId, String searchName,Context context){
+    public SearchItem(String userId, String friendId, String searchName, String email, Context context){
         this.context = context;
         this.userId = userId;
         this.friendId = friendId;
         this.searchName = searchName;
+        this.email = email;
     }
 
     public void setProfileLink(String profileLink) {
@@ -37,19 +40,19 @@ public class SearchItem implements SearchViewListener{
         return profileLink;
     }
 
-    public boolean getIsFriend(){return isFriend;}
+    public boolean isFriend(){return isFriend;}
 
     public void setIsFriend(boolean isFriend){this.isFriend = isFriend;}
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(this.context, FriendProfile.class);
+        Intent intent = new Intent(this.context, isFriend ? FriendProfile.class
+                : UserProfileActivity.class);
         intent.putExtra("userId", userId);
         intent.putExtra("friendId", friendId);
         intent.putExtra("friendName", searchName);
+        intent.putExtra("email", email);
         this.context.startActivity(intent);
-        // Toast.makeText(context, friendId + " " + friendName,Toast.LENGTH_LONG).show();
-
     }
 
     @Override

@@ -51,6 +51,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> {
         if (currentItem.getProfileLink() != null && !currentItem.getProfileLink().isEmpty()) {
             setProfilePicture(currentItem.getProfileLink(), holder);
         }
+        if (!currentItem.isFriend()) {
+            holder.viewFriendBlog.setVisibility(View.INVISIBLE);
+            holder.viewPlaylist.setVisibility(View.INVISIBLE);
+            holder.chat.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

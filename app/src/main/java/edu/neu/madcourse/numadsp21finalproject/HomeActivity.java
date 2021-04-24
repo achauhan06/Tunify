@@ -212,6 +212,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (!searchTextBox.getText().toString().isEmpty()) {
                     String searchValue = searchTextBox.getText().toString();
                     Intent intent = new Intent(this, SearchResultActivity.class);
+                    searchTextBox.setText("");
                     intent.putExtra("searchValue", searchValue);
                     startActivity(intent);
                 } else {

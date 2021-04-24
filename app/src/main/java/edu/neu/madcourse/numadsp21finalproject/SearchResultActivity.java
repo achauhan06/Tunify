@@ -67,6 +67,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
         myBroadcastReceiver = new MyBroadcastReceiver();
         broadcastIntent();
+
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toast.makeText(SearchResultActivity.this, "Please log in first", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -111,9 +112,9 @@ public class SearchResultActivity extends AppCompatActivity {
                             for (DocumentSnapshot d : list) {
                                 if(!d.getId().equals(userId) && d.get("Username") != null && d.get("Username").toString().contains(searchValue)) {
                                     String searchName = d.getString("Username");
-                                    // String email1 = d.getString("Email");
+                                    String email = d.getString("Email");
                                     String searchUserId = d.getId();
-                                    SearchItem user = new SearchItem(userId, searchUserId, searchName, SearchResultActivity.this);
+                                    SearchItem user = new SearchItem(userId, searchUserId, searchName, email,SearchResultActivity.this);
 
                                     String genres = d.getString("Genres");
                                     if (genres != null) {
@@ -132,8 +133,6 @@ public class SearchResultActivity extends AppCompatActivity {
                                     searchItems.add(user);
                                     setOwnerPicture(searchUserId, user);
                                 }
-
-                                //Toast.makeText(UserListActivity.this, email, Toast.LENGTH_SHORT).show();
 
                             }
                         } else {
@@ -176,19 +175,19 @@ public class SearchResultActivity extends AppCompatActivity {
 
             @Override
             public void onViewPlaylistClick(int position) {
-                searchItems.get(position).onItemClick(position);
+                searchItems.get(position).onViewPlaylistClick(position);
 
             }
 
             @Override
             public void onViewBlogClick(int position) {
-                searchItems.get(position).onItemClick(position);
+                searchItems.get(position).onViewBlogClick(position);
 
             }
 
             @Override
             public void onChatClick(int position) {
-                searchItems.get(position).onItemClick(position);
+                searchItems.get(position).onChatClick(position);
 
             }
         };
