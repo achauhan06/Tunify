@@ -122,7 +122,7 @@ public class JamSessionActivity extends AppCompatActivity {
         }
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
-        songName = groupName + "_" + userId + "_" + version + ".mp3";
+        songName = groupName + "_" + userName + "_" + version + ".mp3";
         fileName += songName;
         createRecorder();
         createPlayer();
