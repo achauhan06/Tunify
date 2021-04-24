@@ -60,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:text="owner"
                 android:layout_below="@+id/feeds_item_name"
-                android:layout_toLeftOf="@+id/feeds_item_button"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginVertical="5dp"
                 android:textColor="@android:color/black"

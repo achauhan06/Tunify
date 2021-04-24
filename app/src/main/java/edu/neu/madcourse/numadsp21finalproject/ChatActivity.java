@@ -2,20 +2,25 @@ package edu.neu.madcourse.numadsp21finalproject;
 
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +30,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +43,7 @@ import java.util.List;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatItem;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatAdapter;
 import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
+import edu.neu.madcourse.numadsp21finalproject.users.UserItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -51,6 +59,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText typeField;
     private List<ChatItem> chatItems;
     private ChatAdapter chatAdapter;
+    ImageView profilePicture;
     FirebaseAuth auth;
     String userId;
     FirebaseFirestore firebaseFirestore;
@@ -96,6 +105,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         readMessages();
+
+        profilePicture = findViewById(R.id.userProfilePicture);
 
     }
 
@@ -160,6 +171,7 @@ public class ChatActivity extends AppCompatActivity {
                                                     message, time);
                                     chat.setId(chatId);
                                     chatItems.add(chat);
+                                    setOwnerPicture(friendId, chat);
                                 }
                             }
                         } else {
@@ -169,6 +181,36 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
         });
+    }
+
+    private void setOwnerPicture(String ownerId, ChatItem item) {
+        final String[] picturePath = {Helper.DEFAULT_PICTURE_PATH};
+        Helper.db.collection("images")
+                .document(ownerId).get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                picturePath[0] = snapshot.getString("path");
+            }
+            setProfilePicture(picturePath[0]);
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                setProfilePicture(picturePath[0]);
+            }
+        });
+    }
+
+    private void setProfilePicture(String picturePath) {
+        StorageReference ref = FirebaseStorage.getInstance().getReferenceFromUrl(picturePath);
+        final long FIVE_MEGABYTE = 5 * 1024 * 1024;
+        ref.getBytes(FIVE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap scaledImage = Bitmap.createScaledBitmap(bmp, 60, 60, true);
+            profilePicture.setImageBitmap(scaledImage);
+            profilePicture.setVisibility(View.VISIBLE);
+
+        }).addOnFailureListener(exception -> Toast.makeText(ChatActivity.this,
+                exception.getMessage(),Toast.LENGTH_SHORT).show());
     }
 
     private void createRecyclerView() {

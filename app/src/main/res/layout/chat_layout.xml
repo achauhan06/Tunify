@@ -14,29 +14,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/friend_name_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/friend_detail_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="TextView"
-        android:textSize="16sp"
-        android:textColorLink="@color/primaryTextColor"
+        android:orientation="horizontal"
+        android:background="@color/secondaryColor"
         app:layout_constraintBottom_toTopOf="@+id/chat_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_chat" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_chat">
+        <ImageView
+            android:id="@+id/userProfilePicture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left|center"
+            android:layout_margin="10dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
+        <TextView
+            android:id="@+id/friend_name_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:layout_gravity="left|center"
+            android:text="TextView"
+            android:textColorLink="@color/primaryTextColor"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:background="@color/secondaryLightColor"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/friend_name_view" />
+        app:layout_constraintTop_toBottomOf="@+id/friend_detail_view" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -44,7 +61,6 @@
         android:layout_height="wrap_content"
         android:background="@color/primaryColor"
         android:orientation="horizontal"
-        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
@@ -64,10 +80,10 @@
             android:layout_height="44dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:foreground="@drawable/rectangle_click_effect_background"
-            android:src="@drawable/baseline_send_black_24dp"
             android:backgroundTint="@android:color/transparent"
-            android:clickable="true" />
+            android:clickable="true"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:src="@drawable/baseline_send_black_24dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
