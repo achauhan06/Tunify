@@ -33,6 +33,7 @@ import edu.neu.madcourse.numadsp21finalproject.categoryview.CategoryViewListener
 import edu.neu.madcourse.numadsp21finalproject.songview.SongItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
+import edu.neu.madcourse.numadsp21finalproject.utils.SongListByCategory;
 
 public class CategoryListActivity extends AppCompatActivity {
 
@@ -89,16 +90,10 @@ public class CategoryListActivity extends AppCompatActivity {
 
     private void createCategoryListView(List<String> selectedCategories) {
         categoryItemList = new ArrayList<>();
+        SongListByCategory.createSongListByCategory();
         for(int i = 0; i<Helper.CATEGORY_LIST.length; i++) {
             final String categoryName = Helper.CATEGORY_LIST[i];
-            List<SongItem> songItemList = new ArrayList(){{
-                add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril", categoryName));
-                add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril", categoryName));
-                add(new SongItem("Complicated", "03:22",
-                        "xNN372Ud0EE", "Avril", categoryName));
-            }};
+            List<SongItem> songItemList = SongListByCategory.getSongListForCategory(categoryName);
             CategoryItem categoryItem = new CategoryItem(categoryName,
                     songItemList,
                     !selectedCategories.contains(categoryName));

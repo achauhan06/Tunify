@@ -18,7 +18,11 @@ public class SongItem implements Parcelable,SongViewListener {
     private String songArtist;
     private String genre;
 
-    public SongItem(String songName, String songLength, String songURL, String songArtist, String genre) {
+    public SongItem(String songName,
+                    String songLength,
+                    String songURL,
+                    String songArtist,
+                    String genre) {
         this.songName = songName;
         this.songLength = songLength;
         this.songURL = songURL;
