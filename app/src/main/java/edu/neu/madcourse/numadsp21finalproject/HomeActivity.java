@@ -263,24 +263,15 @@ public class HomeActivity extends AppCompatActivity {
             int id = item.getItemId();
             switch(id)
             {
-                case R.id.account_title:
-                    Toast.makeText(HomeActivity.this, "My Account",Toast.LENGTH_SHORT).show();
-                    break;
                 case R.id.profile_title:
                     Intent intent = new Intent(this,ProfileActivity.class);
                     startActivity(intent);
-                    break;
-                case R.id.settings_title:
-                    Toast.makeText(HomeActivity.this, "My Settings",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.blogs_title:
                     Intent blogIntent = new Intent(this, BlogActivity.class);
                     startActivity(blogIntent);
                     break;
                 case R.id.about_title:
-                    // Toast.makeText(HomeActivity.this, "About",Toast.LENGTH_SHORT).show();
-                    // Intent aboutIntent = new Intent(this, AboutActivity.class);
-                    // startActivity(aboutIntent);
                     aboutDialog.show();
                     break;
                 case R.id.logout_title:

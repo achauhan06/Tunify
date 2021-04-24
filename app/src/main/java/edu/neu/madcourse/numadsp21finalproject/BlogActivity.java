@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,8 @@ import java.util.Map;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogAdapter;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogItem;
 import edu.neu.madcourse.numadsp21finalproject.blogs.BlogViewListener;
+import edu.neu.madcourse.numadsp21finalproject.blogs.SwipeToDeleteBlogs;
+import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.SwipeToDeleteLibrary;
 import edu.neu.madcourse.numadsp21finalproject.navigation.ProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
@@ -183,6 +186,9 @@ public class BlogActivity extends AppCompatActivity {
             }
         };
         blogAdapter = new BlogAdapter(blogItemList, BlogActivity.this, false, blogViewListener);
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new SwipeToDeleteBlogs(blogAdapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setLayoutManager(rLayoutManger);
         recyclerView.setAdapter(blogAdapter);
     }

@@ -61,7 +61,7 @@
             android:name=".notifications.NotificationListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar"
-            android:title="">
+            android:label="Notifications">
             <intent-filter>
                 <action android:name="openNotification"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -80,7 +80,8 @@
         <activity
             android:name=".bottomNavigation.FriendsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar" />
+            android:theme="@style/Theme.Tunify.NoActionBar"
+            android:label="Friends"/>
         <activity
             android:name=".bottomNavigation.FriendProfile"
             android:configChanges="orientation|screenSize"
@@ -88,12 +89,14 @@
         <activity
             android:name=".bottomNavigation.LibraryActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar">
+            android:theme="@style/Theme.Tunify.NoActionBar"
+            android:label="Library">
         </activity>
         <activity
             android:name=".BlogActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.Tunify.NoActionBar">
+            android:theme="@style/Theme.Tunify.NoActionBar"
+            android:label="Blogs">
         </activity>
         <activity android:name=".blogs.BlogDialogActivity"
             android:excludeFromRecents="true"
@@ -134,6 +137,7 @@
         <activity
             android:name=".commentview.CommentActivity"
             android:configChanges="orientation|screenSize"
+            android:label="Comments"
             android:theme="@style/Theme.Tunify.NoActionBar" />
 
         <receiver android:name = ".utils.MyBroadcastReceiver">

@@ -81,8 +81,5 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryHolder> {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 }

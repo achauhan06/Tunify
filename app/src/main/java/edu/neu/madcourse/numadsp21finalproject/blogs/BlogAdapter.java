@@ -4,13 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.util.List;
 
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogHolder> {
 
@@ -46,5 +51,22 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogHolder> {
     @Override
     public int getItemCount() {
         return blogItemList.size();
+    }
+
+    public void deleteItem(int position) {
+        String blogId = blogItemList.get(position).getBlogId();
+        Helper.db.collection("blogs")
+                .document(blogId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(context, "Blog is deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Some error occurred. Blog could not be deleted",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
