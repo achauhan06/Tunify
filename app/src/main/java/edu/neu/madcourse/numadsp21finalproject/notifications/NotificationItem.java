@@ -63,7 +63,7 @@ public class NotificationItem implements NotificationViewListener {
         }else if(this.type.equals("comment")){
             this.projectName = extraInfo;
             this.title = "New Comment";
-            this.body = senderName + " liked your project " + projectName + ".";
+            this.body = senderName + " commented on your project " + projectName + ".";
         } else if(this.type.equals("acceptedRequest") || this.type.equals("declinedRequest")) {
             String actionDone = this.type.equals("acceptedRequest") ? "accepted" : "declined";
             this.isFriendRequest = true;
