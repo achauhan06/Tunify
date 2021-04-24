@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
@@ -245,7 +243,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         });
     }
 
-    public void setDefaultYouTubePlayer() {
+    public YouTubePlayer setDefaultYouTubePlayer() {
         player1 = new YouTubePlayer() {
             @Override
             public void release() {
@@ -423,6 +421,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
             }
         };
         player1.cueVideo("5r0i76VJqL8");
+        return player1;
     }
 
     private void createYoutubeView() {
@@ -432,7 +431,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     @Override
                     public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                         YouTubePlayer youTubePlayer, boolean wasRestored) {
-                        player1 = youTubePlayer;
+                        player1 = youTubePlayer == null ? setDefaultYouTubePlayer() : youTubePlayer;
                         youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
                         if (!wasRestored) {
                             youTubePlayer.cueVideo(songUrl);
