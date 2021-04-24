@@ -143,14 +143,14 @@ public class SongListByCategory {
         List<SongItem> soul = new ArrayList(){{
             add(new SongItem("Hold On, I'm Comin'","2:39",
                     "49fp1z1owcQ", "Sam & Dave", "Soul"));
-            add(new SongItem("Respect","2:41",
-                    "dLEa9c0-C3Y", "Aretha Franklin", "Soul"));
-            add(new SongItem("Knock On Wood","3:15",
-                    "4kX-9Nw916E", "Eddie Floyd", "Soul"));
-            add(new SongItem("Mustang Sally","3:14",
-                    "jw7bwhsx5bw", "Wilson Pickett", "Soul"));
-            add(new SongItem("Hard to Handle","2:31",
-                    "ezv6eRWiBbw", "Otis Redding", "Soul"));
+            add(new SongItem("Respect","2:39",
+                    "0GApz9a8vEk", "Aretha Franklin", "Soul"));
+            add(new SongItem("Knock On Wood","3:55",
+                    "6Aiz8QC2dMI", "Eddie Floyd", "Soul"));
+            add(new SongItem("Mustang Sally","3:41",
+                    "XnAkiGp8aFE", "Wilson Pickett", "Soul"));
+            add(new SongItem("Hard to Handle","3:10",
+                    "OLKc05_VjD0", "Otis Redding", "Soul"));
         }};
         categorySongMap.put("Soul", soul);
 
