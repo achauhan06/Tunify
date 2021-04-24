@@ -169,8 +169,8 @@ public class SongListByCategory {
         categorySongMap.put("R&B", rNB);
 
         List<SongItem> heavyMetal = new ArrayList(){{
-            add(new SongItem("Iron Man","5:17",
-                    "X6hPvnYfhA8", "Black Sabbath", "Heavy Metal"));
+            add(new SongItem("Rainbow In The Dark","5:17",
+                    "UdyQM2PNC9M", "Ronnie James Dio", "Heavy Metal"));
             add(new SongItem("Master of Puppets","8:17",
                     "dkXt18Bm4wM", "Metallica", "Heavy Metal"));
             add(new SongItem("Holy Wars","6:39",
