@@ -97,15 +97,12 @@ public class FriendsActivity extends AppCompatActivity {
                                 String name2 = documentSnapshot.get("name2").toString();
 
                                 // get friend name and friend id
-                                if(name1.equals(userName)) {
-                                    friendName = name2;
-                                }else {
-                                    friendName = name1;
-                                }
                                 if(friendIds.get(0).equals(userId)) {
                                     friendId = friendIds.get(1);
+                                    friendName = name2;
                                 }else {
                                     friendId = friendIds.get(0);
+                                    friendName = name1;
                                 }
 
                                 // add friend item to friend list
@@ -190,8 +187,8 @@ public class FriendsActivity extends AppCompatActivity {
         recyclerView.setAdapter(friendsAdapter);
 
     }
-
-/*    public void getUserName() {
+    /*
+    public void getFirstLastName() {
         DocumentReference userDocumentReference = fireStore.getInstance().collection("users").document(userId);
         userDocumentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -202,11 +199,13 @@ public class FriendsActivity extends AppCompatActivity {
                 if (value.getString("Username")!=null) {
                     userName = value.getString("Username");
                 }
-                System.out.println(userName);
+                // System.out.println(userName);
 
             }
         });
-    }*/
+    }
+
+     */
 
     @Override
     public void onBackPressed() {
