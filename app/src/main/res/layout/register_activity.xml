@@ -5,174 +5,331 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="always"
+        android:isScrollContainer="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:layout_margin="5dp">
 
 
     <TextView
         android:id="@+id/register_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please register below:"
-        app:layout_constraintBottom_toTopOf="@id/register_username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.206" />
+        android:text="Register"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:textColor="@color/primaryTextColor"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
 
-    <EditText
-        android:id="@+id/register_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="username"
-        app:layout_constraintBottom_toTopOf="@id/register_first_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_welcome"
-        >
-    </EditText>
+            </TextView>
+
+            <EditText
+                android:id="@+id/register_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="username"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textColor="@color/primaryTextColor"
+
+                >
+            </EditText>
+        </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/register_first_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="first name"
-        app:layout_constraintBottom_toTopOf="@id/register_last_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_username"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="First Name"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
 
-        >
-    </EditText>
+            </TextView>
 
-    <EditText
-        android:id="@+id/register_last_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="last name"
-        app:layout_constraintBottom_toTopOf="@id/openAlertDialogButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_first_name">
-    </EditText>
+            <EditText
+                android:id="@+id/register_first_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="first name"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textColor="@color/primaryTextColor"
 
-    <EditText
-        android:id="@+id/register_dob"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:hint="Date of birth"
-        app:layout_constraintBottom_toTopOf="@id/register_email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openAlertDialogButton">
-    </EditText>
+                >
+            </EditText>
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/openAlertDialogButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Choose genres"
-        android:focusableInTouchMode="true"
-        android:cursorVisible="false"
-        android:focusable="false"
-        app:layout_constraintBottom_toTopOf="@id/register_dob"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_last_name"
-        android:textColor="@android:color/white">
-    </EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Name"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
 
-    <TextView
-        android:id="@+id/selectedItemPreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:onClick="onClick"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@id/register_dob"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_last_name"
-        android:textSize="18sp"
-        tools:ignore="OnClick">
-    </TextView>
+            </TextView>
 
-    <EditText
-        android:id="@+id/register_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:hint="email"
-        app:layout_constraintBottom_toTopOf="@id/register_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_dob"
+            <EditText
+                android:id="@+id/register_last_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="username"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textColor="@color/primaryTextColor"
 
-        >
+                >
+            </EditText>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
 
-    </EditText>
+            </TextView>
 
-    <EditText
-        android:id="@+id/register_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="password"
-        app:layout_constraintBottom_toTopOf="@id/register_passwordconfirmation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_email"
-        app:layout_constraintVertical_bias="0.1"
-        >
+            <EditText
+                android:id="@+id/register_dob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:textSize="18sp"
+                android:focusableInTouchMode="false"
+                android:hint="Click to choose a date"
+                >
+            </EditText>
 
-    </EditText>
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/register_passwordconfirmation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="confirm password"
-        app:layout_constraintBottom_toTopOf="@id/register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_password"
-        app:layout_constraintVertical_bias="0.1"
-        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Genres"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
 
-    </EditText>
+            </TextView>
+
+            <EditText
+                android:id="@+id/openAlertDialogButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Click to Choose genres"
+                android:focusableInTouchMode="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:textSize="18sp"
+                android:textColor="@android:color/white">
+            </EditText>
+            <TextView
+                android:id="@+id/selectedItemPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                tools:ignore="OnClick">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:inputType="textEmailAddress"
+                android:hint="email"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                >
+
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textColor="@color/primaryTextColor"
+
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/register_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="password"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+
+                >
+
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm Password"
+                android:textColor="@color/primaryTextColor"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/register_passwordconfirmation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="confirm password"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:textSize="18sp"
+                >
+
+            </EditText>
+        </LinearLayout>
+
 
     <Button
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:layout_margin="5dp"
         android:text="Register"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_passwordconfirmation"
         >
 
     </Button>
+</LinearLayout>
 
+
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
