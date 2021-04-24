@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp;
 
 public class ChatItem {
 
+    private String chatId;
     private String senderId;
     private String senderName;
     private String receiverName;
@@ -48,5 +49,13 @@ public class ChatItem {
 
     public String getReceiverName() {
         return receiverName;
+    }
+
+    public void setId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getChatId(String chatId) {
+        return chatId;
     }
 }

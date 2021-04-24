@@ -52,6 +52,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,7 @@ import java.util.Map;
 
 import edu.neu.madcourse.numadsp21finalproject.MainActivity;
 import edu.neu.madcourse.numadsp21finalproject.R;
+import edu.neu.madcourse.numadsp21finalproject.RegisterActivity;
 import edu.neu.madcourse.numadsp21finalproject.UserListActivity;
 import edu.neu.madcourse.numadsp21finalproject.UserProfileActivity;
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.FriendItem;
@@ -155,12 +157,17 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month,
                                           int day) {
 
-                        String a = day+ "/" + (month + 1) +"/" +year;
-                        dob.setText(""+a);
+                        String dateFormat = day+ "/" + (month + 1) +"/" +year;
+                        dob.setText(""+dateFormat);
                     }
                 };
-                Time date = new Time();
-                DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, dpd, date.year ,date.month, date.monthDay);
+                String[] dateInStringArray =
+                        dob.getText().toString().split("/");
+                int[] dateArray = new int[]{Integer.parseInt(dateInStringArray[2]),
+                        Integer.parseInt(dateInStringArray[1])-1,
+                        Integer.parseInt(dateInStringArray[0])};
+                DatePickerDialog d = new DatePickerDialog(ProfileActivity.this, dpd,
+                        dateArray[0], dateArray[1], dateArray[2]);
                 d.show();
             }
         });

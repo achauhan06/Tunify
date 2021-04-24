@@ -108,7 +108,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
     private void showNotification2(RemoteMessage remoteMessage) {
 
-        // TODO: switch click action from library to myNotification
         String click_action = remoteMessage.getNotification().getClickAction();
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
@@ -191,21 +190,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                 });
     }
 
-    //NOT NEEDED
-   /* public static void login(UserService userService, String currentToken) {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                        return;
-                    }
-                    String refreshToken = task.getResult();
-                    if (currentToken == null || currentToken.isEmpty() || !currentToken.equals(refreshToken)) {
-                        userService.updateToken(refreshToken);
-                    }
-                });
-
-    }*/
     public static void sendMessageToDevice(String receiverId,String receiverName, String title,
                                            String body,String contentId,String extraInfo, Context context) {
 
@@ -217,34 +201,37 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         }).start();
     }
 
-    private static void getTokenByUserId(String receiverId,String receiverName,
-                                         String title,String body, String contentId,
-                                         String extraInfo,Context context) {
+    public static void getTokenByUserId(String receiverId, String receiverName,
+                                        String title, String body, String contentId,
+                                        String extraInfo, Context context) {
 
         FirebaseFirestore.getInstance().collection("users").document(receiverId)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                String token = value.getString("MobileToken");
+            public void onSuccess(DocumentSnapshot snapshot) {
 
-                if(token == null) {
-                    Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, "receiver token not found", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            sendMessageToDeviceService(token, receiverId,receiverName,title,body,
-                                    contentId, extraInfo,context);
-                        }
-                    }).start();
+                if (snapshot.exists()) {
+                    String token = snapshot.getString("MobileToken");
+
+                    if(token == null) {
+                        Handler h = new Handler(Looper.getMainLooper());
+                        h.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "receiver token not found", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendMessageToDeviceService(token, receiverId,receiverName,title,body,
+                                        contentId, extraInfo,context);
+                            }
+                        }).start();
+                    }
                 }
+
             }
         });
 
@@ -256,8 +243,6 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
                                                    String receiverId,String receiverName,
                                                    String title, String body, String contentId,
                                                    String extraInfo,Context context) {
-        // String userToken = "eEmJrwCZTIS3bmQd2feBqs:APA91bE-yFSrDo6YZygzcWIYarzZhj0NQWdkivrvDPDwLUALuUUIBscXcF_RsEguC7UXrlsBfwgE1KZH5gUnVdRUFg1kh8yPDFkSvJRTNG0IV1dlIw8mZNt0lh25JQ2FwMnLccJ-0afW";
-
         JSONObject jPayload = new JSONObject();
         JSONObject jNotification = new JSONObject();
         JSONObject jdata = new JSONObject();

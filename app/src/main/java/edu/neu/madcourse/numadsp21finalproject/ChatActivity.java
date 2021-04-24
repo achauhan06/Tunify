@@ -28,6 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,7 @@ import java.util.List;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatItem;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatAdapter;
 import edu.neu.madcourse.numadsp21finalproject.chat.ChatViewListener;
+import edu.neu.madcourse.numadsp21finalproject.service.FirebaseInstanceMessagingService;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 import edu.neu.madcourse.numadsp21finalproject.utils.MyBroadcastReceiver;
 
@@ -114,6 +118,7 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             reference.set(chatMap).addOnSuccessListener(aVoid -> {
+                sendNotification();
                 Toast.makeText(ChatActivity.this, "Message sent!", Toast.LENGTH_SHORT).show();
                 typeField.setText("");
             }).addOnFailureListener(e -> {
@@ -123,6 +128,13 @@ public class ChatActivity extends AppCompatActivity {
         } catch (Error error) {
             error.printStackTrace();
         }
+    }
+
+    private void sendNotification() {
+        String title = "New Message Received";
+        String message = "You have received a new message from " + userName;
+        FirebaseInstanceMessagingService.getTokenByUserId(friendId, friendName, title ,message,
+                "", "", ChatActivity.this);
     }
 
     private void readMessages() {
@@ -137,6 +149,7 @@ public class ChatActivity extends AppCompatActivity {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             chatItems.clear();
                             for (DocumentSnapshot d : list) {
+                                String chatId = d.getId();
                                 String senderId = d.getString("senderId");
                                 String senderName = d.getString("senderName");
                                 String receiverId = d.getString("receiverId");
@@ -151,6 +164,7 @@ public class ChatActivity extends AppCompatActivity {
                                             new ChatItem(senderId, senderName,
                                                     receiverId, receiverName,
                                                     message, time);
+                                    chat.setId(chatId);
                                     chatItems.add(chat);
                                 }
                             }
@@ -164,16 +178,21 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView() {
+        if (chatItems!= null && !chatItems.isEmpty()) {
+            Collections.sort(chatItems, new Comparator<ChatItem>() {
+                @Override
+                public int compare(ChatItem o1, ChatItem o2) {
+                    return o1.getTime().compareTo(o2.getTime());
+                }
+            });
+        }
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.chat_recycler_view);
         recyclerView.setHasFixedSize(true);
-        ChatViewListener chatViewListener = new ChatViewListener() {
-
-        };
         chatAdapter = new ChatAdapter(chatItems, userName);
         recyclerView.setLayoutManager(rLayoutManger);
-        recyclerView.setAdapter(chatAdapter);
-        ;
+        recyclerView.setAdapter(chatAdapter);;
+        recyclerView.scrollToPosition(chatItems.size() - 1);
 
     }
 
