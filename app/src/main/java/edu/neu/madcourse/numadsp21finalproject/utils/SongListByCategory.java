@@ -20,14 +20,14 @@ public class SongListByCategory {
         List<SongItem> rock = new ArrayList(){{
             add(new SongItem("Stairway To Heaven","8:08",
                     "1jS_JKkQ1Fs", "Led Zeppelin", "Rock"));
-            add(new SongItem("Bohemian Rhapsodyby","6:14",
-                    "9Lxm0iSnKNc", "Queen", "Rock"));
+            add(new SongItem("Bohemian Rhapsody","5:53",
+                    "_ih5L6S7Ejk", "Queen", "Rock"));
             add(new SongItem("Smoke On The Water","5:54",
                     "n_xW6NeBRyU", "Deep Purple", "Rock"));
             add(new SongItem("Comfortably Numb","6:38",
                     "Kn02KT5oonU", "Pink Floyd", "Rock"));
-            add(new SongItem("Paint In Black","3:32",
-                    "u0FlMiY-aAk", "The Rolling Stones", "Rock"));
+            add(new SongItem("Paint In Black","3:23",
+                    "GRXk3VNPSpY", "The Rolling Stones", "Rock"));
             add(new SongItem("Pinball Wizard", "3:00" ,"5lbWwObdB2o",
                     "The Who", "Rock"));
         }};
@@ -40,24 +40,24 @@ public class SongListByCategory {
                     "hUgoIVt00HU", "Madonna", "Pop"));
             add(new SongItem("When Doves Cry","4:06",
                     "GGoqXb_He7g", "Prince", "Pop"));
-            add(new SongItem("I Wanna Dance with Somebody","5:26",
-                    "st-yPBxRVPM", "Whitney Houston", "Pop"));
-            add(new SongItem("Baby One More Time","4:06",
-                    "PYpU2TxIzAM", "Britney Spears", "Pop"));
+            add(new SongItem("I Wanna Dance with Somebody","5:04",
+                    "QMmc5ed_cgY", "Whitney Houston", "Pop"));
+            add(new SongItem("Baby One More Time","3:41",
+                    "-4HaTdtgvHA", "Britney Spears", "Pop"));
         }};
         categorySongMap.put("Pop", pop);
 
         List<SongItem> hipHop = new ArrayList(){{
-            add(new SongItem("Juicy","5:10",
-                        "k5edzkufIfo", "Notorious B.I.G", "Hip Hop"));
+            add(new SongItem("California Love","4:06",
+                        "h5jVkRtZ1Ck", "2Pac ft. Dr. Dre", "Hip Hop"));
             add(new SongItem("Fight the Power","4:38",
                     "WlNBIzPZKBo", "Public Enemy", "Hip Hop"));
             add(new SongItem("Shook Ones (Part II)","4:30",
                     "iXt454W6K1M", "Mobb Deep", "Hip Hop"));
             add(new SongItem("Passin' me By","5:03",
                     "OGmPnBesq2k", "The Pharcyde", "Hip Hop"));
-            add(new SongItem("Dear Mama","4:55",
-                    "wqnaLMkM550", "Tupac Shakur", "Hip Hop"));
+            add(new SongItem("Dear Mama","4:56",
+                    "YU6UjfFsMgg", "Tupac Shakur", "Hip Hop"));
         }};
         categorySongMap.put("Hip Hop", hipHop);
 
@@ -94,49 +94,49 @@ public class SongListByCategory {
                     "A8wcJ_j4NXA", "Bob Marley & the Wailers", "Reggae"));
             add(new SongItem(" Pressure Drop","3:01",
                     "vAM2-8kvN_s", "Toots & the Maytals", "Reggae"));
-            add(new SongItem("The Harder they Come","3:18",
-                    "5edUtsCJ150", "Jimmy Cliff", "Reggae"));
+            add(new SongItem("The Harder They Come","3:22",
+                    "KjAT-P2txT8", "Jimmy Cliff", "Reggae"));
         }};
         categorySongMap.put("Reggae", reggae);
 
         List<SongItem> folk = new ArrayList(){{
-            add(new SongItem("This Land if Your Land","3:11",
-                    "SqIJMV4NVtY", "Woody Guthrie", "Folk"));
+            add(new SongItem("This Land Is Your Land","3:01",
+                    "tr9DhsWzlyo", "Woody Guthrie", "Folk"));
             add(new SongItem("Blowin' in the wind","2:50",
                     "gz-FYMh1mLo", "Bob Dylan", "Folk"));
             add(new SongItem("City of New Orleans","4:51",
                     "_ltUr0X8sXg", "Steve Goodman", "Folk"));
-            add(new SongItem("If I had a Hammer","2:28",
-                    "D5OWSNjOTKE", "Pete Seeger", "Folk"));
-            add(new SongItem("Suzanne","3:57",
-                    "6RT6cWMY1NM", "Leonard Cohen", "Folk"));
+            add(new SongItem("If I Had A Hammer","2:10",
+                    "x6Bp0npHMYM", "Pete Seeger", "Folk"));
+            add(new SongItem("Suzanne","3:56",
+                    "H96ymOo1zlc", "Leonard Cohen", "Folk"));
 
         }};
         categorySongMap.put("Folk", folk);
 
         List<SongItem> country = new ArrayList(){{
-            add(new SongItem("I Walk the Line","2:58",
-                    "FTchTYyXQUk", "Johnny Cash", "Country"));
-            add(new SongItem("Jackson","2:48",
-                    "8eNnZUc3eyM", "Johnny Cash & June Carter", "Country"));
-            add(new SongItem("Stand By Your Man","2:48",
-                    "r7TADGV2fLI", "Tammy Wynette", "Country"));
-            add(new SongItem("The Dance","3:5",
-                    "D5r78pPAGog", "Garth Brooks", "Country"));
-            add(new SongItem("Jolene","3:03",
-                    "rRF4uH3mDcE", "Dolly Parton", "Country"));
+            add(new SongItem("I Walk the Line","2:46",
+                    "XtKBtUcunek", "Johnny Cash", "Country"));
+            add(new SongItem("Jackson","3:09",
+                    "bfoYMMQIOhs", "Johnny Cash & June Carter", "Country"));
+            add(new SongItem("Stand By Your Man","2:44",
+                    "UvUz6EVJm4M", "Tammy Wynette", "Country"));
+            add(new SongItem("The Dance","3:04",
+                    "zlRlR7XW7c8", "Garth Brooks", "Country"));
+            add(new SongItem("Jolene","4:08",
+                    "V81_mrnRSpM", "Dolly Parton", "Country"));
         }};
         categorySongMap.put("Country", country);
 
         List<SongItem> classical = new ArrayList(){{
-            add(new SongItem("Eine Kleine Nachtmusik","5:51",
-                    "nEAQn7B3Ymc", "Mozart", "Classical"));
-            add(new SongItem("Für Elise","4:00",
-                    "yLj7Vr6U4Cc", "Beethoven", "Classical"));
-            add(new SongItem("Toccata and Fugue in D minor","9:41",
-                    "y3AiGw8mkq0", "J.S. Bach", "Classical"));
-            add(new SongItem("The Four Seasons","10:19",
-                    "_8UGl80YHPA", "Vivaldi", "Classical"));
+            add(new SongItem( "O Fortuna","2:49",
+                    "LjiACevOQfw", "Carl Orff", "Classical"));
+            add(new SongItem("I Blue Danube","3:13",
+                    "9aY-rtJAY94", "Johann Strauss", "Classical"));
+            add(new SongItem("Dance of the Sugar Plum Fairy","2:27",
+                    "sdduPpnqre4", "Ray Conniff", "Classical"));
+            add(new SongItem("The Four Seasons","9:24",
+                    "7hZGZrOxBT4", "Vivaldi", "Classical"));
         }};
         categorySongMap.put("Classical", classical);
 
@@ -155,8 +155,8 @@ public class SongListByCategory {
         categorySongMap.put("Soul", soul);
 
         List<SongItem> rNB = new ArrayList(){{
-            add(new SongItem("Pony","4:23",
-                    "iYYAMEkzBAE", "Ginuwine", "R&B"));
+            add(new SongItem("Real Love","4:41",
+                    "tOg0BonpCO8", "Mary J. Blige", "R&B"));
             add(new SongItem("Waterfalls","4:17",
                     "6m2IjnfYjPQ", "TLC", "R&B"));
             add(new SongItem("Fantasy","4:23",
@@ -169,7 +169,7 @@ public class SongListByCategory {
         categorySongMap.put("R&B", rNB);
 
         List<SongItem> heavyMetal = new ArrayList(){{
-            add(new SongItem("Rainbow In The Dark","5:17",
+            add(new SongItem("Rainbow In The Dark","4:08",
                     "UdyQM2PNC9M", "Ronnie James Dio", "Heavy Metal"));
             add(new SongItem("Master of Puppets","8:17",
                     "dkXt18Bm4wM", "Metallica", "Heavy Metal"));
