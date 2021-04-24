@@ -328,11 +328,7 @@
 
         </Button>
 
-</LinearLayout>
-
-
+        </LinearLayout>
     </ScrollView>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
