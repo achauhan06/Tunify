@@ -314,18 +314,23 @@ public class RegisterActivity extends AppCompatActivity {
         builder.setTitle("Choose any 3 genres:");
 
         builder.setMultiChoiceItems(listItems, checkedItems, (dialog, which, isChecked) -> {
+            if (!isChecked) {
+                count--;
+            }
             if (isChecked && count < 3) {
                 count++;
                 checkedItems[which] = isChecked;
             }
             else {
-                Toast.makeText(RegisterActivity.this,
-                        "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
-                        .show();
+                if (count == 3) {
+                    Toast.makeText(RegisterActivity.this,
+                            "Only 3 genres can be selected at this point", Toast.LENGTH_SHORT)
+                            .show();
+                }
                 ((AlertDialog) dialog).getListView().setItemChecked(which, false);
                 checkedItems[which]=false;
             }
-            if (!isChecked) count--;
+
         });
 
         builder.setCancelable(false);
