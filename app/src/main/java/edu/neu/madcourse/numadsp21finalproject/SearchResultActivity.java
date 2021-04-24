@@ -110,7 +110,10 @@ public class SearchResultActivity extends AppCompatActivity {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
-                                if(!d.getId().equals(userId) && d.get("Username") != null && d.get("Username").toString().contains(searchValue)) {
+                                if(!d.getId().equals(userId) && d.getString("Username") != null
+                                        && d.getString("Username").contains(searchValue)
+                                        || d.getString("First Name").contains(searchValue)
+                                        || d.getString("Last Name").contains(searchValue)) {
                                     String searchName = d.getString("Username");
                                     String email = d.getString("Email");
                                     String searchUserId = d.getId();
