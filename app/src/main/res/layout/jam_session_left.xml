@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipToPadding="false"
     android:paddingVertical="10dp"
-    android:paddingRight="15dp"
     android:paddingLeft="15dp"
-    android:clipToPadding="false">
+    android:paddingRight="15dp"
+    android:visibility="visible">
 
     <TextView
         android:id="@+id/show_jam_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:scaleType="centerInside"
         android:text="friend A:"
         android:textSize="20sp"
-        android:scaleType="centerInside"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/show_jam_time"
@@ -23,23 +24,48 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/show_jam_name"
         android:text="time"
-        android:textSize="10sp"
-        />
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/show_jam_message"
-        android:layout_marginLeft="15dp"
-        android:textSize="15sp"
-        android:layout_below="@id/show_jam_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SongName"/>
+        android:layout_below="@id/show_jam_time"
+        android:layout_marginLeft="15dp"
+        android:text="SongName"
+        android:textSize="15sp" />
 
     <ImageButton
         android:id="@+id/jam_play_pause_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_play_pause"
-        />
+        android:src="@drawable/ic_play_pause" />
+    <LinearLayout
+        android:id="@+id/delete_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel_delete_jam_item"
+            android:src="@drawable/baseline_cancel_black_24dp"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:layout_margin="3dp"/>
+        <ImageButton
+            android:id="@+id/delete_jam_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_delete_black_24dp"
+            android:background="@android:color/transparent"
+            android:foreground="@drawable/rectangle_click_effect_background"
+            android:layout_margin="3dp"
+            />
+    </LinearLayout>
+
 </RelativeLayout>

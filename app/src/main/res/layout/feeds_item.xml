@@ -105,6 +105,7 @@
                 android:layout_margin="20dp"
                 android:visibility="invisible"
                 android:src="@drawable/ic_baseline_pause_circle_24"
+                android:foreground="@drawable/rectangle_click_effect_background"
                 />
             <TextView
                 android:id="@+id/feeds_item_comment_count"
