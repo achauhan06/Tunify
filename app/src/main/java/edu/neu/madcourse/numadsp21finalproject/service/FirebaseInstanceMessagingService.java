@@ -34,18 +34,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
-import edu.neu.madcourse.numadsp21finalproject.MainActivity;
-import edu.neu.madcourse.numadsp21finalproject.RegisterActivity;
 import edu.neu.madcourse.numadsp21finalproject.UserService;
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentActivity;
-import edu.neu.madcourse.numadsp21finalproject.commentview.CommentItem;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
 
 

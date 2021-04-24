@@ -208,11 +208,14 @@ public class HomeActivity extends AppCompatActivity {
         private void setSearchComponent() {
             searchButton = findViewById(R.id.search_icon);
             searchTextBox = findViewById(R.id.search_box);
+            searchTextBox.setCursorVisible(false);
+            searchTextBox.setOnClickListener(l->searchTextBox.setCursorVisible(true));
             searchButton.setOnClickListener(v -> {
                 if (!searchTextBox.getText().toString().isEmpty()) {
                     String searchValue = searchTextBox.getText().toString();
                     Intent intent = new Intent(this, SearchResultActivity.class);
                     searchTextBox.setText("");
+                    searchTextBox.setCursorVisible(false);
                     intent.putExtra("searchValue", searchValue);
                     startActivity(intent);
                 } else {
