@@ -121,8 +121,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
         intent.putExtra("friendId",remoteMessage.getData().get("friendId"));
         intent.putExtra("time",remoteMessage.getData().get("time"));
 
-        // intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
-        // intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
+        //intent.putExtra("friendName",remoteMessage.getData().get("friendName"));
+        //intent.putExtra("friendToken",remoteMessage.getData().get("friendToken"));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(this, 0 /* Request code */, intent,
@@ -212,6 +212,8 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
 
                 if (snapshot.exists()) {
                     String token = snapshot.getString("MobileToken");
+                    System.out.println("iuyjgtfyghjiokljiythfrghjkl.jhgfc");
+                    System.out.println(token);
 
                     if(token == null) {
                         Handler h = new Handler(Looper.getMainLooper());
@@ -253,9 +255,12 @@ public class FirebaseInstanceMessagingService extends FirebaseMessagingService {
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
 
-            // TODO: change to myNotification, change manifest too
             //citation : https://stackoverflow.com/a/43801355
-            jNotification.put("click_action","openNotification");
+            if (contentId.equals("chatType")) {
+                jNotification.put("click_action","openChat");
+            } else {
+                jNotification.put("click_action","openNotification");
+            }
 
             String senderName = Helper.getUsername(context);
             // String senderToken = Helper.getUserToken(context);

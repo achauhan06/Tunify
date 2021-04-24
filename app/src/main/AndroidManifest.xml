@@ -113,6 +113,10 @@
             android:name=".ChatActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.Tunify.NoActionBar">
+            <intent-filter>
+                <action android:name="openChat"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
 
         <activity

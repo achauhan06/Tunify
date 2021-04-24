@@ -51,7 +51,6 @@ public class ChatActivity extends AppCompatActivity {
     private String userToken;
     private String friendId;
     private String friendName;
-    private String friendToken;
     private Snackbar snackbar;
     private EditText typeField;
     private List<ChatItem> chatItems;
@@ -134,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
         String title = "New Message Received";
         String message = "You have received a new message from " + userName;
         FirebaseInstanceMessagingService.getTokenByUserId(friendId, friendName, title ,message,
-                "", "", ChatActivity.this);
+                "chatType", "", ChatActivity.this);
     }
 
     private void readMessages() {
