@@ -379,30 +379,19 @@ public class HomeActivity extends AppCompatActivity {
 
         firebaseFirestore.getInstance().collection("friends")
                 .document(userId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                        @Nullable FirebaseFirestoreException error) {
+                        if (snapshot.exists()) {
+                            friendsList = (ArrayList<String>) snapshot.get("friendsId");
+                        } else {
+                            Log.d("get friends list", "No such document");
+                        }
+                        getFeed();
 
-                    if (document.exists()) {
-                        friendsList = (ArrayList<String>) document.get("friendsId");
-                    } else {
-                        Log.d("get friends list", "No such document");
                     }
-                    // fetching recordings based on friends list
-                    getFeed();
-                } else {
-                    Log.d("get friends list", "get failed with ", task.getException());
-                }
-
-
-
-            }
-
-
-
-        });
+                });
 
     }
 
@@ -415,27 +404,26 @@ public class HomeActivity extends AppCompatActivity {
                 .whereIn ("owner", friendsList)
                 // not sure if i should limit or not
                 // .limit(10)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                    public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
+                        if (!querySnapshot.isEmpty()) {
+                            feedsItemArrayList.clear();
+                            List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                            for(DocumentSnapshot documentSnapshot : documents) {
                                 FeedsItem item = new FeedsItem(documentSnapshot, HomeActivity.this);
                                 feedsItemArrayList.add(item);
                                 String ownerId = item.getOwnerId();
                                 setOwnerPicture(ownerId, item);
                             }
-
                         } else {
-                            Log.d("firebase", "Error getting feeds items", task.getException());
+                            Log.d("firebase", "Error getting feeds items");
                         }
                         createFeedsRecyclerView();
 
+
                     }
                 });
-
-
     }
 
     private void setOwnerPicture(String ownerId, FeedsItem item) {

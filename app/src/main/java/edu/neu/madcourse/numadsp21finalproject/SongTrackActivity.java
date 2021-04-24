@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import edu.neu.madcourse.numadsp21finalproject.bottomNavigation.LibraryActivity;
 import edu.neu.madcourse.numadsp21finalproject.utils.Helper;
@@ -148,6 +149,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         fileName = getExternalCacheDir().getAbsolutePath();
         fileName += "/";
         fileName += songName+".mp3";
+        createRecorder();
         setPlayUploadSection();
         setRecordSection();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -155,7 +157,7 @@ public class SongTrackActivity extends YouTubeBaseActivity {
         recordingProgressbar.setProgress(0);
         recordingProgressbar.setMax(length);
         attemptView = findViewById(R.id.attempt_score);
-        createRecorder();
+
         createBackButton();
         setDefaultYouTubePlayer();
     }
@@ -448,7 +450,15 @@ public class SongTrackActivity extends YouTubeBaseActivity {
                     @Override
                     public void onInitializationFailure(YouTubePlayer.Provider provider,
                                                         YouTubeInitializationResult youTubeInitializationResult) {
-                        System.out.println("hello");
+                        player1 = setDefaultYouTubePlayer();
+                        player1.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+                        if (isRecording) {
+                            player1.loadVideo(songUrl);
+                        }
+                        else {
+                            player1.cueVideo(songUrl);
+                        }
+
 
                     }
                 });
@@ -461,7 +471,8 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
             case REQUEST_RECORD_AUDIO_PERMISSION:
@@ -533,14 +544,20 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void startRecording() {
-        recordButton.setImageResource(R.drawable.microphone);
-        player1.play();
-        recorder.start();
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
-        isRecording = true;
-        recordingProgressbar.setProgress(0);
-        startProgressBarForRecording();
+        try {
+            recorder.start();
+            player1.play();
+            recordButton.setImageResource(R.drawable.microphone);
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            isRecording = true;
+            recordingProgressbar.setProgress(0);
+            startProgressBarForRecording();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(SongTrackActivity.this, "Error loading recorder", Toast.LENGTH_SHORT);
+        }
+
 
 
     }
@@ -564,20 +581,25 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void stopRecording() {
-        recorder.stop();
-        recorder.release();
-        recorder = null;
-        long finalTime = SystemClock.elapsedRealtime() - chronometer.getBase();
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        timeWhenStopped = 0;
-        chronometer.stop();
-        progress[0] = 0;
-        isRecording = false;
-        recordButton.setImageResource(R.drawable.microphone_block);
-        mStartRecording = true;
-        player1.pause();
-        showPlayer();
-        setCurrentScore(finalTime);
+        try {
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+            long finalTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            timeWhenStopped = 0;
+            chronometer.stop();
+            progress[0] = 0;
+            isRecording = false;
+            recordButton.setImageResource(R.drawable.microphone_block);
+            mStartRecording = true;
+            player1.pause();
+            showPlayer();
+            setCurrentScore(finalTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void setCurrentScore(long finalTime) {
@@ -601,22 +623,32 @@ public class SongTrackActivity extends YouTubeBaseActivity {
     }
 
     private void pauseRecording() {
-        recorder.pause();
-        player1.pause();
+        try {
+            recorder.pause();
+            player1.pause();
 
-        timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
-        chronometer.stop();
-        isRecording = false;
+            timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
+            chronometer.stop();
+            isRecording = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void resumeRecording() {
-        recorder.resume();
-        player1.play();
-        chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        chronometer.start();
-        isRecording = true;
-        startProgressBarForRecording();
-        mStartRecording = false;
+        try {
+            recorder.resume();
+            player1.play();
+            chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+            chronometer.start();
+            isRecording = true;
+            startProgressBarForRecording();
+            mStartRecording = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void uploadAudio() {

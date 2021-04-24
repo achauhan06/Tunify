@@ -29,7 +29,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
             android:outlineAmbientShadowColor="@color/secondaryLightColor"
-            android:text="chat"
+            android:text="View"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold"
