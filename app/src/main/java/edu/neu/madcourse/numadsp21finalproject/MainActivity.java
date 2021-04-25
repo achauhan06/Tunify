@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     String readExternalStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
     boolean openAppSettings = false;
     private BroadcastReceiver myBroadcastReceiver = null;
+    private boolean willResume = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 permissionType += "Storage permission has";
                             }
-                            permissionString = " " + permissionType + " been denied. " +
+                            permissionString = permissionType + " been denied. " +
                                     "It is required for using certain app features." +
                                     "Please allow this in the app settings in your device.";
                             openAppSettings = true;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         if (openAppSettings) {
                             openAppSettings = false;
+                            willResume = true;
                             startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                     Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
                         } else {
@@ -332,4 +334,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (willResume) {
+            willResume = false;
+            if (getPermissionsForApp()) {
+                logIn();
+            }
+        }
+    }
 }
