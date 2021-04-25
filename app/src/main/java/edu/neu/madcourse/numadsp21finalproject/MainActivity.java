@@ -164,8 +164,9 @@ public class MainActivity extends AppCompatActivity {
                             openAppSettings = false;
                             startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                     Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
+                        } else {
+                            getPermissionsForApp();
                         }
-                        finish();
                     }
                 });
 
@@ -330,6 +331,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }
