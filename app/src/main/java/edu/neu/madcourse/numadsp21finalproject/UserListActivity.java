@@ -118,6 +118,7 @@ public class UserListActivity extends AppCompatActivity {
                                         @Nullable FirebaseFirestoreException error) {
 
                 if (!queryDocumentSnapshots.isEmpty()) {
+                    userItemList.clear();
                     List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                     for (DocumentSnapshot d : list) {
                         String userName = d.getString("First Name") + " " + d.getString("Last Name");
@@ -177,11 +178,11 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void createRecyclerView() {
-        if(userItemList.isEmpty()) {
+        /*if(userItemList.isEmpty()) {
             CustomToast toast = new CustomToast(UserListActivity.this,
                     "There are no other people!", Snackbar.LENGTH_SHORT);
             toast.makeCustomToast(Gravity.CENTER);
-        }
+        }*/
         rLayoutManger = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.user_recycler_view);
         recyclerView.setHasFixedSize(true);

@@ -55,7 +55,9 @@ public class JamSessionAdapter extends RecyclerView.Adapter<JamSessionHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if(jamSessionItemList.get(position).getUserName().equals(userName)) {
+        if(jamSessionItemList.get(position) != null
+                && jamSessionItemList.get(position).getUserName() != null
+                && jamSessionItemList.get(position).getUserName().equals(userName)) {
             return DISPLAY_RIGHT;
         }
         return DISPLAY_LEFT;
